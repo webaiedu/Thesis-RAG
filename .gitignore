@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+*.pyc
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+
+# Local settings (secrets live in backend/.env and frontend/.env.local, ignored in their folders)
+retrieval/.env
+*.log

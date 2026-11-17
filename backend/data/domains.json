@@ -1,0 +1,34 @@
+{
+  "criminal": {
+    "label": "Criminal law",
+    "description": "Offences and punishments, criminal procedure, police and metropolitan police laws: Penal Code, Code of Criminal Procedure, murder, theft, assault, arrest, bail, FIR, trial, terrorism, acid crimes, speedy trial, land crimes (অপরাধ, শাস্তি, দণ্ডবিধি, ফৌজদারি কার্যবিধি, পুলিশ, জামিন, গ্রেপ্তার, এসিড, সন্ত্রাস)."
+  },
+  "education": {
+    "label": "Education law",
+    "description": "Universities, schools, madrasahs, primary and secondary education, University Grants Commission, teachers and staff of educational institutions, public examinations (শিক্ষা, বিশ্ববিদ্যালয়, স্কুল, মাদ্রাসা, প্রাথমিক শিক্ষা, শিক্ষক, পরীক্ষা)."
+  },
+  "family": {
+    "label": "Family law",
+    "description": "Marriage, divorce, guardianship and custody of children, Muslim Family Laws Ordinance, Hindu, Christian, Parsi and special marriage laws, widow remarriage, marriage with foreigners (বিবাহ, তালাক, বিবাহবিচ্ছেদ, অভিভাবকত্ব, মুসলিম পারিবারিক আইন, হিন্দু বিবাহ নিবন্ধন)."
+  },
+  "labour": {
+    "label": "Labour and employment law",
+    "description": "Workers' rights, wages, minimum wages, Bangladesh Labour Act 2006, EPZ labour, worker welfare funds, tea and transport workers, government and public service employment, appointment and pay of constitutional office holders (শ্রম, শ্রমিক, মজুরি, বাংলাদেশ শ্রম আইন, চাকরি, নিয়োগ, কল্যাণ তহবিল)."
+  },
+  "land": {
+    "label": "Land and registration law",
+    "description": "Land ownership, tenancy, land acquisition, land development tax, khatian, land disputes and reform, plus registration laws: Registration Act 1908 (deeds), birth and death registration, national ID, societies, marriages, trademarks/geographical indications (ভূমি, জমি, খতিয়ান, প্রজাস্বত্ব, অধিগ্রহণ, ভূমি উন্নয়ন কর, নিবন্ধন, দলিল, জন্ম নিবন্ধন, জাতীয় পরিচয়পত্র)."
+  },
+  "tax": {
+    "label": "Tax and revenue law",
+    "description": "Income tax (Income Tax Act 2023), VAT and supplementary duty, customs and tariffs, municipal taxation, National Board of Revenue, revenue policy (কর, আয়কর, মূল্য সংযোজন কর, ভ্যাট, শুল্ক, রাজস্ব, জাতীয় রাজস্ব বোর্ড)."
+  },
+  "children_women": {
+    "label": "Women and children law",
+    "description": "Protection of women and children, violence against women and children (Nari o Shishu Nirjatan Daman Ain), Children Act 2013, women's property rights, abandoned children, child day-care, custodial torture, reserved women's seats (নারী ও শিশু নির্যাতন, শিশু আইন, নারীর সম্পত্তি, শিশু অধিকার, মহিলা)."
+  },
+  "uncategorized": {
+    "label": "Other Bangladesh laws",
+    "description": "Catch-all collection of Bangladesh Acts, Ordinances and Regulations that are not in a specific category. Searched automatically when the specific databases have no relevant match."
+  }
+}

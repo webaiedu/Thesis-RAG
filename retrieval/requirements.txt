@@ -1,0 +1,12 @@
+sentence-transformers>=3.0
+chromadb>=0.5
+fastapi>=0.110
+uvicorn>=0.29
+python-dotenv>=1.0
+pymupdf>=1.24
+easyocr>=1.7
+python-multipart>=0.0.9
+markitdown[docx,pptx,xlsx,xls,outlook]>=0.1
+pillow-heif>=0.18
+# GPU: install the CUDA build of torch first, e.g.
+#   pip install torch --index-url https://download.pytorch.org/whl/cu128
