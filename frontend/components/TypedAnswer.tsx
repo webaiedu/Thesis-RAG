@@ -28,8 +28,8 @@ export default function TypedAnswer({
     if (shown >= text.length) return;
     const id = requestAnimationFrame(() => {
       const behind = text.length - shown;
-      // About 2-3 characters per frame normally; far behind -> close the gap in ~10 frames.
-      setShown((n) => Math.min(text.length, n + Math.max(2, Math.ceil(behind / 10))));
+      // About 3-4 characters per frame normally; far behind -> close the gap in ~7 frames.
+      setShown((n) => Math.min(text.length, n + Math.max(3, Math.ceil(behind / 7))));
     });
     return () => cancelAnimationFrame(id);
   }, [shown, text]);

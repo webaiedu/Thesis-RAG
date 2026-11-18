@@ -30,5 +30,9 @@
   "uncategorized": {
     "label": "Other Bangladesh laws",
     "description": "Catch-all collection of Bangladesh Acts, Ordinances and Regulations that are not in a specific category. Searched automatically when the specific databases have no relevant match."
+  },
+  "cases": {
+    "label": "Court decisions (Supreme Court)",
+    "description": "Reported judgments of the Appellate Division and High Court Division of the Supreme Court of Bangladesh, from the official Supreme Court Online Bulletin (SCOB, 2015 onwards). Searched alongside the law databases on every legal question, to show how the courts applied the law (মামলা, রায়, নজির, সুপ্রিম কোর্ট, হাইকোর্ট বিভাগ, আপিল বিভাগ)."
   }
 }

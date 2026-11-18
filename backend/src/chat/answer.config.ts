@@ -33,6 +33,8 @@ export const modelLabel = (tier: ModelTier) => MODEL_IDS[tier].label;
 export interface EffortProfile {
   /** Law excerpts retrieved per search. */
   topK: number;
+  /** Court decisions (case-law excerpts) added to a legal answer. */
+  cases: number;
   /** Passages of the user's uploaded file put in the prompt. */
   filePassages: number;
   /** Earlier messages sent to the model. */
@@ -45,6 +47,7 @@ export interface EffortProfile {
 
 export const EFFORT: Record<Effort, EffortProfile> = {
   low: {
+    cases: 1,
     topK: 3,
     filePassages: 3,
     history: 4,
@@ -55,6 +58,7 @@ export const EFFORT: Record<Effort, EffortProfile> = {
       'Cover only the main point.',
   },
   mid: {
+    cases: 2,
     topK: 5,
     filePassages: 5,
     history: 6,
@@ -65,6 +69,7 @@ export const EFFORT: Record<Effort, EffortProfile> = {
       'organised in short paragraphs or bullets.',
   },
   high: {
+    cases: 3,
     topK: 8,
     filePassages: 8,
     history: 10,

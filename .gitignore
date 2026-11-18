@@ -9,3 +9,7 @@ Thumbs.db
 # Local settings (secrets live in backend/.env and frontend/.env.local, ignored in their folders)
 retrieval/.env
 *.log
+
+# Downloaded court PDFs (copyright Supreme Court of Bangladesh); manifest.csv is kept
+prepareDataset/raw_cases/*
+!prepareDataset/raw_cases/manifest.csv

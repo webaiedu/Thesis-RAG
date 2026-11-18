@@ -40,6 +40,24 @@ def read_records(path: Path):
     return records
 
 
+CASE_FIELDS = ("case_title", "citation", "court", "judge", "decided", "case_no", "source_url", "text_source")
+
+
+def metadata(r: dict) -> dict:
+    """Chroma metadata for one chunk: an Act section, or a court decision (kind == "case")."""
+    if r.get("kind") == "case":
+        return {"kind": "case", **{k: str(r.get(k) or "") for k in CASE_FIELDS}}
+    return {
+        "kind": "act",
+        "act": r.get("act_title") or "",
+        "year": r.get("act_year") or "",
+        "act_no": r.get("act_no") or "",
+        "section": r.get("section_no") or "",
+        "title": r.get("section_title") or "",
+        "chapter": r.get("chapter_no") or "",
+    }
+
+
 def fingerprint(path: Path) -> str:
     h = hashlib.sha256(path.read_bytes())
     h.update(f"|{common.MODEL_NAME}|{common.DOC_PREFIX}".encode())
@@ -76,6 +94,7 @@ def main():
     for domain, path in by_domain.items():
         records = read_records(path)
         acts = list(dict.fromkeys(r.get("act_title", "") for r in records if r.get("act_title")))
+        cases = len({r.get("citation") for r in records if r.get("kind") == "case"})
         fp = fingerprint(path)
         entry = manifest.get(domain, {})
         info[domain] = {
@@ -85,6 +104,7 @@ def main():
             "file": path.name,
             "chunks": len(records),
             "acts": acts,
+            "cases": cases,  # number of court decisions (case-law databases only)
             "hash": fp,
             "model": common.MODEL_NAME,
         }
@@ -130,17 +150,7 @@ def main():
                 ids=[r["id"] for r in batch],
                 documents=[r["text"] for r in batch],
                 embeddings=common.embed([r["text"] for r in batch], common.DOC_PREFIX),
-                metadatas=[
-                    {
-                        "act": r.get("act_title") or "",
-                        "year": r.get("act_year") or "",
-                        "act_no": r.get("act_no") or "",
-                        "section": r.get("section_no") or "",
-                        "title": r.get("section_title") or "",
-                        "chapter": r.get("chapter_no") or "",
-                    }
-                    for r in batch
-                ],
+                metadatas=[metadata(r) for r in batch],
             )
             print(f"\r[{domain}] {min(i + BATCH, len(records))}/{len(records)}", end="", flush=True)
         print(f"\n[{domain}] stored {col.count()} chunks from {path.name}")

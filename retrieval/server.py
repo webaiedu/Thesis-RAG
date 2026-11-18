@@ -69,10 +69,44 @@ class SearchRequest(BaseModel):
 
 
 def excerpt(text: str, limit: int = 450) -> str:
+    """The chunk without its heading lines: after "Section ..." (Acts) or "---" (cases)."""
     lines = text.split("\n")
-    idx = next((i for i, l in enumerate(lines) if l.startswith("Section")), -1)
+    idx = next((i for i, l in enumerate(lines) if l.startswith("Section") or l == "---"), -1)
     body = " ".join(lines[idx + 1 :])
     return body if len(body) <= limit else body[:limit] + "…"
+
+
+def source(id_: str, domain: str, meta: dict, score: float, doc: str) -> dict:
+    """One search hit. Act sections and court decisions share the same shape; the case
+    fields are filled for kind == "case" only."""
+    meta = meta or {}
+    case = meta.get("kind") == "case"
+    return {
+        "id": id_,
+        "domain": domain,
+        "kind": "case" if case else "act",
+        "act": meta.get("act", ""),
+        "year": meta.get("year", ""),
+        "actNo": meta.get("act_no", ""),
+        "section": meta.get("section", ""),
+        "title": meta.get("title", ""),
+        "chapter": meta.get("chapter", ""),
+        **(
+            {
+                "caseTitle": meta.get("case_title", ""),
+                "citation": meta.get("citation", ""),
+                "court": meta.get("court", ""),
+                "judge": meta.get("judge", ""),
+                "decided": meta.get("decided", ""),
+                "url": meta.get("source_url", ""),
+            }
+            if case
+            else {}
+        ),
+        "score": score,
+        "excerpt": excerpt(doc),
+        "text": doc,  # full chunk, used by the backend to build the prompt
+    }
 
 
 @app.get("/health")
@@ -113,21 +147,8 @@ def search(req: SearchRequest):
         for id_, doc, meta, dist in zip(
             res["ids"][0], res["documents"][0], res["metadatas"][0], res["distances"][0]
         ):
-            results.append(
-                {
-                    "id": id_,
-                    "domain": d,
-                    "act": meta["act"],
-                    "year": meta["year"],
-                    "actNo": meta["act_no"],
-                    "section": meta["section"],
-                    "title": meta["title"],
-                    "chapter": meta["chapter"],
-                    "score": round(1 - dist, 3),  # cosine distance -> similarity
-                    "excerpt": excerpt(doc),
-                    "text": doc,  # full chunk, used by the backend to build the prompt
-                }
-            )
+            # cosine distance -> similarity
+            results.append(source(id_, d, meta, round(1 - dist, 3), doc))
     results.sort(key=lambda r: r["score"], reverse=True)
     return {"results": results[: req.k]}
 
@@ -150,6 +171,18 @@ def extract(file: UploadFile = File(...)):
         raise HTTPException(415, str(e))
     except Exception as e:  # corrupt / encrypted files
         raise HTTPException(422, f"Could not read this file: {e}")
+
+
+@app.post("/image")
+def image(file: UploadFile = File(...)):
+    """A photo as a small JPEG (base64) for the vision model. Fast: no OCR."""
+    data = file.file.read(MAX_UPLOAD + 1)
+    if len(data) > MAX_UPLOAD:
+        raise HTTPException(413, "File is larger than 20 MB.")
+    try:
+        return {"image": files.image_jpeg(data)}
+    except files.Unsupported as e:
+        raise HTTPException(415, str(e))
 
 
 class RankRequest(BaseModel):

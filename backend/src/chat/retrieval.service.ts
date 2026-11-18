@@ -93,6 +93,13 @@ export class RetrievalService {
     return this.call<Extracted>('/extract', { method: 'POST', body: form }, 600_000);
   }
 
+  /** A photo converted to a small JPEG (base64) for the vision model. No OCR, so it is fast. */
+  async jpeg(file: Buffer, name: string, mime: string): Promise<string> {
+    const form = new FormData();
+    form.append('file', new Blob([new Uint8Array(file)], { type: mime || 'application/octet-stream' }), name);
+    return (await this.call<{ image: string }>('/image', { method: 'POST', body: form }, 60_000)).image;
+  }
+
   /** The passages of an uploaded document that best match the question. */
   async rank(text: string, query: string, k: number): Promise<string[]> {
     const data = await this.call<{ passages: string[] }>('/rank', {

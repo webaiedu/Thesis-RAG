@@ -8,6 +8,10 @@ const ID = /^[A-Za-z0-9_-]{1,64}$/;
 /** Firestore documents are limited to 1 MB; Bangla is 3 bytes per character. */
 const MAX_CHARS = 150_000;
 
+const IMAGE_EXT = /\.(png|jpe?g|webp|bmp|tiff?|gif|heic|heif|avif)$/i;
+const looksLikeImage = (name: string, mime: string) =>
+  !!process.env.VISION_MODEL?.trim() && ((mime ?? '').startsWith('image/') || IMAGE_EXT.test(name));
+
 export interface UploadedFile {
   originalname: string;
   mimetype: string;
@@ -48,15 +52,24 @@ export class FilesService {
   async upload(uid: string, file: UploadedFile): Promise<AttachmentInfo> {
     await this.usage.assertAvailable(uid);
     const name = (file.originalname || 'file').replace(/[\r\n]/g, ' ').slice(0, 200);
+    // Photos are read twice, by OCR and by the vision model (layout, handwriting and non-text
+    // content OCR can miss). Run both at the same time instead of one after the other.
+    const meter = new Meter();
+    const vision = looksLikeImage(name, file.mimetype)
+      ? this.retrieval
+          .jpeg(file.buffer, name, file.mimetype)
+          .then((jpeg) => this.llm.describeImage(jpeg, meter))
+          .catch(() => null) // not an image after all, or unreadable: extract() reports it
+      : null;
     const ex = await this.retrieval.extract(file.buffer, name, file.mimetype);
 
     let text = ex.text;
-    if (ex.kind === 'image' && ex.image) {
-      // The vision model reads layout, handwriting and non-text content OCR can miss.
-      const meter = new Meter();
-      const vision = await this.llm.describeImage(ex.image, meter);
+    if (ex.kind === 'image') {
+      let described = vision ? await vision : null;
+      if (described === null && ex.image) described = await this.llm.describeImage(ex.image, meter);
+      const visionText = described ?? '';
       await this.usage.add(uid, meter.tokens);
-      text = [text && `[Text read by OCR]\n${text}`, vision && `[Read by the vision model]\n${vision}`]
+      text = [text && `[Text read by OCR]\n${text}`, visionText && `[Read by the vision model]\n${visionText}`]
         .filter(Boolean)
         .join('\n\n');
     }

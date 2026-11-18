@@ -14,6 +14,15 @@ export type Source = {
   chapter: string;
   score: number;
   excerpt: string;
+  /** "case" = a court decision (fields below set); "act" or missing = a section of an Act. */
+  kind?: 'act' | 'case';
+  caseTitle?: string;
+  citation?: string;
+  court?: string;
+  judge?: string;
+  decided?: string;
+  /** Official PDF on supremecourt.gov.bd */
+  url?: string;
 };
 export type RouteInfo = {
   type: 'law' | 'general' | 'unsupported';

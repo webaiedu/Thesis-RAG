@@ -148,24 +148,27 @@ def _open_image(data: bytes):
         raise Unsupported(f"This image could not be opened ({e}).")
 
 
+def _jpeg(img) -> str:
+    """A small JPEG (base64) for the vision model, whatever the input format."""
+    small = img.copy()
+    small.thumbnail((1600, 1600))
+    buf = io.BytesIO()
+    small.save(buf, "JPEG", quality=88)
+    return base64.b64encode(buf.getvalue()).decode("ascii")
+
+
+def image_jpeg(data: bytes) -> str:
+    """Only the JPEG copy (no OCR), so the backend can start the vision model while OCR runs."""
+    return _jpeg(_open_image(data))
+
+
 def extract_image(data: bytes) -> dict:
     img = _open_image(data)
     # Very large photos: OCR a downscaled copy (faster, same accuracy for normal text).
     ocr_img = img.copy()
     ocr_img.thumbnail((2600, 2600))
     text = _clean(ocr(np.asarray(ocr_img)))
-    # A small JPEG for the vision model (works for any input format).
-    small = img.copy()
-    small.thumbnail((1600, 1600))
-    buf = io.BytesIO()
-    small.save(buf, "JPEG", quality=88)
-    return {
-        "text": text,
-        "pages": 1,
-        "method": "ocr",
-        "notes": [],
-        "image": base64.b64encode(buf.getvalue()).decode("ascii"),
-    }
+    return {"text": text, "pages": 1, "method": "ocr", "notes": [], "image": _jpeg(img)}
 
 
 # ---------------- documents and text ----------------

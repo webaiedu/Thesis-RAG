@@ -41,6 +41,11 @@ npx tsc --noEmit -p .                 # type-check (npm run build also type-chec
 
 # dataset prep
 python prepareDataset/prepare.py input.json output.jsonl   # then move output into backend/data/
+
+# case law (run inside prepareDataset/ with the retrieval venv)
+python fetch_cases.py                       # download every SCOB volume + raw_cases/manifest.csv
+python fetch_cases.py --no-scob --listing ad.html hcd.html   # + judgment PDFs from saved list pages
+python prepare_cases.py                     # -> backend/data/cases.jsonl (OCR needs the GPU; --no-ocr skips it)
 ```
 
 Reloading: `nest start --watch` and `next dev` reload on code changes. `uvicorn` runs without `--reload`, so restart it after editing `retrieval/*.py`. Every server reads its env file only at startup, so restart after editing env files. Don't run `npm run build` in `backend/` while `start:dev` is running: both write `dist/`. Use `tsc --noEmit` instead.
@@ -62,6 +67,10 @@ The frontend sends questions to `POST /api/chat/stream`, which streams newline-d
 
 Short follow-up questions (under 40 chars) are combined with the previous user question to build the search query (`buildQuery`).
 
+**Typos:** in Auto mode the router also returns `question`, the latest message with its spelling and grammar fixed. `applyCorrection()` searches with it and appends it to the user's message for the answer model, keeping the original wording. Every system prompt (`identityLine()`) also tells the model to read past typos and to introduce itself only when asked. `searchText()` drops a clause-final "in Bangladesh" from the search query, because it pulls in unrelated sections that mention Bangladesh.
+
+**LM Studio model ids:** `LlmService.resolveLmStudioModel()` checks the configured ids against `/v1/models`. An id that isn't listed is matched by its name without the publisher prefix (e.g. `qwen/x` vs `x`).
+
 ### Answer settings (`answer.config.ts`, mirrored in `frontend/lib/models.ts`)
 - **`model`:** `high`/`mid`/`low` map to the LM Studio ids `LMSTUDIO_MODEL_HIGH/MID/LOW` (Qwen3-Next 80B / Qwen3 30B / Gemma 4 E4B). They apply only when the provider is `lmstudio`.
 - **`effort`:** the `EFFORT` table sets law top-k, file passages, history length, `max_tokens`, temperature and a depth instruction in the prompt. `chats.service.ts` `HISTORY_FOR_MODEL` must be at least the largest `history` value.
@@ -73,13 +82,14 @@ Each saved assistant message stores `meta` (the model and settings that produced
 `LlmService` is the only code that calls Gemini (REST `generateContent` / `streamGenerateContent?alt=sse`) or LM Studio (OpenAI-compatible `/chat/completions`, `stream: true` with `include_usage`).
 - **Streaming:** `complete()` streams when given `onDelta`.
 - **`<think>` blocks:** `VisibleText` removes them, including tags split across chunks.
+- **Thinking off:** LM Studio calls send `reasoning_effort` from `LMSTUDIO_REASONING` (default `none`). Without it Gemma 4 (router, vision, "low") thinks ~150 hidden tokens before every reply.
 - **Token counting:** every call adds its tokens to an optional `Meter`, using the provider-reported count or about chars/3.
 - **Images:** `describeImage()` sends an uploaded photo to `VISION_MODEL`.
 
 ### Files (computer-vision feature)
 `POST /api/files` (multipart, max 20 MB) goes through `FilesService` to retrieval `/extract` (`retrieval/files.py`). Everything runs locally:
 - **PDF:** PyMuPDF text layer, plus EasyOCR (`bn,en`, GPU) for pages without text.
-- **Photo (any format, including HEIC):** OCR, plus a JPEG copy that the backend sends to `VISION_MODEL`.
+- **Photo (any format, including HEIC):** OCR, plus a JPEG copy that the backend sends to `VISION_MODEL`. `FilesService` fetches the JPEG from `/image` (no OCR) first, so the vision model runs while `/extract` does the OCR.
 - **Office, HTML, EPUB, `.msg`:** MarkItDown.
 - **Anything else:** decoded as text if it is text.
 - **Refused with 415:** audio/video (MarkItDown would transcribe them online), old `.doc`/`.ppt`, and binary files.
@@ -100,6 +110,14 @@ A domain is one `backend/data/<name>.jsonl` file. Its id comes from `common.doma
 The optional `backend/data/domains.json` sets labels and descriptions for each domain, which helps the router choose correctly. Don't confuse it with the generated `retrieval/chroma_db/domains.json`.
 
 A `.jsonl` record needs `id` and `text`. `act_title`, `act_year`, `act_no`, `section_no`, `section_title` and `chapter_no` become Chroma metadata, which the API returns as `Source` objects. `excerpt()` in `server.py` expects the chunk text to contain a line starting with `Section`. `prepare.py` must only fix encoding and spacing (mojibake, glued words). It must never change legal wording.
+
+### Case law (`cases` domain)
+`backend/data/cases.jsonl` holds Supreme Court of Bangladesh judgments from the official Supreme Court Online Bulletin (SCOB, `supremecourt.gov.bd/resources/bulletin/{vol}_SCOB_{year}.pdf`, vols 1–20, 2015–2025).
+- **Building it:** `prepareDataset/fetch_cases.py` downloads the PDFs to `prepareDataset/raw_cases/`. The PDFs are gitignored because they are © Supreme Court of Bangladesh. `manifest.csv`, which records the URL, sha256 and date of every file, is committed as the provenance record.
+- **Parsing:** `prepare_cases.py` splits each volume into cases using the running page header (`19 SCOB [2024] AD  <title> (<judge>)  <page>`). The citation is the volume, year, division and first page. Only whitespace is normalised.
+- **Old Bangla fonts:** pages typed in non-Unicode fonts (SutonnyMJ, AdarshaLipi) extract as gibberish, so they are OCR'd. With `--no-ocr` they are skipped, and `raw_cases/cases_report.csv` lists `pages_skipped` per case. `case_overrides.csv` holds hand-checked titles for headers in those fonts.
+- **Record format:** records have `kind: "case"`, `case_title`, `citation`, `court`, `judge`, `decided`, `case_no`, `source_url` (official PDF `#page=N`) and `text_source`. The text is a heading line, then `---`, then the judgment text. `excerpt()` cuts at `---`.
+- **In the backend:** like the fallback domain, `cases` (`CASES_DOMAIN`) is hidden from the router. `ChatService.caseHits()` adds 1–3 decisions to every law answer (`EFFORT[].cases`, only score >= `CASES_MIN_SCORE`, one chunk per case). They are numbered after the law excerpts in a separate "COURT DECISIONS" prompt block. The frontend shows them with a "Case" badge and a link to the official PDF.
 
 ### Embeddings
 `ingest.py` and `server.py` both load `retrieval/.env` via `common.py` (real env vars win). That file sets `EMBED_MODEL=BAAI/bge-m3`, which is multilingual; the code default `BAAI/bge-small-en-v1.5` is English only.

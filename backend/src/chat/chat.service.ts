@@ -5,7 +5,7 @@ import { AnswerMode, MessageDto } from './chat.dto';
 import { AnswerMeta, Domain, RouteInfo, Source } from './chat.types';
 import { LlmService, Meter, Provider } from './llm.service';
 import { Hit, RetrievalService } from './retrieval.service';
-import { RouterService, fallbackDomainId } from './router.service';
+import { RouterService, casesDomainId, fallbackDomainId } from './router.service';
 
 const GENERAL_PROMPT = [
   identityLine(),
@@ -41,6 +41,8 @@ interface Ctx {
   settings: AnswerSettings;
   file: { name: string; passages: string[] } | null;
   opts: ReplyOptions;
+  /** The latest question with spelling/grammar fixed by the router (Auto mode only). */
+  corrected?: string;
 }
 
 @Injectable()
@@ -85,6 +87,7 @@ export class ChatService {
       signal: opts.signal,
     });
     if (searchError && decision.type !== 'general') throw searchError;
+    this.applyCorrection(ctx, decision.question);
 
     // 1) Not a legal question -> general assistant
     if (decision.type === 'general') return this.general(ctx);
@@ -126,10 +129,54 @@ export class ChatService {
     return this.answer(ctx, hits, used);
   }
 
+  /**
+   * Typos ("tell me about this low") make both the search and small models go wrong. The
+   * router already returns the question with its mistakes fixed: search with that, and show
+   * it to the answering model next to the user's own words (in case the fix is wrong).
+   */
+  private applyCorrection(ctx: Ctx, question?: string) {
+    const msgs = ctx.messages;
+    const last = msgs[msgs.length - 1];
+    if (!question || last?.role !== 'user') return;
+    const simple = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
+    if (simple(question) === simple(last.content)) return;
+    ctx.corrected = question;
+    ctx.messages = [
+      ...msgs.slice(0, -1),
+      { ...last, content: `${last.content}\n\n(With spelling corrected, the question reads: "${question}")` },
+    ];
+    this.logger.log(`Corrected question: "${last.content.slice(0, 120)}" -> "${question.slice(0, 120)}"`);
+  }
+
   /** True when at least one hit is similar enough to count as "found". */
   private relevant(hits: Hit[]): boolean {
     const min = Number(process.env.FALLBACK_MIN_SCORE ?? 0.56);
     return hits.some((h) => h.score >= min);
+  }
+
+  /**
+   * Court decisions that match the question, added next to the law excerpts so the answer
+   * can show how the Supreme Court applied the law. Only strong matches are kept
+   * (CASES_MIN_SCORE, default FALLBACK_MIN_SCORE). Never fails the answer: without the
+   * case database, or if its search fails, the answer is written from the laws alone.
+   */
+  private async caseHits(ctx: Ctx, domains: Domain[]): Promise<Hit[]> {
+    const id = casesDomainId();
+    const k = EFFORT[ctx.settings.effort].cases;
+    if (!id || k <= 0 || domains.some((d) => d.id === id)) return [];
+    try {
+      if (!(await this.retrieval.domains()).some((d) => d.id === id)) return [];
+      const min = Number(process.env.CASES_MIN_SCORE?.trim() || process.env.FALLBACK_MIN_SCORE?.trim() || 0.56);
+      // Several chunks of one judgment can match; keep the best chunk of each case.
+      const hits = await this.retrieval.search(this.buildQuery(ctx), [id], k * 3);
+      const seen = new Set<string>();
+      return hits
+        .filter((h) => h.score >= min && !seen.has(h.citation ?? h.id) && seen.add(h.citation ?? h.id))
+        .slice(0, k);
+    } catch (e) {
+      this.logger.warn(`Case search failed, answering from the laws only: ${(e as Error).message}`);
+      return [];
+    }
   }
 
   /** The parts of the uploaded file that matter for this question (more with higher effort). */
@@ -175,7 +222,7 @@ export class ChatService {
       ...styleLines(settings, 'general'),
       ...(ctx.file
         ? [
-            'The user attached a file. Its text (from text extraction or OCR, so it may contain small reading errors) is below. Use it to answer, and say so if it does not contain what was asked.',
+            'The user attached a file. Its text (from text extraction or OCR, so it may contain small reading errors) is below. When the user says "this", "the image", "the file", "the picture" or "the document", they mean this file. Use it to answer, and say so if it does not contain what was asked.',
           ]
         : []),
       ...this.fileBlock(ctx.file),
@@ -200,17 +247,19 @@ export class ChatService {
     return this.answer(ctx, hits, domains);
   }
 
-  /** Answer from already-retrieved excerpts. */
-  private async answer(ctx: Ctx, hits: Hit[], domains: Domain[]): Promise<Answer> {
+  /** Answer from already-retrieved excerpts (plus matching court decisions). */
+  private async answer(ctx: Ctx, lawHits: Hit[], domains: Domain[]): Promise<Answer> {
     const provider = (process.env.LLM_PROVIDER ?? 'lmstudio') as Provider;
     const model = provider === 'gemini' ? (process.env.GEMINI_MODEL ?? 'gemini-flash-latest') : modelId(ctx.settings.model);
     const effort = EFFORT[ctx.settings.effort];
+    // Laws first, then cases: the [n] numbers in the prompt match the order of the sources shown.
+    const cases = await this.caseHits(ctx, domains);
+    const hits = [...lawHits, ...cases];
+    const used = domains.map((d) => ({ id: d.id, label: d.label }));
+    if (cases.length) used.push({ id: casesDomainId(), label: cases[0].domain });
     const start: AnswerStart = {
       sources: hits.map(({ _text, ...s }) => s),
-      route: {
-        type: 'law',
-        domains: domains.map((d) => ({ id: d.id, label: d.label })),
-      },
+      route: { type: 'law', domains: used },
       meta: this.meta(ctx.settings, model),
     };
     ctx.opts.onStart?.(start);
@@ -250,17 +299,44 @@ export class ChatService {
    */
   private buildQuery(ctx: Ctx): string {
     const users = ctx.messages.filter((m) => m.role === 'user');
-    const last = users[users.length - 1]?.content ?? '';
+    const last = ctx.corrected ?? users[users.length - 1]?.content ?? '';
     const prev = users[users.length - 2]?.content;
-    const q = last.length < 40 && prev ? `${prev}\n${last}` : last;
+    const q = this.searchText(last.length < 40 && prev ? `${prev}\n${last}` : last);
     if (!ctx.file) return q;
     const doc = ctx.file.passages.join('\n').replace(/\s+/g, ' ').slice(0, 1500);
     return `${q}\n${doc}`.slice(0, 3900);
   }
 
+  /**
+   * Every law in the databases is a Bangladesh law, so "... in Bangladesh?" adds nothing to a
+   * search except noise: it pulls in sections that mention Bangladesh (e.g. kidnapping "from
+   * Bangladesh") instead of the one asked about. Drop it where it ends a clause; names such as
+   * "Bangladesh Labour Act" are kept.
+   */
+  private searchText(q: string): string {
+    const cleaned = q
+      .replace(/\s*\b(?:in|of|under|within|according to)\s+(?:the\s+)?(?:laws?\s+of\s+)?bangladesh\b(?=\s*(?:[?.!,;:]|$))/gim, '')
+      .replace(/(^|\s)বাংলাদেশে(?=[\s?।,!]|$)/g, '$1')
+      .trim();
+    return cleaned || q;
+  }
+
   private lawPrompt(hits: Hit[], ctx: Ctx): string {
+    const numbered = hits.map((h, i) => ({ h, n: i + 1 }));
+    const laws = numbered.filter(({ h }) => h.kind !== 'case');
+    const cases = numbered.filter(({ h }) => h.kind === 'case');
+    const block = (xs: typeof numbered) => xs.map(({ h, n }) => `[${n}] ${h._text}`).join('\n\n');
     const excerpts = hits.length
-      ? hits.map((h, i) => `[${i + 1}] ${h._text}`).join('\n\n')
+      ? [
+          ...(laws.length ? ['LAW EXCERPTS (Acts and their sections):', block(laws)] : []),
+          ...(cases.length
+            ? [
+                '',
+                'COURT DECISIONS (Supreme Court of Bangladesh, from the official Supreme Court Online Bulletin):',
+                block(cases),
+              ]
+            : []),
+        ].join('\n')
       : '(no relevant excerpts were found)';
     return [
       identityLine(),
@@ -268,14 +344,22 @@ export class ChatService {
       'Rules:',
       `- If the user only asks who you are or what your name is, just reply "I am ${BOT_NAME}, an AI assistant for Bangladesh law" in your own words; no excerpts are needed for that.`,
       '- Cite the Act and section number for every claim, e.g. (Public Examinations (Offences) Act, 1980, Section 2).',
+      ...(cases.length
+        ? [
+            '- The COURT DECISIONS are real judgments. Use one only when it is relevant to the question, to show how the courts applied or interpreted the law (for example: "In <case name>, <citation>, the <court> held that ...").',
+            '- Cite a decision by its case name and citation exactly as given in its excerpt. State only what the excerpt itself says the court found or held; do not add facts or outcomes that are not in it.',
+            '- The legal rule comes from the LAW EXCERPTS when they cover it. Never present a court decision as a section of an Act. If only court decisions are relevant, answer from them and say that the answer is based on case law.',
+            '- Irrelevant decisions: ignore them silently.',
+          ]
+        : []),
       '- If the excerpts do not contain the answer, say you could not find it in the available laws. Never guess or use outside knowledge.',
-      '- Do not invent section numbers or quotes.',
+      '- Do not invent section numbers, case names, citations or quotes.',
       '- The excerpts may be in Bangla or English. Reply in the same language the user writes in; if that differs from an excerpt, translate its meaning faithfully without adding anything.',
       '- Keep Act names and section numbers exactly as they appear in the excerpts (Bangla digits such as ২৮ are fine).',
       '- You give general information, not legal advice.',
       ...(ctx.file
         ? [
-            "- The user attached a file (shown after the excerpts). Use it for the facts of the user's situation and quote it when relevant, but take every legal rule from the EXCERPTS only. Its text came from extraction or OCR and may contain small reading errors.",
+            "- The user attached a file (shown after the excerpts); \"this\", \"the image\", \"the file\" or \"the document\" means that file. Use it for the facts of the user's situation and quote it when relevant, but take every legal rule from the EXCERPTS only. Its text came from extraction or OCR and may contain small reading errors.",
           ]
         : []),
       ...styleLines(ctx.settings).map((l) => `- ${l}`),

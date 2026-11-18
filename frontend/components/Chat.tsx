@@ -122,19 +122,39 @@ function Sources({ sources, multiDomain }: { sources: Source[]; multiDomain: boo
           <li key={src.id} className="source">
             <div className="source-head">
               <span className="source-num">{i + 1}</span>
-              <div className="source-ref">
-                <strong>{src.act}</strong>
-                <span>
-                  {[
-                    src.section && `Section ${src.section}`,
-                    src.title,
-                    src.chapter,
-                    multiDomain && src.domain,
-                  ]
-                    .filter(Boolean)
-                    .join(' · ')}
-                </span>
-              </div>
+              {src.kind === 'case' ? (
+                <div className="source-ref">
+                  <strong>
+                    <span className="case-badge">Case</span>
+                    {src.caseTitle}
+                  </strong>
+                  <span>
+                    {[src.citation, src.court, src.decided && `decided ${src.decided}`].filter(Boolean).join(' · ')}
+                    {src.url && (
+                      <>
+                        {' · '}
+                        <a href={src.url} target="_blank" rel="noopener noreferrer">
+                          Official PDF
+                        </a>
+                      </>
+                    )}
+                  </span>
+                </div>
+              ) : (
+                <div className="source-ref">
+                  <strong>{src.act}</strong>
+                  <span>
+                    {[
+                      src.section && `Section ${src.section}`,
+                      src.title,
+                      src.chapter,
+                      multiDomain && src.domain,
+                    ]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </span>
+                </div>
+              )}
               {typeof src.score === 'number' && (
                 <span className="score" title="How closely this excerpt matched your question">
                   {Math.round(src.score * 100)}%
@@ -712,33 +732,24 @@ export default function Chat({ chatId, title, resetKey, onChatSaved, onBusyChang
           onDragLeave={() => setDragging(false)}
           onDrop={onDrop}
         >
-          {(pending || chatFile) && (
+          {/* The chat's file (chatFile) stays in use for follow-ups but is not shown here. */}
+          {pending && (
             <div className="attach-row">
-              {pending ? (
-                <span className={`attach ${pending.status}`}>
-                  <FileChip name={pending.name} kind={pending.kind}>
-                    <small>{fileStatus(pending)}</small>
-                  </FileChip>
-                  {pending.status === 'uploading' && <span className="attach-spin" aria-label="Reading file" />}
-                  <button
-                    type="button"
-                    className="icon-btn small"
-                    onClick={() => setPending(null)}
-                    aria-label="Remove file"
-                    title="Remove file"
-                  >
-                    <CloseIcon size={14} />
-                  </button>
-                </span>
-              ) : (
-                chatFile && (
-                  <span className="attach context" title="Follow-up questions in this chat also use this file">
-                    <FileChip name={chatFile.name} kind={chatFile.kind}>
-                      <small>Used as context in this chat</small>
-                    </FileChip>
-                  </span>
-                )
-              )}
+              <span className={`attach ${pending.status}`}>
+                <FileChip name={pending.name} kind={pending.kind}>
+                  <small>{fileStatus(pending)}</small>
+                </FileChip>
+                {pending.status === 'uploading' && <span className="attach-spin" aria-label="Reading file" />}
+                <button
+                  type="button"
+                  className="icon-btn small"
+                  onClick={() => setPending(null)}
+                  aria-label="Remove file"
+                  title="Remove file"
+                >
+                  <CloseIcon size={14} />
+                </button>
+              </span>
             </div>
           )}
 

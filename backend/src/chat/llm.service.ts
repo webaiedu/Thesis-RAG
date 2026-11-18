@@ -36,6 +36,17 @@ export interface LlmOptions {
 const estimate = (...parts: string[]) => Math.ceil(parts.reduce((n, p) => n + p.length, 0) / 3);
 
 /**
+ * Thinking models (Gemma 4 here, which is also the router and vision model) otherwise spend
+ * 150+ hidden tokens "thinking" before every reply: seconds of delay on each route and image.
+ * LMSTUDIO_REASONING=none (default) turns that off; set it to low/medium/high to allow it, or
+ * to "" to send nothing. Models without a thinking mode ignore it.
+ */
+const lmReasoning = () => {
+  const r = (process.env.LMSTUDIO_REASONING ?? 'none').trim();
+  return r ? { reasoning_effort: r } : {};
+};
+
+/**
  * Turns streamed raw text into visible text: drops <think>...</think> blocks and holds back a
  * possibly unfinished tag at the end, so it is never shown and then taken back.
  */
@@ -107,10 +118,40 @@ export class LlmService {
       : this.lmStudio(system, history, opts);
   }
 
+  private models: { at: number; ids: string[] } | null = null;
+
+  /**
+   * The id LM Studio actually uses for a configured model. Ids differ by where a model was
+   * downloaded from ("qwen/qwen3-next-80b-a3b-instruct" vs "qwen3-next-80b-a3b-instruct"),
+   * so an id that is not listed is matched by its name without the publisher prefix.
+   */
+  async resolveLmStudioModel(model: string): Promise<string> {
+    const base = process.env.LMSTUDIO_URL ?? 'http://localhost:1234/v1';
+    if (!this.models || Date.now() - this.models.at > 60_000) {
+      try {
+        const res = await fetch(`${base}/models`, { signal: AbortSignal.timeout(5_000) });
+        const data: any = await res.json();
+        this.models = { at: Date.now(), ids: (data?.data ?? []).map((m: any) => String(m.id)) };
+      } catch {
+        return model; // LM Studio unreachable: the real call reports it
+      }
+    }
+    const ids = this.models.ids;
+    if (ids.includes(model)) return model;
+    const name = (id: string) => id.split('/').pop()!.toLowerCase();
+    const match = ids.find((id) => name(id) === name(model));
+    if (match) {
+      this.logger.log(`Model "${model}" is called "${match}" in LM Studio; using that.`);
+      return match;
+    }
+    return model;
+  }
+
   async lmStudio(system: string, history: MessageDto[], opts: LlmOptions): Promise<string> {
     const base = process.env.LMSTUDIO_URL ?? 'http://localhost:1234/v1';
-    const model = opts.model ?? process.env.LMSTUDIO_CHAT_MODEL;
-    if (!model) throw new InternalServerErrorException('LMSTUDIO_CHAT_MODEL is not set.');
+    const configured = opts.model ?? process.env.LMSTUDIO_CHAT_MODEL;
+    if (!configured) throw new InternalServerErrorException('LMSTUDIO_CHAT_MODEL is not set.');
+    const model = await this.resolveLmStudioModel(configured);
     const stream = !!opts.onDelta;
 
     let res: Response;
@@ -121,6 +162,7 @@ export class LlmService {
         body: JSON.stringify({
           model,
           temperature: opts.temperature ?? 0.2,
+          ...lmReasoning(),
           ...(opts.maxTokens ? { max_tokens: opts.maxTokens } : {}),
           ...(stream ? { stream: true, stream_options: { include_usage: true } } : {}),
           messages: [{ role: 'system', content: system }, ...history],
@@ -173,8 +215,9 @@ export class LlmService {
    * so uploads still work with OCR alone.
    */
   async describeImage(jpegBase64: string, meter?: Meter): Promise<string> {
-    const model = process.env.VISION_MODEL?.trim();
-    if (!model) return '';
+    const configured = process.env.VISION_MODEL?.trim();
+    if (!configured) return '';
+    const model = await this.resolveLmStudioModel(configured);
     const base = process.env.LMSTUDIO_URL ?? 'http://localhost:1234/v1';
     try {
       const res = await fetch(`${base}/chat/completions`, {
@@ -183,6 +226,7 @@ export class LlmService {
         body: JSON.stringify({
           model,
           temperature: 0,
+          ...lmReasoning(),
           max_tokens: 1500,
           messages: [
             {
