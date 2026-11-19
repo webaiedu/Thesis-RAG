@@ -1,78 +1,112 @@
-# Where to start next (handoff, 18 Nov 2026)
+# Where to start next (handoff, 19 Nov 2026)
 
-## Status of the 9 requested items
+Goal right now: **benchmark the system before fine-tuning** (thesis baseline), then fine-tune and benchmark again.
+- Full plan: the 4 daily runbooks in `benchmark/` (start with `benchmark/README.md`).
+- Background: `planning/ROADMAP.md`.
 
-| # | Task | Status |
-|---|------|--------|
-| 1 | Faster typing animation | **Done** (`frontend/components/TypedAnswer.tsx`: 3+ chars/frame, catches up in ~7 frames) |
-| 2 | Qwen3-Next 80B alongside the other two models | **Done and tested**. All 3 models answer through the backend (`model: high/mid/low`). `.env` id: `LMSTUDIO_MODEL_HIGH=qwen3-next-80b-a3b-instruct` |
-| 3 | Typos + files answered with "I am Ainkhoj..." + slow file reading | **Done, file part not yet re-tested** (see "Start here") |
-| 4 | Hide "Used as context in this chat" | **Done** (file is still kept per chat, just not shown) |
-| 5 | OCR the 370 old-font Bangla pages | **Done**: 0 pages skipped now; 453 cases / 14,855 chunks; ingested into Chroma (`cases` domain) |
-| 6 | Individual Supreme Court judgments | **Code done** (`fetch_cases.py --listing`); needs list pages saved from a browser (you) |
-| 7 | HawkScan API key | **Pending: you** (install was blocked for the agent; steps below) |
-| 8 | GPU / context length | **Checked**: all 3 models are 100% on GPU; contexts already reduced; recommendations below |
-| 9 | Run + test everything | **Half done** (see "Start here") |
-
-### What was changed for item 3
-- Router (Auto mode) returns the question with spelling/grammar fixed; search uses it and the answer model sees both versions (`chat.service.ts applyCorrection`, `router.service.ts`).
-- Every system prompt says: introduce yourself only when asked; read past typos (`bot.config.ts`).
-- File prompts say "this / the image / the file" = the attached file.
-- Photos: vision model and OCR now run **in parallel** (`files.service.ts`, retrieval `/image`).
-- **New today:** Gemma 4 E4B (router + vision + "low" model) was "thinking" ~150 hidden tokens before every reply (6 s first token). `LlmService` now sends `reasoning_effort: "none"` to LM Studio (`LMSTUDIO_REASONING` in `backend/.env`, default `none`). Gemma first token: 6.3 s -> 1.2 s. Qwen models are unaffected.
+## What was done today
+| Item | Status |
+|---|---|
+| Child Marriage Restraint Act 2017 moved from `uncategorized` to `children_women` (+ router description) | **Done**, re-ingested, verified in search |
+| Benchmark runbooks `benchmark/` (before/after × Gemma/Qwen3 30B, 27-setting grid) | **Done** |
+| Test-set generator `eval/make_questions.py` (80/10/10 split by section/case, no leakage) | **Done**, trial checked |
+| Test + val candidates | **Done**: 532 test candidates, 544 val, half Bangla/half English, all 9 domains; leakage check OK; review sheet exported |
+| Review tool `eval/review.py` + team guide `eval/REVIEW_GUIDE.md` | **Done**, tested |
+| Benchmark runner `backend/src/eval/run-eval.ts` (`npm run eval`) | **Done**, smoke-tested with the 80B (routing cache, resume, run config) |
+| `ChatService.reply()` accepts a cached router decision; `EVAL_TEMPERATURE` in `LlmService` | **Done**, type-checked; no effect on the normal app |
+| Search benchmark `eval/eval_retrieval.py` (Hit/Recall@k, MRR, nDCG; oracle vs all domains; exact chunk vs same section/case) | **Done**, tested on the trial questions |
+| `eval/score.py` (answer metrics + LLM judge) | **Not started** |
+| Nothing committed yet | see "Commit" below |
 
 ## Start here tomorrow
 
-1. Start everything (each in its own terminal):
-   ```bash
-   # LM Studio: load the 3 models (check with: ~/.lmstudio/bin/lms ps)
-   cd retrieval && source .venv/bin/activate && python -m uvicorn server:app --port 8000
-   cd backend  && npm run start:dev
-   cd frontend && npm run dev          # http://localhost:3000
-   ```
-   (Node: `export PATH="$HOME/.local/node-v22.20.0-linux-arm64/bin:$PATH"`)
-2. Finish the tests that were interrupted (item 9). Already passed: General mode on all 3 models, Auto routing to general, identity question, auth + usage endpoint, type-checks (backend, frontend, Python). Still to test in the browser:
-   - [ ] Law question with typos, Auto mode: `wat is the punisment for theft in bangladesh?` -> criminal domain, Penal Code sections cited
-   - [ ] Bangla question: `চুরি করলে কী শাস্তি হয়?`
-   - [ ] Specific mode ("/" list), e.g. children_women: `minimum age of marriage for girls`
-   - [ ] Case law appears ("Case" badge + Official PDF link), e.g. `can parliament give indemnity to joint forces for killings during operation clean heart?` (should find Z. I. Khan Panna vs Bangladesh, 7 SCOB [2016] HCD 7, a case that used to be skipped and is now OCR'd)
-   - [ ] **Upload an image** with a legal text and ask with typos: `withe the image can you tell me about this low?` -> must answer about the file, not "I am Ainkhoj". Note the upload time.
-   - [ ] Upload a PDF (text + scanned) and a .docx; ask a follow-up without re-attaching (file must still be used, chip must not show)
-   - [ ] Effort low/mid/high and technicality settings change answer length/style
-   - [ ] Usage bar updates; 429 after the limit (optional: set `TOKEN_LIMIT_PER_HOUR=3000` temporarily)
-   - [ ] Stop the retrieval server -> general questions still work, law questions show an error
-3. If file upload is still slow: check `retrieval` log timings. OCR (EasyOCR, GPU) is the slow part for big PDFs; the vision model is now ~1 s faster per image after disabling thinking.
-4. Clean-up: the agent created a Firebase test user `ainkhoj-e2e-test` (Firebase console -> Authentication, and Firestore `users/ainkhoj-e2e-test`). Delete both.
-
-## Things only you can do
-
-### HawkScan (item 7)
-The agent was not allowed to download the binary, so do it yourself:
+### 1. Check the generated questions (5 min, already verified on 19 Nov: 532 test / 544 val, no leakage)
 ```bash
-mkdir -p ~/.local/bin && cd ~/.local/bin
-url=$(curl -fsSL https://download.stackhawk.com/hawkdocs/hawk.manifest.json | python3 -c "import json,sys;m=json.load(sys.stdin);print([a['url'] for a in m['latest']['assets'] if a['asset']['group']=='linux-aarch64' and a['url'].endswith('/hawk')][0])")
-curl -fsSL "$url" -o hawk && chmod +x hawk && hawk version   # needs v6.0.0+
-hawk init --browser    # log in to app.stackhawk.com (free account); saves the key in ~/.hawk/
+cd eval
+wc -l data/test_candidates.jsonl data/val.jsonl          # 532 and 544
+python3 make_questions.py --check data/test_candidates.jsonl data/val.jsonl   # must say "OK: no leakage"
+ls data/review/                                          # test_review.csv + handwritten.csv
 ```
-No browser? Create a key at https://app.stackhawk.com -> Settings -> API Keys, then `hawk init` and paste it (or `export HAWK_API_KEY=hawk.xxx.xxx`). Never commit the key.
-Then ask Claude: "run a HawkScan of the backend" (it will create `stackhawk.yml` for http://localhost:4000/api; the scan needs a Firebase token for auth).
+If a file is missing or short, the generation was interrupted. Load the 80B (context **32768**, Parallel 4) and run the same command again; it resumes:
+```bash
+python3 make_questions.py --split test --per-domain 34 --out data/test_candidates.jsonl
+python3 make_questions.py --split val  --per-domain 34 --out data/val.jsonl
+python3 review.py export data/test_candidates.jsonl data/review/test_review.csv
+```
 
-### Individual Supreme Court judgments (item 6)
-1. In a browser open and save (Ctrl+S, "Webpage, HTML only") into `prepareDataset/`:
-   - Appellate Division: https://www.supremecourt.gov.bd/web/indexn.php?page=judgments.php&menu=00&div_id=1&type_id=5 -> `ad.html`
-   - High Court Division: https://www.supremecourt.gov.bd/web/indexn.php?page=judgments.php&menu=00&div_id=2&type_id=5 -> `hcd.html`
-   (If the list is paginated, save each page: `ad1.html ad2.html ...`.)
-2. Then (retrieval server **stopped**):
-   ```bash
-   cd prepareDataset && source ../retrieval/.venv/bin/activate
-   python fetch_cases.py --no-scob --listing ad*.html hcd*.html   # downloads PDFs + manifest
-   python prepare_cases.py                                        # SCOB + judgments, with OCR (~30-40 min)
-   cd ../retrieval && python ingest.py cases
-   ```
+### 2. Test-set review: Claude first, then the team rechecks (decided 19 Nov)
+Say: *"do the test-set review"*. Claude (~3–4 h, resumable; progress is saved in the CSV):
+1. Adds columns `recheck` and `team_decision` to `eval/data/review/test_review.csv`, and teaches `review.py import` to prefer `team_decision` and report the Claude–team agreement rate.
+2. Reviews all 532 rows (keep / fix / drop, reason in `notes`) and writes ~60 questions in `handwritten.csv`, with gold chunk ids found via `review.py find`. The retrieval server must be running.
+3. Marks `recheck` = all fixes and drops, all hand-written rows, and a random 20% of keeps.
 
-### LM Studio / GPU (item 8)
-- Verified: 3 `llama-server` processes on CUDA 13, memory equals model size (80B 47.7 GB, 30B 21.6 GB, Gemma 4.9 GB), 60/88/59 tok/s. Nothing runs on CPU.
-- DGX Spark has **one shared 128 GB memory** for CPU and GPU (`nvidia-smi` shows "Memory-Usage: Not Supported"; that is normal). The problem with max contexts was memory, not the GPU: at 262k context the 30B model's KV cache alone is ~25 GB, which together with 75 GB of weights, OCR (~9 GB), the embedding model and the browser leaves no room (swap / crashes).
-- Current contexts are fine: 80B 40k, 30B 40k, Gemma 30k (our prompts are under ~12k tokens). **Keep them** or use 32k / 32k / 16k. Note: LM Studio's saved default for Qwen3-30B is still 262144: in LM Studio -> My Models -> qwen3-30b -> settings, set Context Length to 32768 so a reload does not go back to max.
-- Also in each model's load settings: Flash Attention ON, GPU offload MAX. Optional: KV cache quantization Q8_0 to halve KV memory.
-- If memory looks full after loading/unloading many times: `sudo sh -c 'sync; echo 3 > /proc/sys/vm/drop_caches'` frees the file cache.
+Then **the team** filters `recheck = yes` and fills `team_decision` (agree / keep / fix / drop), ~1.5–2 person-hours. Then:
+`python3 review.py import data/review/test_review.csv --handwritten data/review/handwritten.csv`.
+Thesis wording: "generated by an LLM, first-pass reviewed by an LLM, verified by the authors (agreement X%)".
+
+### 3. Ask Claude to build the rest of the benchmark (~2–3 h)
+Say: *"continue the benchmark: build score.py, then run the pilot"*. That covers:
+1. **`eval/score.py`:** router accuracy, citation precision/recall, LLM-judge scores (correctness, faithfulness, technicality match), length/readability, latency, bootstrap CIs, compare tables.
+2. **Pilot:** a few questions × all 27 settings, to measure the real speed and check the scoring end to end.
+
+**Decide first: which judge model?** It must stay the same for every before/after run.
+- **Gemini** (fast, independent of our models, costs API quota), or
+- **local Qwen3-Next 80B** (free, ~6 h per 10k answers, but it is a "Qwen", like one of the tuned models).
+
+### 4. Before tagging the baseline: decide on one known issue
+In the smoke test, the 80B started a law answer with "I am Ainkhoj, an AI assistant…" without being asked. Either fix it now (prompt change in `bot.config.ts` / `chat.service.ts`), **before** `git tag baseline-v1`, or keep it and let the benchmark measure it. Don't change prompts after the tag.
+
+### 5. Optional overnight job: training questions (~6 h, needed only before fine-tuning)
+```bash
+cd eval && python3 make_questions.py --split train --per-domain 600 --out data/train.jsonl
+```
+80B loaded at context 32768, Parallel 4. Resumable.
+
+## Things to remember
+- **LM Studio context × Parallel:** the context is split across the parallel slots.
+  - The generator needs ≥ 32768 on the 80B. With 8192, every parallel request failed with "Context size has been exceeded".
+  - On benchmark days, load the answer models with **49152** (see `benchmark/README.md`).
+- **Runner:** `cd backend && EVAL_TEMPERATURE=0 npm run eval -- --variant … --models … --efforts … --tech … --test … --out …`. The full option list is at the top of `backend/src/eval/run-eval.ts`.
+  - It compiles to `backend/dist-eval/` (gitignored), so it doesn't clash with `npm run start:dev`.
+  - Router decisions are cached in `eval/runs/route-cache.jsonl`, shared by all runs.
+- **The trial runs found real baseline problems:**
+  - English questions about Bangla-language laws are retrieved less often than Bangla ones (trial: Hit@5 0.71 vs 0.82). A cross-language gap; fine-tuning bge-m3 should help. Only 34 unchecked questions, so treat this as a hint, not a result;
+  - context-less questions get routed to "general" and answered from outside knowledge (a hallucination);
+  - the 80B router takes 7–15 s per question, Gemma ~1 s.
+
+## Commit (nothing from today is committed yet)
+New or changed files:
+- **Data:** `backend/data/{children_women,uncategorized}.jsonl`, `backend/data/domains.json`
+- **Benchmark plans:** `benchmark/`
+- **Eval tooling and data:** `eval/` (scripts, guide, `data/`)
+- **Runner:** `backend/src/eval/run-eval.ts`
+- **Backend changes:** `backend/src/chat/{chat,llm}.service.ts`, `backend/package.json`, `backend/.gitignore`, `.gitignore`
+- **This file:** `planning/NEXT_STEPS.md`
+
+Ask Claude to commit when you're happy with it.
+
+## Still open from 18 Nov
+- [ ] **Browser tests:**
+  - law question with typos (Auto);
+  - Bangla question;
+  - `/children_women minimum age of marriage for girls` (should now cite the Child Marriage Restraint Act 2017);
+  - case law ("Case" badge + PDF link);
+  - image/PDF/.docx upload + follow-up;
+  - effort/technicality;
+  - usage bar + 429;
+  - retrieval down.
+
+  Pick the model the loaded LM Studio model matches ("low" = Gemma). The agent can't do these, because minting a login token was blocked.
+- [ ] Delete the Firebase test user `ainkhoj-e2e-test` (Authentication + Firestore `users/ainkhoj-e2e-test`).
+- [ ] HawkScan: install `hawk` and create the API key (steps in git history of this file, or ask Claude).
+- [ ] Supreme Court individual judgments: save the AD/HCD list pages from a browser into `prepareDataset/`, then `fetch_cases.py --no-scob --listing …`.
+- [ ] LM Studio: set Qwen3-30B's saved default context to something below 262144 (it reverts to max on reload).
+
+## Starting the services
+```bash
+# LM Studio: load what the task needs (lms ps to check)
+cd retrieval && source .venv/bin/activate && python -m uvicorn server:app --port 8000
+cd backend  && npm run start:dev      # only for the web app; the benchmark runner doesn't need it
+cd frontend && npm run dev            # http://localhost:3000
+```
+(Node: `export PATH="$HOME/.local/node-v22.20.0-linux-arm64/bin:$PATH"`)

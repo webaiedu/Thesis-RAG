@@ -3,3 +3,4 @@ dist
 .env
 data/index.json
 firebase-service-account.json
+dist-eval

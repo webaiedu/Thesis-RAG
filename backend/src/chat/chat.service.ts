@@ -5,7 +5,7 @@ import { AnswerMode, MessageDto } from './chat.dto';
 import { AnswerMeta, Domain, RouteInfo, Source } from './chat.types';
 import { LlmService, Meter, Provider } from './llm.service';
 import { Hit, RetrievalService } from './retrieval.service';
-import { RouterService, casesDomainId, fallbackDomainId } from './router.service';
+import { Decision, RouterService, casesDomainId, fallbackDomainId } from './router.service';
 
 const GENERAL_PROMPT = [
   identityLine(),
@@ -33,6 +33,10 @@ export interface ReplyOptions {
   onStart?: (s: AnswerStart) => void;
   onDelta?: (text: string) => void;
   signal?: AbortSignal;
+  /** Benchmark only: reuse an earlier router decision instead of calling the router again. */
+  routeDecision?: Decision;
+  /** Called with the router decision (Auto mode), e.g. so the benchmark can cache it. */
+  onRoute?: (d: Decision) => void;
 }
 
 /** Everything one request needs, worked out once. */
@@ -82,10 +86,13 @@ export class ChatService {
     } catch (e) {
       searchError = e;
     }
-    const decision = await this.router.route(messages, domains, ctx.file && this.fileHint(ctx.file), {
-      meter: opts.meter,
-      signal: opts.signal,
-    });
+    const decision =
+      opts.routeDecision ??
+      (await this.router.route(messages, domains, ctx.file && this.fileHint(ctx.file), {
+        meter: opts.meter,
+        signal: opts.signal,
+      }));
+    opts.onRoute?.(decision);
     if (searchError && decision.type !== 'general') throw searchError;
     this.applyCorrection(ctx, decision.question);
 

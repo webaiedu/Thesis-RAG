@@ -113,6 +113,9 @@ export class LlmService {
     history: MessageDto[],
     opts: LlmOptions = {},
   ): Promise<string> {
+    // Benchmark runs set EVAL_TEMPERATURE (e.g. 0) so every call is repeatable.
+    const evalTemp = process.env.EVAL_TEMPERATURE?.trim();
+    if (evalTemp) opts = { ...opts, temperature: Number(evalTemp) };
     return provider === 'gemini'
       ? this.gemini(system, history, opts)
       : this.lmStudio(system, history, opts);

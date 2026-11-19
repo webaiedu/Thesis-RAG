@@ -1,0 +1,2 @@
+﻿question,lang,type,expected_route,domain,gold_chunk_ids,reference_answer,reviewer,notes
+wat is the punisment for theft in bangladesh?,en,typo,law,criminal,the-penal-code-1860-1860-s379,"Under Section 379 of the Penal Code, 1860, theft is punishable with imprisonment up to three years, or fine, or both.",,EXAMPLE ROW: replace or delete

@@ -13,3 +13,7 @@ retrieval/.env
 # Downloaded court PDFs (copyright Supreme Court of Bangladesh); manifest.csv is kept
 prepareDataset/raw_cases/*
 !prepareDataset/raw_cases/manifest.csv
+
+# Benchmark scratch files (the real data and runs in eval/ are committed)
+eval/data/trial*.jsonl
+eval/data/gen_*.log
