@@ -17,6 +17,9 @@
  *   --route-cache  router decisions, shared by every setting and variant
  *                  (default ../eval/runs/route-cache.jsonl)
  *   --limit N      only the first N questions (pilot)
+ *   --files-dir    folder of the test items' "file" (default ../eval/data/files)
+ *   --file-cache   extracted file text (OCR + vision), made once and reused by every setting and
+ *                  variant like the router cache (default ../eval/runs/file-cache.jsonl)
  *
  * Resumable: run the same command again and finished question+setting pairs are skipped.
  * Set EVAL_TEMPERATURE=0 for repeatable answers.
@@ -31,7 +34,8 @@ import { AppModule } from '../app.module';
 import { AnswerSettings, EFFORT, modelId } from '../chat/answer.config';
 import { ChatService } from '../chat/chat.service';
 import { MessageDto } from '../chat/chat.dto';
-import { Meter } from '../chat/llm.service';
+import { LlmService, Meter } from '../chat/llm.service';
+import { FileContext } from '../chat/chat.service';
 import { RetrievalService } from '../chat/retrieval.service';
 import { Decision, RouterService } from '../chat/router.service';
 
@@ -43,6 +47,8 @@ interface TestItem {
   id: string;
   question: string;
   messages?: MessageDto[];
+  /** File attached to the question (name inside --files-dir). */
+  file?: string;
   [k: string]: unknown;
 }
 interface CachedRoute {
@@ -83,6 +89,8 @@ function args() {
     workers: Math.max(1, Number(a.workers ?? 4)),
     routeCache: path.resolve(a['route-cache'] ?? '../eval/runs/route-cache.jsonl'),
     limit: Number(a.limit ?? 0),
+    filesDir: path.resolve(a['files-dir'] ?? '../eval/data/files'),
+    fileCache: path.resolve(a['file-cache'] ?? '../eval/runs/file-cache.jsonl'),
   };
 }
 
@@ -115,6 +123,7 @@ async function main() {
   const chat = app.get(ChatService);
   const router = app.get(RouterService);
   const retrieval = app.get(RetrievalService);
+  const llm = app.get(LlmService);
 
   let tests = readJsonl<TestItem>(o.test);
   if (o.limit) tests = tests.slice(0, o.limit);
@@ -144,9 +153,45 @@ async function main() {
   const domains = o.mode === 'auto' ? await retrieval.domains() : [];
   const byId = new Map(domains.map((d) => [d.id, d]));
 
+  // ---- 0) attached files: extracted once (same steps as FilesService.upload), reused everywhere ----
+  interface CachedFile extends FileContext { file: string; sha: string; vision: string | null; kind: string;
+    method: string; extractMs: number; visionMs: number; tokens: number }
+  const fileCache = new Map(readJsonl<CachedFile>(o.fileCache).map((f) => [`${f.file}|${f.sha}|${f.vision}`, f]));
+  const files = new Map<string, CachedFile>();
+  for (const name of [...new Set(tests.map((q) => q.file).filter((f): f is string => !!f))]) {
+    const buf = fs.readFileSync(path.join(o.filesDir, name));
+    const vision = process.env.VISION_MODEL?.trim() || null;
+    const ck = `${name}|${sha(buf)}|${vision}`;
+    let f = fileCache.get(ck);
+    if (!f) {
+      const mime = name.endsWith('.pdf') ? 'application/pdf' : name.endsWith('.jpg') ? 'image/jpeg'
+        : name.endsWith('.docx') ? 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' : '';
+      const meter = new Meter();
+      let t = Date.now();
+      const ex = await retrieval.extract(buf, name, mime);
+      const extractMs = Date.now() - t;
+      let text = ex.text, visionMs = 0;
+      if (ex.kind === 'image' && vision) {
+        t = Date.now();
+        const described = await llm.describeImage(ex.image ?? (await retrieval.jpeg(buf, name, mime)), meter).catch(() => '');
+        visionMs = Date.now() - t;
+        text = [text && `[Text read by OCR]\n${text}`, described && `[Read by the vision model]\n${described}`]
+          .filter(Boolean).join('\n\n');
+      }
+      f = { file: name, sha: sha(buf), vision, name, text: text.trim().slice(0, 150_000), kind: ex.kind,
+        method: ex.method, extractMs, visionMs, tokens: meter.tokens };
+      fileCache.set(ck, f);
+      fs.appendFileSync(o.fileCache, JSON.stringify(f) + '\n');
+      console.log(`  file ${name}: ${ex.method}, ${f.text.length} chars, ${extractMs} ms + vision ${visionMs} ms`);
+    }
+    files.set(name, f);
+  }
+  const fileOf = (q: TestItem): FileContext | null => (q.file ? files.get(q.file) ?? null : null);
+
   // ---- 1) router decisions: once per question, reused by every setting and variant ----
   const cache = new Map(readJsonl<CachedRoute>(o.routeCache).map((r) => [`${r.id}|${r.qhash}`, r]));
-  const key = (q: TestItem) => `${q.id}|${sha(JSON.stringify(msgsOf(q))).slice(0, 16)}`;
+  const key = (q: TestItem) =>
+    `${q.id}|${sha(JSON.stringify(q.file ? { m: msgsOf(q), f: q.file } : msgsOf(q))).slice(0, 16)}`;
   if (o.mode === 'auto') {
     const todo = tests.filter((q) => !cache.has(key(q)));
     console.log(`Router: ${tests.length - todo.length} cached, ${todo.length} to route`);
@@ -155,7 +200,8 @@ async function main() {
     await pool(todo, o.workers, async (q) => {
       const meter = new Meter();
       const start = Date.now();
-      const d = await router.route(msgsOf(q), domains, null, { meter });
+      const f = fileOf(q);
+      const d = await router.route(msgsOf(q), domains, f && (await chat.routingFileHint(msgsOf(q), f)), { meter });
       const rec: CachedRoute = {
         id: q.id, qhash: key(q).split('|')[1], type: d.type,
         domains: d.type === 'law' ? d.domains.map((x) => x.id) : [], question: d.question,
@@ -193,14 +239,14 @@ async function main() {
     let firstToken = 0;
     try {
       const ans = await chat.reply(msgsOf(q), {
-        mode: o.mode, settings: s, meter,
+        mode: o.mode, settings: s, meter, file: fileOf(q),
         routeDecision: o.mode === 'auto' ? decisionFor(q) : undefined,
         onDelta: () => { if (!firstToken) firstToken = Date.now() - start; },
       });
       const r = cache.get(key(q));
       fs.appendFileSync(answersFile, JSON.stringify({
         key: k, variant: o.variant, id: q.id, mode: o.mode, settings: s,
-        question: q.question, reply: ans.reply, route: ans.route, meta: ans.meta,
+        question: q.question, file: q.file ?? null, reply: ans.reply, route: ans.route, meta: ans.meta,
         corrected: r?.question ?? null,
         sources: ans.sources.map(({ excerpt, ...src }) => src),
         tokens: meter.tokens, routerTokens: r?.tokens ?? 0,

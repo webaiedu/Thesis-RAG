@@ -179,8 +179,22 @@ def judge_config_hash():
     return hashlib.sha256((json.dumps(j, sort_keys=True) + JUDGE_SYSTEM + JUDGE_TEMPLATE).encode()).hexdigest()[:12]
 
 
+_TRUTH = None
+
+
+def file_truth(name):
+    """Ground-truth text of a benchmark file (data/files/manifest.jsonl)."""
+    global _TRUTH
+    if _TRUTH is None:
+        _TRUTH = {m["file"]: m["truth"] for m in read_jsonl(HERE / "data" / "files" / "manifest.jsonl")}
+    return _TRUTH.get(name)
+
+
 def excerpts_for(ans, limit):
     ch, parts, used = chunks(), [], 0
+    if ans.get("file") and file_truth(ans["file"]):
+        parts.append("[attached file, its true content] " + file_truth(ans["file"]))
+        used += len(parts[0])
     for i, s in enumerate(ans.get("sources", []), 1):
         t = ch.get(s["id"], {}).get("text", "")
         t = t[: max(0, limit - used)]
@@ -285,6 +299,7 @@ def score_rows(run_dir, test_path):
              "model": s["model"], "effort": s["effort"], "tech": s["technicality"],
              "domain": q.get("domain") or "-", "lang": q.get("lang"), "type": q.get("type", "generated"),
              "kind": q.get("kind"), "expected_route": exp, "route": route,
+             "format": q.get("format") or "-", "doc": q.get("doc") or "-",
              "route_ok": float(route == exp) if a.get("mode") != "general" else None,
              "domain_ok": (float(bool(gdoms & rdoms)) if exp == "law" and route == "law" and golds else None),
              "ctx_hit_chunk": c_chunk, "ctx_hit_group": c_group,
@@ -381,6 +396,7 @@ def report(run_dir, test_path):
     summary = {}
     for by, title in [(["variant"], "Overall"), (["model", "effort", "tech"], "By setting"),
                       (["domain"], "By domain"), (["lang"], "By language"), (["type"], "By question type"),
+                      (["format", "lang"], "By file format (file questions only; '-' = no file)"),
                       (["expected_route", "route"], "Routing (expected vs actual)")]:
         recs = summarize(rows, by, METRICS)
         summary["/".join(by)] = recs

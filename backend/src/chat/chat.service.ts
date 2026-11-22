@@ -204,6 +204,15 @@ export class ChatService {
     }
   }
 
+  /**
+   * Benchmark only: the file hint the router gets, built from mid-effort passages so a cached
+   * router decision does not depend on the answer setting. Not used by the app itself.
+   */
+  async routingFileHint(messages: MessageDto[], file: FileContext): Promise<string | null> {
+    const f = await this.filePassages(messages, { model: 'mid', effort: 'mid', technicality: 'auto' }, file);
+    return f && this.fileHint(f);
+  }
+
   private fileHint(file: NonNullable<Ctx['file']>): string {
     const start = file.passages.join('\n').replace(/\s+/g, ' ').slice(0, 600);
     return `The user attached a file "${file.name}". It contains:\n${start}`;

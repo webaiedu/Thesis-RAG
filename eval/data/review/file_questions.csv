@@ -1,0 +1,1220 @@
+﻿question,lang,type,expected_route,domain,gold_chunk_ids,reference_answer,reviewer,notes,file,doc,format,recheck,team_decision,file_text,gold_text
+"According to this appointment letter, are my working hours legal?",en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s১০২,"No. The letter sets 11 working hours a day for six days, about 66 hours a week. Under section 102 of the Bangladesh Labour Act, 2006 an adult worker ordinarily works no more than 48 hours a week, and even with overtime the total may not exceed 60 hours in any week or an average of 56 hours a week over a year.",claude,,d01-appointment.docx,d01-appointment,text,yes,,"RUPA GARMENTS LTD.
+
+Plot 14, BSCIC Industrial Area, Konabari, Gazipur
+Ref: RGL/HR/2026/0412                         Date: 05 January 2026
+
+APPOINTMENT LETTER
+
+To: Ms. Shirin Akter, Sewing Machine Operator (Grade 4)
+
+We are pleased to appoint you as a permanent worker on the following terms:
+1. Monthly wage: Tk 12,800 (basic Tk 7,500).
+2. Working hours: 8:00 AM to 8:00 PM, with a one-hour lunch break, six days a week (Saturday to Thursday).
+3. Weekly holiday: Friday.
+4. Overtime beyond the above hours will be paid at the normal hourly rate of your basic wage.
+5. Casual leave: 5 days per calendar year.
+6. Either party may end this employment as per company policy.
+
+Please sign the duplicate copy as acceptance.
+
+Md. Kamal Hossain
+Manager (HR & Admin)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ১০২
+১০২। (১) কোন প্রাপ্তবয়স্ক শ্রমিক কোন প্রতিষ্ঠানে সাধারণতঃ সপ্তাহে আটচল্লিশ ঘণ্টার অধিক সময় কাজ করিবেন না বা তাহাকে দিয়ে কাজ করানো যাইবে না।(২) ধারা ১০৮ এর বিধান সাপেক্ষে, কোন প্রাপ্তবয়স্ক শ্রমিক কোন প্রতিষ্ঠানে সপ্তাহে আটচল্লিশ ঘণ্টার অধিক সময়ও কাজ করতে পারিবেনঃতবে শর্ত থাকে যে, কোন সপ্তাহে উক্তরূপ কোন শ্রমিকের মোট কর্ম-সময় ষাট ঘণ্টার অধিক হইবে না, এবং কোন বৎসরে উহা গড়ে প্রতি সপ্তাহে ছাপ্পান্ন ঘণ্টার অধিক হইবে নাঃআরও শর্ত থাকে যে, কোন সড়ক পরিবহণ প্রতিষ্ঠানে চাকুরীরত কোন শ্রমিকের সর্বমোট অতিরিক্ত কর্মঘণ্টা বৎসরে একশত পঞ্চাশ ঘণ্টার অধিক হইবে নাঃআরও শর্ত থাকে যে, বিশেষ বিশেষ শিল্পের ক্ষেত্রে, সরকার লিখিত আদেশ দ্বারা আরোপিত শর্তে, এ ধারার বিধান শিথিল করিতে অথবা উহা হইতে এককালীন সর্বোচ্চ ছয় মাস মেয়াদের জন্য অব্যাহতি দিতে পারিবে যদি সরকার এই মর্মে সন্তুষ্ট হয় যে, জনস্বার্থে/অর্থনৈতিক উন্নয়নের স্বার্থে উক্ত শিথিল/অব্যাহতি প্রয়োজনীয়।"
+My letter says overtime is paid at the normal hourly rate. Is that allowed?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s১০৮,"No. Under section 108 of the Bangladesh Labour Act, 2006, a worker who works beyond the fixed hours is entitled to overtime at twice the ordinary rate of basic wage and dearness allowance (and any ad-hoc or interim wage), not the normal rate. (This does not apply to piece-rate workers.)",claude,,d01-appointment.docx,d01-appointment,text,yes,,"RUPA GARMENTS LTD.
+
+Plot 14, BSCIC Industrial Area, Konabari, Gazipur
+Ref: RGL/HR/2026/0412                         Date: 05 January 2026
+
+APPOINTMENT LETTER
+
+To: Ms. Shirin Akter, Sewing Machine Operator (Grade 4)
+
+We are pleased to appoint you as a permanent worker on the following terms:
+1. Monthly wage: Tk 12,800 (basic Tk 7,500).
+2. Working hours: 8:00 AM to 8:00 PM, with a one-hour lunch break, six days a week (Saturday to Thursday).
+3. Weekly holiday: Friday.
+4. Overtime beyond the above hours will be paid at the normal hourly rate of your basic wage.
+5. Casual leave: 5 days per calendar year.
+6. Either party may end this employment as per company policy.
+
+Please sign the duplicate copy as acceptance.
+
+Md. Kamal Hossain
+Manager (HR & Admin)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ১০৮
+১০৮। (১) যে ক্ষেত্রে কোন শ্রমিক কোন প্রতিষ্ঠানে কোন দিন বা সপ্তাহে এই আইনের অধীন নির্দিষ্ট সময়ের অতিরিক্ত সময় কাজ করেন, সে ক্ষেত্রে তিনি অধিকাল কাজের জন্য তাহার মূল মজুরী ও মহার্ঘভাতা এবং এডহক বা অন্তবর্তী মজুরী, যদি থাকে, এর সাধারণ হারের দ্বিগুণ হারে ভাতা পাইবেন।95[ (২) ঠিকা-হার (পিস রেট) ভিত্তিতে মজুরিপ্রাপ্ত শ্রমিকগণের ক্ষেত্রে উপ-ধারা (১) এর বিধান প্রযোজ্য হইবে না।](৩) এই ধারার বিধান পালন নিশ্চিত করার লক্ষে সরকার কোন প্রতিষ্ঠান কর্তৃক রক্ষণীয় রেজিস্টার বিধিদ্বারা নির্ধারণ করিতে পারিবে।"
+"According to this appointment letter, are my working hours legal?",en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s১০২,"No. The letter sets 11 working hours a day for six days, about 66 hours a week. Under section 102 of the Bangladesh Labour Act, 2006 an adult worker ordinarily works no more than 48 hours a week, and even with overtime the total may not exceed 60 hours in any week or an average of 56 hours a week over a year.",claude,,d01-appointment-scan.pdf,d01-appointment,scan,,,"RUPA GARMENTS LTD.
+
+Plot 14, BSCIC Industrial Area, Konabari, Gazipur
+Ref: RGL/HR/2026/0412                         Date: 05 January 2026
+
+APPOINTMENT LETTER
+
+To: Ms. Shirin Akter, Sewing Machine Operator (Grade 4)
+
+We are pleased to appoint you as a permanent worker on the following terms:
+1. Monthly wage: Tk 12,800 (basic Tk 7,500).
+2. Working hours: 8:00 AM to 8:00 PM, with a one-hour lunch break, six days a week (Saturday to Thursday).
+3. Weekly holiday: Friday.
+4. Overtime beyond the above hours will be paid at the normal hourly rate of your basic wage.
+5. Casual leave: 5 days per calendar year.
+6. Either party may end this employment as per company policy.
+
+Please sign the duplicate copy as acceptance.
+
+Md. Kamal Hossain
+Manager (HR & Admin)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ১০২
+১০২। (১) কোন প্রাপ্তবয়স্ক শ্রমিক কোন প্রতিষ্ঠানে সাধারণতঃ সপ্তাহে আটচল্লিশ ঘণ্টার অধিক সময় কাজ করিবেন না বা তাহাকে দিয়ে কাজ করানো যাইবে না।(২) ধারা ১০৮ এর বিধান সাপেক্ষে, কোন প্রাপ্তবয়স্ক শ্রমিক কোন প্রতিষ্ঠানে সপ্তাহে আটচল্লিশ ঘণ্টার অধিক সময়ও কাজ করতে পারিবেনঃতবে শর্ত থাকে যে, কোন সপ্তাহে উক্তরূপ কোন শ্রমিকের মোট কর্ম-সময় ষাট ঘণ্টার অধিক হইবে না, এবং কোন বৎসরে উহা গড়ে প্রতি সপ্তাহে ছাপ্পান্ন ঘণ্টার অধিক হইবে নাঃআরও শর্ত থাকে যে, কোন সড়ক পরিবহণ প্রতিষ্ঠানে চাকুরীরত কোন শ্রমিকের সর্বমোট অতিরিক্ত কর্মঘণ্টা বৎসরে একশত পঞ্চাশ ঘণ্টার অধিক হইবে নাঃআরও শর্ত থাকে যে, বিশেষ বিশেষ শিল্পের ক্ষেত্রে, সরকার লিখিত আদেশ দ্বারা আরোপিত শর্তে, এ ধারার বিধান শিথিল করিতে অথবা উহা হইতে এককালীন সর্বোচ্চ ছয় মাস মেয়াদের জন্য অব্যাহতি দিতে পারিবে যদি সরকার এই মর্মে সন্তুষ্ট হয় যে, জনস্বার্থে/অর্থনৈতিক উন্নয়নের স্বার্থে উক্ত শিথিল/অব্যাহতি প্রয়োজনীয়।"
+My letter says overtime is paid at the normal hourly rate. Is that allowed?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s১০৮,"No. Under section 108 of the Bangladesh Labour Act, 2006, a worker who works beyond the fixed hours is entitled to overtime at twice the ordinary rate of basic wage and dearness allowance (and any ad-hoc or interim wage), not the normal rate. (This does not apply to piece-rate workers.)",claude,,d01-appointment-scan.pdf,d01-appointment,scan,,,"RUPA GARMENTS LTD.
+
+Plot 14, BSCIC Industrial Area, Konabari, Gazipur
+Ref: RGL/HR/2026/0412                         Date: 05 January 2026
+
+APPOINTMENT LETTER
+
+To: Ms. Shirin Akter, Sewing Machine Operator (Grade 4)
+
+We are pleased to appoint you as a permanent worker on the following terms:
+1. Monthly wage: Tk 12,800 (basic Tk 7,500).
+2. Working hours: 8:00 AM to 8:00 PM, with a one-hour lunch break, six days a week (Saturday to Thursday).
+3. Weekly holiday: Friday.
+4. Overtime beyond the above hours will be paid at the normal hourly rate of your basic wage.
+5. Casual leave: 5 days per calendar year.
+6. Either party may end this employment as per company policy.
+
+Please sign the duplicate copy as acceptance.
+
+Md. Kamal Hossain
+Manager (HR & Admin)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ১০৮
+১০৮। (১) যে ক্ষেত্রে কোন শ্রমিক কোন প্রতিষ্ঠানে কোন দিন বা সপ্তাহে এই আইনের অধীন নির্দিষ্ট সময়ের অতিরিক্ত সময় কাজ করেন, সে ক্ষেত্রে তিনি অধিকাল কাজের জন্য তাহার মূল মজুরী ও মহার্ঘভাতা এবং এডহক বা অন্তবর্তী মজুরী, যদি থাকে, এর সাধারণ হারের দ্বিগুণ হারে ভাতা পাইবেন।95[ (২) ঠিকা-হার (পিস রেট) ভিত্তিতে মজুরিপ্রাপ্ত শ্রমিকগণের ক্ষেত্রে উপ-ধারা (১) এর বিধান প্রযোজ্য হইবে না।](৩) এই ধারার বিধান পালন নিশ্চিত করার লক্ষে সরকার কোন প্রতিষ্ঠান কর্তৃক রক্ষণীয় রেজিস্টার বিধিদ্বারা নির্ধারণ করিতে পারিবে।"
+"According to this appointment letter, are my working hours legal?",en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s১০২,"No. The letter sets 11 working hours a day for six days, about 66 hours a week. Under section 102 of the Bangladesh Labour Act, 2006 an adult worker ordinarily works no more than 48 hours a week, and even with overtime the total may not exceed 60 hours in any week or an average of 56 hours a week over a year.",claude,,d01-appointment-photo.jpg,d01-appointment,photo,,,"RUPA GARMENTS LTD.
+
+Plot 14, BSCIC Industrial Area, Konabari, Gazipur
+Ref: RGL/HR/2026/0412                         Date: 05 January 2026
+
+APPOINTMENT LETTER
+
+To: Ms. Shirin Akter, Sewing Machine Operator (Grade 4)
+
+We are pleased to appoint you as a permanent worker on the following terms:
+1. Monthly wage: Tk 12,800 (basic Tk 7,500).
+2. Working hours: 8:00 AM to 8:00 PM, with a one-hour lunch break, six days a week (Saturday to Thursday).
+3. Weekly holiday: Friday.
+4. Overtime beyond the above hours will be paid at the normal hourly rate of your basic wage.
+5. Casual leave: 5 days per calendar year.
+6. Either party may end this employment as per company policy.
+
+Please sign the duplicate copy as acceptance.
+
+Md. Kamal Hossain
+Manager (HR & Admin)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ১০২
+১০২। (১) কোন প্রাপ্তবয়স্ক শ্রমিক কোন প্রতিষ্ঠানে সাধারণতঃ সপ্তাহে আটচল্লিশ ঘণ্টার অধিক সময় কাজ করিবেন না বা তাহাকে দিয়ে কাজ করানো যাইবে না।(২) ধারা ১০৮ এর বিধান সাপেক্ষে, কোন প্রাপ্তবয়স্ক শ্রমিক কোন প্রতিষ্ঠানে সপ্তাহে আটচল্লিশ ঘণ্টার অধিক সময়ও কাজ করতে পারিবেনঃতবে শর্ত থাকে যে, কোন সপ্তাহে উক্তরূপ কোন শ্রমিকের মোট কর্ম-সময় ষাট ঘণ্টার অধিক হইবে না, এবং কোন বৎসরে উহা গড়ে প্রতি সপ্তাহে ছাপ্পান্ন ঘণ্টার অধিক হইবে নাঃআরও শর্ত থাকে যে, কোন সড়ক পরিবহণ প্রতিষ্ঠানে চাকুরীরত কোন শ্রমিকের সর্বমোট অতিরিক্ত কর্মঘণ্টা বৎসরে একশত পঞ্চাশ ঘণ্টার অধিক হইবে নাঃআরও শর্ত থাকে যে, বিশেষ বিশেষ শিল্পের ক্ষেত্রে, সরকার লিখিত আদেশ দ্বারা আরোপিত শর্তে, এ ধারার বিধান শিথিল করিতে অথবা উহা হইতে এককালীন সর্বোচ্চ ছয় মাস মেয়াদের জন্য অব্যাহতি দিতে পারিবে যদি সরকার এই মর্মে সন্তুষ্ট হয় যে, জনস্বার্থে/অর্থনৈতিক উন্নয়নের স্বার্থে উক্ত শিথিল/অব্যাহতি প্রয়োজনীয়।"
+My letter says overtime is paid at the normal hourly rate. Is that allowed?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s১০৮,"No. Under section 108 of the Bangladesh Labour Act, 2006, a worker who works beyond the fixed hours is entitled to overtime at twice the ordinary rate of basic wage and dearness allowance (and any ad-hoc or interim wage), not the normal rate. (This does not apply to piece-rate workers.)",claude,,d01-appointment-photo.jpg,d01-appointment,photo,,,"RUPA GARMENTS LTD.
+
+Plot 14, BSCIC Industrial Area, Konabari, Gazipur
+Ref: RGL/HR/2026/0412                         Date: 05 January 2026
+
+APPOINTMENT LETTER
+
+To: Ms. Shirin Akter, Sewing Machine Operator (Grade 4)
+
+We are pleased to appoint you as a permanent worker on the following terms:
+1. Monthly wage: Tk 12,800 (basic Tk 7,500).
+2. Working hours: 8:00 AM to 8:00 PM, with a one-hour lunch break, six days a week (Saturday to Thursday).
+3. Weekly holiday: Friday.
+4. Overtime beyond the above hours will be paid at the normal hourly rate of your basic wage.
+5. Casual leave: 5 days per calendar year.
+6. Either party may end this employment as per company policy.
+
+Please sign the duplicate copy as acceptance.
+
+Md. Kamal Hossain
+Manager (HR & Admin)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ১০৮
+১০৮। (১) যে ক্ষেত্রে কোন শ্রমিক কোন প্রতিষ্ঠানে কোন দিন বা সপ্তাহে এই আইনের অধীন নির্দিষ্ট সময়ের অতিরিক্ত সময় কাজ করেন, সে ক্ষেত্রে তিনি অধিকাল কাজের জন্য তাহার মূল মজুরী ও মহার্ঘভাতা এবং এডহক বা অন্তবর্তী মজুরী, যদি থাকে, এর সাধারণ হারের দ্বিগুণ হারে ভাতা পাইবেন।95[ (২) ঠিকা-হার (পিস রেট) ভিত্তিতে মজুরিপ্রাপ্ত শ্রমিকগণের ক্ষেত্রে উপ-ধারা (১) এর বিধান প্রযোজ্য হইবে না।](৩) এই ধারার বিধান পালন নিশ্চিত করার লক্ষে সরকার কোন প্রতিষ্ঠান কর্তৃক রক্ষণীয় রেজিস্টার বিধিদ্বারা নির্ধারণ করিতে পারিবে।"
+এই চিঠিতে আমাকে মাত্র ১৫ দিনের নোটিশ দেওয়া হয়েছে। এটা কি আইনসম্মত?,bn,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৬,"না। চিঠি অনুযায়ী আপনি মাসিক মজুরিতে নিযুক্ত স্থায়ী শ্রমিক। বাংলাদেশ শ্রম আইন, ২০০৬-এর ধারা ২৬(১) অনুযায়ী মালিক এমন শ্রমিকের চাকরির অবসান করতে চাইলে একশত বিশ দিনের লিখিত নোটিশ দিতে হয়; ১৫ দিন যথেষ্ট নয়।",claude,,d02-termination.pdf,d02-termination,text,yes,,"মেসার্স নদী নিটওয়্যার লিমিটেড
+
+কাশিমপুর, গাজীপুর
+স্মারক নং: এনএনএল/প্রশা/২০২৬/৭৭                তারিখ: ১০ ফেব্রুয়ারি ২০২৬
+
+চাকরি অবসানের নোটিশ
+
+প্রতি: জনাব মোঃ রফিকুল ইসলাম, সিনিয়র অপারেটর (স্থায়ী), কার্ড নং ৪৪১৮
+
+প্রতিষ্ঠানের পুনর্গঠনের কারণে কর্তৃপক্ষ আপনার চাকরির অবসান করার সিদ্ধান্ত নিয়েছে। এই নোটিশ প্রাপ্তির ১৫ (পনের) দিন পর অর্থাৎ ২৫ ফেব্রুয়ারি ২০২৬ তারিখ হইতে আপনার চাকরির অবসান হইবে। আপনার মাসিক মজুরি ১৪,২০০ টাকা। আপনার পাওনাদি হিসাব বিভাগ হইতে বুঝিয়া লইবেন।
+
+স্বাক্ষর
+মোসাঃ নাসরিন সুলতানা
+উপ-মহাব্যবস্থাপক (মানবসম্পদ)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৬
+২৬৷ (১) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের তেগত্রে, একশত বিশ দিনের,(খ) অন্য শ্রমিকের তেগত্রে, ষাট দিনের,লিখিত নোটিশ প্রদান করিয়া কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন৷(২) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের ক্ষেত্রে, ত্রিশ দিনের,(খ) অন্য শ্রমিকের ক্ষেত্রে, চৌদ্দ দিনের,লিখিত নোটিশ প্রদান করিয়া কোন অস্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন, যদি না এই অবসান যে অস্থায়ী কাজ সম্পাদনের জন্য শ্রমিককে নিযুক্ত করা হইয়াছে উহা সম্পূর্ণ হওয়া, বন্ধ হওয়া, বিলুপ্ত হওয়া বা পরিত্যক্ত হওয়ার কারণে হয়৷(৩) যে ক্ষেত্রে মালিক বিনা নোটিশে কোন শ্রমিকের চাকুরীর অবসান করিতে চাহেন সে ক্ষেত্রে, তিনি উপ-ধারা (১) অথবা (২) এর অধীন, প্রদেয় নোটিশের পরিবর্তে নোটিশ মেয়াদের জন্য মজুরী প্রদান করিয়া ইহা করিতে পারিবেন৷(৪) যে ক্ষেত্রে এই ধারার অধীন কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করা হয় সেক্ষেত্রে, মালিক শ্রমিককে তাহার প্রত্যেক সম্পূর্ণ বত্সরের চাকুরীর জন্য ক্ষতিপূরণ হিসাবে ত্রিশ দিনের মজুরী, অথবা গ্রাচ্যুইটি, যদি প্রদেয় হয়, যাহা অধিক হইবে, প্রদান করিবেন এবং এই ক্ষতিপূরণ এই আইনের অধীন শ্রমিককে প্রদেয় অন্যান্য সুবিধার অতিরিক্ত হইবে৷"
+"মালিক যদি পুরো নোটিশ না দিয়ে আমাকে বিদায় করতে চায়, তাহলে আমাকে কী দিতে হবে?",bn,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৬,"বাংলাদেশ শ্রম আইন, ২০০৬-এর ধারা ২৬(৩) অনুযায়ী মালিক বিনা নোটিশে চাকরির অবসান করতে চাইলে নোটিশের পরিবর্তে নোটিশ মেয়াদের (এখানে একশত বিশ দিনের) মজুরি দিতে হবে।",claude,,d02-termination.pdf,d02-termination,text,yes,,"মেসার্স নদী নিটওয়্যার লিমিটেড
+
+কাশিমপুর, গাজীপুর
+স্মারক নং: এনএনএল/প্রশা/২০২৬/৭৭                তারিখ: ১০ ফেব্রুয়ারি ২০২৬
+
+চাকরি অবসানের নোটিশ
+
+প্রতি: জনাব মোঃ রফিকুল ইসলাম, সিনিয়র অপারেটর (স্থায়ী), কার্ড নং ৪৪১৮
+
+প্রতিষ্ঠানের পুনর্গঠনের কারণে কর্তৃপক্ষ আপনার চাকরির অবসান করার সিদ্ধান্ত নিয়েছে। এই নোটিশ প্রাপ্তির ১৫ (পনের) দিন পর অর্থাৎ ২৫ ফেব্রুয়ারি ২০২৬ তারিখ হইতে আপনার চাকরির অবসান হইবে। আপনার মাসিক মজুরি ১৪,২০০ টাকা। আপনার পাওনাদি হিসাব বিভাগ হইতে বুঝিয়া লইবেন।
+
+স্বাক্ষর
+মোসাঃ নাসরিন সুলতানা
+উপ-মহাব্যবস্থাপক (মানবসম্পদ)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৬
+২৬৷ (১) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের তেগত্রে, একশত বিশ দিনের,(খ) অন্য শ্রমিকের তেগত্রে, ষাট দিনের,লিখিত নোটিশ প্রদান করিয়া কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন৷(২) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের ক্ষেত্রে, ত্রিশ দিনের,(খ) অন্য শ্রমিকের ক্ষেত্রে, চৌদ্দ দিনের,লিখিত নোটিশ প্রদান করিয়া কোন অস্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন, যদি না এই অবসান যে অস্থায়ী কাজ সম্পাদনের জন্য শ্রমিককে নিযুক্ত করা হইয়াছে উহা সম্পূর্ণ হওয়া, বন্ধ হওয়া, বিলুপ্ত হওয়া বা পরিত্যক্ত হওয়ার কারণে হয়৷(৩) যে ক্ষেত্রে মালিক বিনা নোটিশে কোন শ্রমিকের চাকুরীর অবসান করিতে চাহেন সে ক্ষেত্রে, তিনি উপ-ধারা (১) অথবা (২) এর অধীন, প্রদেয় নোটিশের পরিবর্তে নোটিশ মেয়াদের জন্য মজুরী প্রদান করিয়া ইহা করিতে পারিবেন৷(৪) যে ক্ষেত্রে এই ধারার অধীন কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করা হয় সেক্ষেত্রে, মালিক শ্রমিককে তাহার প্রত্যেক সম্পূর্ণ বত্সরের চাকুরীর জন্য ক্ষতিপূরণ হিসাবে ত্রিশ দিনের মজুরী, অথবা গ্রাচ্যুইটি, যদি প্রদেয় হয়, যাহা অধিক হইবে, প্রদান করিবেন এবং এই ক্ষতিপূরণ এই আইনের অধীন শ্রমিককে প্রদেয় অন্যান্য সুবিধার অতিরিক্ত হইবে৷"
+এই চিঠিতে আমাকে মাত্র ১৫ দিনের নোটিশ দেওয়া হয়েছে। এটা কি আইনসম্মত?,bn,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৬,"না। চিঠি অনুযায়ী আপনি মাসিক মজুরিতে নিযুক্ত স্থায়ী শ্রমিক। বাংলাদেশ শ্রম আইন, ২০০৬-এর ধারা ২৬(১) অনুযায়ী মালিক এমন শ্রমিকের চাকরির অবসান করতে চাইলে একশত বিশ দিনের লিখিত নোটিশ দিতে হয়; ১৫ দিন যথেষ্ট নয়।",claude,,d02-termination-scan.pdf,d02-termination,scan,,,"মেসার্স নদী নিটওয়্যার লিমিটেড
+
+কাশিমপুর, গাজীপুর
+স্মারক নং: এনএনএল/প্রশা/২০২৬/৭৭                তারিখ: ১০ ফেব্রুয়ারি ২০২৬
+
+চাকরি অবসানের নোটিশ
+
+প্রতি: জনাব মোঃ রফিকুল ইসলাম, সিনিয়র অপারেটর (স্থায়ী), কার্ড নং ৪৪১৮
+
+প্রতিষ্ঠানের পুনর্গঠনের কারণে কর্তৃপক্ষ আপনার চাকরির অবসান করার সিদ্ধান্ত নিয়েছে। এই নোটিশ প্রাপ্তির ১৫ (পনের) দিন পর অর্থাৎ ২৫ ফেব্রুয়ারি ২০২৬ তারিখ হইতে আপনার চাকরির অবসান হইবে। আপনার মাসিক মজুরি ১৪,২০০ টাকা। আপনার পাওনাদি হিসাব বিভাগ হইতে বুঝিয়া লইবেন।
+
+স্বাক্ষর
+মোসাঃ নাসরিন সুলতানা
+উপ-মহাব্যবস্থাপক (মানবসম্পদ)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৬
+২৬৷ (১) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের তেগত্রে, একশত বিশ দিনের,(খ) অন্য শ্রমিকের তেগত্রে, ষাট দিনের,লিখিত নোটিশ প্রদান করিয়া কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন৷(২) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের ক্ষেত্রে, ত্রিশ দিনের,(খ) অন্য শ্রমিকের ক্ষেত্রে, চৌদ্দ দিনের,লিখিত নোটিশ প্রদান করিয়া কোন অস্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন, যদি না এই অবসান যে অস্থায়ী কাজ সম্পাদনের জন্য শ্রমিককে নিযুক্ত করা হইয়াছে উহা সম্পূর্ণ হওয়া, বন্ধ হওয়া, বিলুপ্ত হওয়া বা পরিত্যক্ত হওয়ার কারণে হয়৷(৩) যে ক্ষেত্রে মালিক বিনা নোটিশে কোন শ্রমিকের চাকুরীর অবসান করিতে চাহেন সে ক্ষেত্রে, তিনি উপ-ধারা (১) অথবা (২) এর অধীন, প্রদেয় নোটিশের পরিবর্তে নোটিশ মেয়াদের জন্য মজুরী প্রদান করিয়া ইহা করিতে পারিবেন৷(৪) যে ক্ষেত্রে এই ধারার অধীন কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করা হয় সেক্ষেত্রে, মালিক শ্রমিককে তাহার প্রত্যেক সম্পূর্ণ বত্সরের চাকুরীর জন্য ক্ষতিপূরণ হিসাবে ত্রিশ দিনের মজুরী, অথবা গ্রাচ্যুইটি, যদি প্রদেয় হয়, যাহা অধিক হইবে, প্রদান করিবেন এবং এই ক্ষতিপূরণ এই আইনের অধীন শ্রমিককে প্রদেয় অন্যান্য সুবিধার অতিরিক্ত হইবে৷"
+"মালিক যদি পুরো নোটিশ না দিয়ে আমাকে বিদায় করতে চায়, তাহলে আমাকে কী দিতে হবে?",bn,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৬,"বাংলাদেশ শ্রম আইন, ২০০৬-এর ধারা ২৬(৩) অনুযায়ী মালিক বিনা নোটিশে চাকরির অবসান করতে চাইলে নোটিশের পরিবর্তে নোটিশ মেয়াদের (এখানে একশত বিশ দিনের) মজুরি দিতে হবে।",claude,,d02-termination-scan.pdf,d02-termination,scan,,,"মেসার্স নদী নিটওয়্যার লিমিটেড
+
+কাশিমপুর, গাজীপুর
+স্মারক নং: এনএনএল/প্রশা/২০২৬/৭৭                তারিখ: ১০ ফেব্রুয়ারি ২০২৬
+
+চাকরি অবসানের নোটিশ
+
+প্রতি: জনাব মোঃ রফিকুল ইসলাম, সিনিয়র অপারেটর (স্থায়ী), কার্ড নং ৪৪১৮
+
+প্রতিষ্ঠানের পুনর্গঠনের কারণে কর্তৃপক্ষ আপনার চাকরির অবসান করার সিদ্ধান্ত নিয়েছে। এই নোটিশ প্রাপ্তির ১৫ (পনের) দিন পর অর্থাৎ ২৫ ফেব্রুয়ারি ২০২৬ তারিখ হইতে আপনার চাকরির অবসান হইবে। আপনার মাসিক মজুরি ১৪,২০০ টাকা। আপনার পাওনাদি হিসাব বিভাগ হইতে বুঝিয়া লইবেন।
+
+স্বাক্ষর
+মোসাঃ নাসরিন সুলতানা
+উপ-মহাব্যবস্থাপক (মানবসম্পদ)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৬
+২৬৷ (১) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের তেগত্রে, একশত বিশ দিনের,(খ) অন্য শ্রমিকের তেগত্রে, ষাট দিনের,লিখিত নোটিশ প্রদান করিয়া কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন৷(২) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের ক্ষেত্রে, ত্রিশ দিনের,(খ) অন্য শ্রমিকের ক্ষেত্রে, চৌদ্দ দিনের,লিখিত নোটিশ প্রদান করিয়া কোন অস্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন, যদি না এই অবসান যে অস্থায়ী কাজ সম্পাদনের জন্য শ্রমিককে নিযুক্ত করা হইয়াছে উহা সম্পূর্ণ হওয়া, বন্ধ হওয়া, বিলুপ্ত হওয়া বা পরিত্যক্ত হওয়ার কারণে হয়৷(৩) যে ক্ষেত্রে মালিক বিনা নোটিশে কোন শ্রমিকের চাকুরীর অবসান করিতে চাহেন সে ক্ষেত্রে, তিনি উপ-ধারা (১) অথবা (২) এর অধীন, প্রদেয় নোটিশের পরিবর্তে নোটিশ মেয়াদের জন্য মজুরী প্রদান করিয়া ইহা করিতে পারিবেন৷(৪) যে ক্ষেত্রে এই ধারার অধীন কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করা হয় সেক্ষেত্রে, মালিক শ্রমিককে তাহার প্রত্যেক সম্পূর্ণ বত্সরের চাকুরীর জন্য ক্ষতিপূরণ হিসাবে ত্রিশ দিনের মজুরী, অথবা গ্রাচ্যুইটি, যদি প্রদেয় হয়, যাহা অধিক হইবে, প্রদান করিবেন এবং এই ক্ষতিপূরণ এই আইনের অধীন শ্রমিককে প্রদেয় অন্যান্য সুবিধার অতিরিক্ত হইবে৷"
+এই চিঠিতে আমাকে মাত্র ১৫ দিনের নোটিশ দেওয়া হয়েছে। এটা কি আইনসম্মত?,bn,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৬,"না। চিঠি অনুযায়ী আপনি মাসিক মজুরিতে নিযুক্ত স্থায়ী শ্রমিক। বাংলাদেশ শ্রম আইন, ২০০৬-এর ধারা ২৬(১) অনুযায়ী মালিক এমন শ্রমিকের চাকরির অবসান করতে চাইলে একশত বিশ দিনের লিখিত নোটিশ দিতে হয়; ১৫ দিন যথেষ্ট নয়।",claude,,d02-termination-photo.jpg,d02-termination,photo,,,"মেসার্স নদী নিটওয়্যার লিমিটেড
+
+কাশিমপুর, গাজীপুর
+স্মারক নং: এনএনএল/প্রশা/২০২৬/৭৭                তারিখ: ১০ ফেব্রুয়ারি ২০২৬
+
+চাকরি অবসানের নোটিশ
+
+প্রতি: জনাব মোঃ রফিকুল ইসলাম, সিনিয়র অপারেটর (স্থায়ী), কার্ড নং ৪৪১৮
+
+প্রতিষ্ঠানের পুনর্গঠনের কারণে কর্তৃপক্ষ আপনার চাকরির অবসান করার সিদ্ধান্ত নিয়েছে। এই নোটিশ প্রাপ্তির ১৫ (পনের) দিন পর অর্থাৎ ২৫ ফেব্রুয়ারি ২০২৬ তারিখ হইতে আপনার চাকরির অবসান হইবে। আপনার মাসিক মজুরি ১৪,২০০ টাকা। আপনার পাওনাদি হিসাব বিভাগ হইতে বুঝিয়া লইবেন।
+
+স্বাক্ষর
+মোসাঃ নাসরিন সুলতানা
+উপ-মহাব্যবস্থাপক (মানবসম্পদ)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৬
+২৬৷ (১) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের তেগত্রে, একশত বিশ দিনের,(খ) অন্য শ্রমিকের তেগত্রে, ষাট দিনের,লিখিত নোটিশ প্রদান করিয়া কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন৷(২) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের ক্ষেত্রে, ত্রিশ দিনের,(খ) অন্য শ্রমিকের ক্ষেত্রে, চৌদ্দ দিনের,লিখিত নোটিশ প্রদান করিয়া কোন অস্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন, যদি না এই অবসান যে অস্থায়ী কাজ সম্পাদনের জন্য শ্রমিককে নিযুক্ত করা হইয়াছে উহা সম্পূর্ণ হওয়া, বন্ধ হওয়া, বিলুপ্ত হওয়া বা পরিত্যক্ত হওয়ার কারণে হয়৷(৩) যে ক্ষেত্রে মালিক বিনা নোটিশে কোন শ্রমিকের চাকুরীর অবসান করিতে চাহেন সে ক্ষেত্রে, তিনি উপ-ধারা (১) অথবা (২) এর অধীন, প্রদেয় নোটিশের পরিবর্তে নোটিশ মেয়াদের জন্য মজুরী প্রদান করিয়া ইহা করিতে পারিবেন৷(৪) যে ক্ষেত্রে এই ধারার অধীন কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করা হয় সেক্ষেত্রে, মালিক শ্রমিককে তাহার প্রত্যেক সম্পূর্ণ বত্সরের চাকুরীর জন্য ক্ষতিপূরণ হিসাবে ত্রিশ দিনের মজুরী, অথবা গ্রাচ্যুইটি, যদি প্রদেয় হয়, যাহা অধিক হইবে, প্রদান করিবেন এবং এই ক্ষতিপূরণ এই আইনের অধীন শ্রমিককে প্রদেয় অন্যান্য সুবিধার অতিরিক্ত হইবে৷"
+"মালিক যদি পুরো নোটিশ না দিয়ে আমাকে বিদায় করতে চায়, তাহলে আমাকে কী দিতে হবে?",bn,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৬,"বাংলাদেশ শ্রম আইন, ২০০৬-এর ধারা ২৬(৩) অনুযায়ী মালিক বিনা নোটিশে চাকরির অবসান করতে চাইলে নোটিশের পরিবর্তে নোটিশ মেয়াদের (এখানে একশত বিশ দিনের) মজুরি দিতে হবে।",claude,,d02-termination-photo.jpg,d02-termination,photo,,,"মেসার্স নদী নিটওয়্যার লিমিটেড
+
+কাশিমপুর, গাজীপুর
+স্মারক নং: এনএনএল/প্রশা/২০২৬/৭৭                তারিখ: ১০ ফেব্রুয়ারি ২০২৬
+
+চাকরি অবসানের নোটিশ
+
+প্রতি: জনাব মোঃ রফিকুল ইসলাম, সিনিয়র অপারেটর (স্থায়ী), কার্ড নং ৪৪১৮
+
+প্রতিষ্ঠানের পুনর্গঠনের কারণে কর্তৃপক্ষ আপনার চাকরির অবসান করার সিদ্ধান্ত নিয়েছে। এই নোটিশ প্রাপ্তির ১৫ (পনের) দিন পর অর্থাৎ ২৫ ফেব্রুয়ারি ২০২৬ তারিখ হইতে আপনার চাকরির অবসান হইবে। আপনার মাসিক মজুরি ১৪,২০০ টাকা। আপনার পাওনাদি হিসাব বিভাগ হইতে বুঝিয়া লইবেন।
+
+স্বাক্ষর
+মোসাঃ নাসরিন সুলতানা
+উপ-মহাব্যবস্থাপক (মানবসম্পদ)","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৬
+২৬৷ (১) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের তেগত্রে, একশত বিশ দিনের,(খ) অন্য শ্রমিকের তেগত্রে, ষাট দিনের,লিখিত নোটিশ প্রদান করিয়া কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন৷(২) এই অধ্যায়ের অন্যত্র বিধৃত কোন পন্থা ছাড়াও মালিক-(ক) মাসিক মজুরীর ভিত্তিতে নিয়োজিত শ্রমিকের ক্ষেত্রে, ত্রিশ দিনের,(খ) অন্য শ্রমিকের ক্ষেত্রে, চৌদ্দ দিনের,লিখিত নোটিশ প্রদান করিয়া কোন অস্থায়ী শ্রমিকের চাকুরীর অবসান করিতে পারিবেন, যদি না এই অবসান যে অস্থায়ী কাজ সম্পাদনের জন্য শ্রমিককে নিযুক্ত করা হইয়াছে উহা সম্পূর্ণ হওয়া, বন্ধ হওয়া, বিলুপ্ত হওয়া বা পরিত্যক্ত হওয়ার কারণে হয়৷(৩) যে ক্ষেত্রে মালিক বিনা নোটিশে কোন শ্রমিকের চাকুরীর অবসান করিতে চাহেন সে ক্ষেত্রে, তিনি উপ-ধারা (১) অথবা (২) এর অধীন, প্রদেয় নোটিশের পরিবর্তে নোটিশ মেয়াদের জন্য মজুরী প্রদান করিয়া ইহা করিতে পারিবেন৷(৪) যে ক্ষেত্রে এই ধারার অধীন কোন স্থায়ী শ্রমিকের চাকুরীর অবসান করা হয় সেক্ষেত্রে, মালিক শ্রমিককে তাহার প্রত্যেক সম্পূর্ণ বত্সরের চাকুরীর জন্য ক্ষতিপূরণ হিসাবে ত্রিশ দিনের মজুরী, অথবা গ্রাচ্যুইটি, যদি প্রদেয় হয়, যাহা অধিক হইবে, প্রদান করিবেন এবং এই ক্ষতিপূরণ এই আইনের অধীন শ্রমিককে প্রদেয় অন্যান্য সুবিধার অতিরিক্ত হইবে৷"
+The company says I get only 4 weeks of unpaid maternity leave. What does the law say?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s৪৬;বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s৪৮,"Under section 46 of the Bangladesh Labour Act, 2006, a woman worker who has worked at least six months for the employer before delivery is entitled to maternity benefit for 8 weeks before and 8 weeks after delivery (unless she already has two or more living children). By the memo she joined on 01 July 2025, so she will have worked more than six months by April 2026. Under section 48 the benefit is paid fully in cash at her average daily, weekly or monthly wage.",claude,,d03-maternity.pdf,d03-maternity,text,yes,,"GREENFIELD APPARELS LTD.
+
+Ashulia, Savar, Dhaka
+Office Memo No. GAL/ADM/2026/031                Date: 02 March 2026
+
+Subject: Reply to maternity leave application
+
+To: Mrs. Mitu Rani Das, Quality Inspector (joined 01 July 2025)
+
+With reference to your application dated 25 February 2026, management has decided that you may take
+4 (four) weeks of maternity leave without pay from your expected delivery date of 20 April 2026.
+No maternity benefit will be paid as per company policy. You must rejoin on 18 May 2026, failing which
+your job will be considered abandoned.
+
+Abdul Mannan
+Assistant Manager, Administration","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ৪৬
+৪৬৷ (১) প্রত্যেক মহিলা শ্রমিক তাহার মালিকের নিকট হইতে তাহার সন্ত্মান প্রসবের সম্ভাব্য তারিখের অব্যবহিত পূর্ববর্তী আট সপ্তাহ এবং সন্ত্মান প্রসবের অব্যবহিত পরবর্তী আট সপ্তাহের জন্য প্রসূতি কল্যাণ সুবিধা পাইবার অধিকারী হইবেন, এবং তাহার মালিক তাহাকে এই সুবিধা প্রদান করিতে বাধ্য থাকিবেনঃতবে শর্ত থাকে যে, কোন মহিলা উক্তরূপ সুবিধা পাইবেন না যদি না তিনি তাহার মালিকের অধীন তাহার সন্ত্মান প্রসবের অব্যবহিত পূর্বে অন্যুন ছয় মাস কাজ করিয়া থাকেন৷(২) কোন মহিলাকে উক্তরূপ সুবিধা প্রদেয় হইবে না যদি তাহার সন্ত্মান প্রসবের সময় তাহার দুই বা ততোধিক সন্ত্মান জীবিত থাকে, তবে এতেগত্রে তিনি কোন ছুটি পাইবার অধিকারী হইলে তাহা পাইবেন৷
+
+বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ৪৮
+৪৮৷ (১) এই62[ অধ্যায়ের] অধীন যে প্রসূতি কল্যাণ সুবিধা প্রদেয় হইবে উহা উপ-ধারা (২) এ উল্লিখিত পন্থায় গণনা করিয়া দৈনিক, সাপ্তাহিক বা মাসিক, যে তেগত্রে যাহা প্রযোজ্য, গড় মজুরী হারে সম্পূর্ণ নগদে প্রদান করিতে হইবে৷(২) উপ-ধারা (১) এর প্রয়োজনে দৈনিক, সাপ্তাহিক বা মাসিক গড় মজুরী গণনার জন্য সংশ্লিষ্ট মহিলা কর্তৃক এই অধ্যায়ের অধীন নোটিশ প্রদানের অব্যবহিত পূর্ববর্তী তিন মাসে তাহার প্রাপ্ত মোট মজুরীকে উক্ত সময়ে তাহার মোট প্রকৃত কাজের দিনগুলি দ্বারা ভাগ করিতে হইবে৷"
+Can the company be punished for refusing to pay my maternity benefit?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৮৬,"Yes. Under section 286 of the Bangladesh Labour Act, 2006, an employer who deprives a woman worker of maternity benefit is punishable with a fine up to twenty-five thousand taka; the court may order the fine (or part of it) to be paid to her as compensation and will order the employer to give her the benefit she was denied.",claude,,d03-maternity.pdf,d03-maternity,text,yes,,"GREENFIELD APPARELS LTD.
+
+Ashulia, Savar, Dhaka
+Office Memo No. GAL/ADM/2026/031                Date: 02 March 2026
+
+Subject: Reply to maternity leave application
+
+To: Mrs. Mitu Rani Das, Quality Inspector (joined 01 July 2025)
+
+With reference to your application dated 25 February 2026, management has decided that you may take
+4 (four) weeks of maternity leave without pay from your expected delivery date of 20 April 2026.
+No maternity benefit will be paid as per company policy. You must rejoin on 18 May 2026, failing which
+your job will be considered abandoned.
+
+Abdul Mannan
+Assistant Manager, Administration","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৮৬
+২৮৬৷ (১) কোন মালিক চতুর্থ অধ্যায়ের204[ বিধান অনুযায়ী কোনো মহিলা শ্রমিককে প্রসূতি কল্যাণ সুবিধা হইতে বঞ্চিত করিলে ], তিনি205[ পঁচিশ হাজার] টাকা পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন৷(২) যে ক্ষেত্রে আদালত উপ-ধারা (১) এর অধীন কোন অর্থদণ্ড আরোপ করে সে ক্ষেত্রে, আদালত উহার রায় প্রদানকালে আদায়কৃত দণ্ডের অর্থ সম্পূর্র্র্ণ বা উহার কোন অংশ সংশ্লিষ্ট মহিলাকে, যে কারণে উক্ত অর্থদণ্ড আরোপ করা হইয়াছে সে কারণ হইতে উদ্ভুত ক্ষতির জন্য, ক্ষতিপূরণ হিসাবে প্রদানের আদেশ দিতে পারিবে৷206[ (৩) আদালত, উপ-ধারা (২) এর অতিরিক্ত হিসাবে, চতুর্থ অধ্যায়ের যে সুবিধা হইতে শ্রমিককে বঞ্চিত করা হইয়াছে, সেই সুবিধা প্রদানের জন্য সংশ্লিষ্ট মালিককে আদেশ প্রদান করিবে।]"
+The company says I get only 4 weeks of unpaid maternity leave. What does the law say?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s৪৬;বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s৪৮,"Under section 46 of the Bangladesh Labour Act, 2006, a woman worker who has worked at least six months for the employer before delivery is entitled to maternity benefit for 8 weeks before and 8 weeks after delivery (unless she already has two or more living children). By the memo she joined on 01 July 2025, so she will have worked more than six months by April 2026. Under section 48 the benefit is paid fully in cash at her average daily, weekly or monthly wage.",claude,,d03-maternity-scan.pdf,d03-maternity,scan,,,"GREENFIELD APPARELS LTD.
+
+Ashulia, Savar, Dhaka
+Office Memo No. GAL/ADM/2026/031                Date: 02 March 2026
+
+Subject: Reply to maternity leave application
+
+To: Mrs. Mitu Rani Das, Quality Inspector (joined 01 July 2025)
+
+With reference to your application dated 25 February 2026, management has decided that you may take
+4 (four) weeks of maternity leave without pay from your expected delivery date of 20 April 2026.
+No maternity benefit will be paid as per company policy. You must rejoin on 18 May 2026, failing which
+your job will be considered abandoned.
+
+Abdul Mannan
+Assistant Manager, Administration","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ৪৬
+৪৬৷ (১) প্রত্যেক মহিলা শ্রমিক তাহার মালিকের নিকট হইতে তাহার সন্ত্মান প্রসবের সম্ভাব্য তারিখের অব্যবহিত পূর্ববর্তী আট সপ্তাহ এবং সন্ত্মান প্রসবের অব্যবহিত পরবর্তী আট সপ্তাহের জন্য প্রসূতি কল্যাণ সুবিধা পাইবার অধিকারী হইবেন, এবং তাহার মালিক তাহাকে এই সুবিধা প্রদান করিতে বাধ্য থাকিবেনঃতবে শর্ত থাকে যে, কোন মহিলা উক্তরূপ সুবিধা পাইবেন না যদি না তিনি তাহার মালিকের অধীন তাহার সন্ত্মান প্রসবের অব্যবহিত পূর্বে অন্যুন ছয় মাস কাজ করিয়া থাকেন৷(২) কোন মহিলাকে উক্তরূপ সুবিধা প্রদেয় হইবে না যদি তাহার সন্ত্মান প্রসবের সময় তাহার দুই বা ততোধিক সন্ত্মান জীবিত থাকে, তবে এতেগত্রে তিনি কোন ছুটি পাইবার অধিকারী হইলে তাহা পাইবেন৷
+
+বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ৪৮
+৪৮৷ (১) এই62[ অধ্যায়ের] অধীন যে প্রসূতি কল্যাণ সুবিধা প্রদেয় হইবে উহা উপ-ধারা (২) এ উল্লিখিত পন্থায় গণনা করিয়া দৈনিক, সাপ্তাহিক বা মাসিক, যে তেগত্রে যাহা প্রযোজ্য, গড় মজুরী হারে সম্পূর্ণ নগদে প্রদান করিতে হইবে৷(২) উপ-ধারা (১) এর প্রয়োজনে দৈনিক, সাপ্তাহিক বা মাসিক গড় মজুরী গণনার জন্য সংশ্লিষ্ট মহিলা কর্তৃক এই অধ্যায়ের অধীন নোটিশ প্রদানের অব্যবহিত পূর্ববর্তী তিন মাসে তাহার প্রাপ্ত মোট মজুরীকে উক্ত সময়ে তাহার মোট প্রকৃত কাজের দিনগুলি দ্বারা ভাগ করিতে হইবে৷"
+Can the company be punished for refusing to pay my maternity benefit?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৮৬,"Yes. Under section 286 of the Bangladesh Labour Act, 2006, an employer who deprives a woman worker of maternity benefit is punishable with a fine up to twenty-five thousand taka; the court may order the fine (or part of it) to be paid to her as compensation and will order the employer to give her the benefit she was denied.",claude,,d03-maternity-scan.pdf,d03-maternity,scan,,,"GREENFIELD APPARELS LTD.
+
+Ashulia, Savar, Dhaka
+Office Memo No. GAL/ADM/2026/031                Date: 02 March 2026
+
+Subject: Reply to maternity leave application
+
+To: Mrs. Mitu Rani Das, Quality Inspector (joined 01 July 2025)
+
+With reference to your application dated 25 February 2026, management has decided that you may take
+4 (four) weeks of maternity leave without pay from your expected delivery date of 20 April 2026.
+No maternity benefit will be paid as per company policy. You must rejoin on 18 May 2026, failing which
+your job will be considered abandoned.
+
+Abdul Mannan
+Assistant Manager, Administration","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৮৬
+২৮৬৷ (১) কোন মালিক চতুর্থ অধ্যায়ের204[ বিধান অনুযায়ী কোনো মহিলা শ্রমিককে প্রসূতি কল্যাণ সুবিধা হইতে বঞ্চিত করিলে ], তিনি205[ পঁচিশ হাজার] টাকা পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন৷(২) যে ক্ষেত্রে আদালত উপ-ধারা (১) এর অধীন কোন অর্থদণ্ড আরোপ করে সে ক্ষেত্রে, আদালত উহার রায় প্রদানকালে আদায়কৃত দণ্ডের অর্থ সম্পূর্র্র্ণ বা উহার কোন অংশ সংশ্লিষ্ট মহিলাকে, যে কারণে উক্ত অর্থদণ্ড আরোপ করা হইয়াছে সে কারণ হইতে উদ্ভুত ক্ষতির জন্য, ক্ষতিপূরণ হিসাবে প্রদানের আদেশ দিতে পারিবে৷206[ (৩) আদালত, উপ-ধারা (২) এর অতিরিক্ত হিসাবে, চতুর্থ অধ্যায়ের যে সুবিধা হইতে শ্রমিককে বঞ্চিত করা হইয়াছে, সেই সুবিধা প্রদানের জন্য সংশ্লিষ্ট মালিককে আদেশ প্রদান করিবে।]"
+The company says I get only 4 weeks of unpaid maternity leave. What does the law say?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s৪৬;বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s৪৮,"Under section 46 of the Bangladesh Labour Act, 2006, a woman worker who has worked at least six months for the employer before delivery is entitled to maternity benefit for 8 weeks before and 8 weeks after delivery (unless she already has two or more living children). By the memo she joined on 01 July 2025, so she will have worked more than six months by April 2026. Under section 48 the benefit is paid fully in cash at her average daily, weekly or monthly wage.",claude,,d03-maternity-photo.jpg,d03-maternity,photo,,,"GREENFIELD APPARELS LTD.
+
+Ashulia, Savar, Dhaka
+Office Memo No. GAL/ADM/2026/031                Date: 02 March 2026
+
+Subject: Reply to maternity leave application
+
+To: Mrs. Mitu Rani Das, Quality Inspector (joined 01 July 2025)
+
+With reference to your application dated 25 February 2026, management has decided that you may take
+4 (four) weeks of maternity leave without pay from your expected delivery date of 20 April 2026.
+No maternity benefit will be paid as per company policy. You must rejoin on 18 May 2026, failing which
+your job will be considered abandoned.
+
+Abdul Mannan
+Assistant Manager, Administration","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ৪৬
+৪৬৷ (১) প্রত্যেক মহিলা শ্রমিক তাহার মালিকের নিকট হইতে তাহার সন্ত্মান প্রসবের সম্ভাব্য তারিখের অব্যবহিত পূর্ববর্তী আট সপ্তাহ এবং সন্ত্মান প্রসবের অব্যবহিত পরবর্তী আট সপ্তাহের জন্য প্রসূতি কল্যাণ সুবিধা পাইবার অধিকারী হইবেন, এবং তাহার মালিক তাহাকে এই সুবিধা প্রদান করিতে বাধ্য থাকিবেনঃতবে শর্ত থাকে যে, কোন মহিলা উক্তরূপ সুবিধা পাইবেন না যদি না তিনি তাহার মালিকের অধীন তাহার সন্ত্মান প্রসবের অব্যবহিত পূর্বে অন্যুন ছয় মাস কাজ করিয়া থাকেন৷(২) কোন মহিলাকে উক্তরূপ সুবিধা প্রদেয় হইবে না যদি তাহার সন্ত্মান প্রসবের সময় তাহার দুই বা ততোধিক সন্ত্মান জীবিত থাকে, তবে এতেগত্রে তিনি কোন ছুটি পাইবার অধিকারী হইলে তাহা পাইবেন৷
+
+বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ৪৮
+৪৮৷ (১) এই62[ অধ্যায়ের] অধীন যে প্রসূতি কল্যাণ সুবিধা প্রদেয় হইবে উহা উপ-ধারা (২) এ উল্লিখিত পন্থায় গণনা করিয়া দৈনিক, সাপ্তাহিক বা মাসিক, যে তেগত্রে যাহা প্রযোজ্য, গড় মজুরী হারে সম্পূর্ণ নগদে প্রদান করিতে হইবে৷(২) উপ-ধারা (১) এর প্রয়োজনে দৈনিক, সাপ্তাহিক বা মাসিক গড় মজুরী গণনার জন্য সংশ্লিষ্ট মহিলা কর্তৃক এই অধ্যায়ের অধীন নোটিশ প্রদানের অব্যবহিত পূর্ববর্তী তিন মাসে তাহার প্রাপ্ত মোট মজুরীকে উক্ত সময়ে তাহার মোট প্রকৃত কাজের দিনগুলি দ্বারা ভাগ করিতে হইবে৷"
+Can the company be punished for refusing to pay my maternity benefit?,en,file,law,labour,বাংলাদেশ-শ্রম-আইন-২০০৬-2006-s২৮৬,"Yes. Under section 286 of the Bangladesh Labour Act, 2006, an employer who deprives a woman worker of maternity benefit is punishable with a fine up to twenty-five thousand taka; the court may order the fine (or part of it) to be paid to her as compensation and will order the employer to give her the benefit she was denied.",claude,,d03-maternity-photo.jpg,d03-maternity,photo,,,"GREENFIELD APPARELS LTD.
+
+Ashulia, Savar, Dhaka
+Office Memo No. GAL/ADM/2026/031                Date: 02 March 2026
+
+Subject: Reply to maternity leave application
+
+To: Mrs. Mitu Rani Das, Quality Inspector (joined 01 July 2025)
+
+With reference to your application dated 25 February 2026, management has decided that you may take
+4 (four) weeks of maternity leave without pay from your expected delivery date of 20 April 2026.
+No maternity benefit will be paid as per company policy. You must rejoin on 18 May 2026, failing which
+your job will be considered abandoned.
+
+Abdul Mannan
+Assistant Manager, Administration","বাংলাদেশ শ্রম আইন, ২০০৬ (Act No. ৪২ of 2006)
+Section ২৮৬
+২৮৬৷ (১) কোন মালিক চতুর্থ অধ্যায়ের204[ বিধান অনুযায়ী কোনো মহিলা শ্রমিককে প্রসূতি কল্যাণ সুবিধা হইতে বঞ্চিত করিলে ], তিনি205[ পঁচিশ হাজার] টাকা পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন৷(২) যে ক্ষেত্রে আদালত উপ-ধারা (১) এর অধীন কোন অর্থদণ্ড আরোপ করে সে ক্ষেত্রে, আদালত উহার রায় প্রদানকালে আদায়কৃত দণ্ডের অর্থ সম্পূর্র্র্ণ বা উহার কোন অংশ সংশ্লিষ্ট মহিলাকে, যে কারণে উক্ত অর্থদণ্ড আরোপ করা হইয়াছে সে কারণ হইতে উদ্ভুত ক্ষতির জন্য, ক্ষতিপূরণ হিসাবে প্রদানের আদেশ দিতে পারিবে৷206[ (৩) আদালত, উপ-ধারা (২) এর অতিরিক্ত হিসাবে, চতুর্থ অধ্যায়ের যে সুবিধা হইতে শ্রমিককে বঞ্চিত করা হইয়াছে, সেই সুবিধা প্রদানের জন্য সংশ্লিষ্ট মালিককে আদেশ প্রদান করিবে।]"
+এই নোটিশ অনুযায়ী তালাক কবে কার্যকর হবে?,bn,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s7,"মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭(৩) অনুযায়ী আগে প্রত্যাহার না হলে চেয়ারম্যানের কাছে নোটিশ পৌঁছানোর দিন থেকে ৯০ দিন পর তালাক কার্যকর হয়। কিন্তু নোটিশে বলা আছে স্ত্রী অন্তঃসত্ত্বা, তাই ধারা ৭(৫) অনুযায়ী ৯০ দিন বা গর্ভাবস্থা, যেটি পরে শেষ হবে, তার আগে তালাক কার্যকর হবে না।",claude,,d04-talaq.pdf,d04-talaq,text,yes,,"তালাকের নোটিশ
+
+বরাবর
+চেয়ারম্যান, ৫ নং মির্জাপুর ইউনিয়ন পরিষদ, টাঙ্গাইল
+
+বিষয়: মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭ অনুযায়ী তালাকের নোটিশ
+
+জনাব,
+আমি মোঃ সোহেল রানা, পিতা: মৃত আব্দুল জব্বার, গ্রাম: বাঁশতৈল। আমি আমার স্ত্রী মোসাঃ রুমানা আক্তারকে গত ১২ মার্চ ২০২৬ তারিখে তালাক প্রদান করিয়াছি। এই নোটিশের একটি অনুলিপি আমার স্ত্রীকে প্রদান করা হইল। উল্লেখ্য, আমার স্ত্রী বর্তমানে প্রায় পাঁচ মাসের অন্তঃসত্ত্বা।
+
+নোটিশ প্রদানের তারিখ: ১৪ মার্চ ২০২৬
+
+বিনীত
+মোঃ সোহেল রানা","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 7
+7. (1) Any man who wishes to divorce his wife shall, as soon as may be after the pronouncement of talaq in any form whatsoever, give the Chairman notice in writing of his having done so, and shall supply a copy thereof to the wife.(2) Whoever contravenes the provisions of sub-section (1) shall be punishable with simple imprisonment for term which may extend to one year or with fine which may extend to10[ten thousand taka] or with both.(3) Save as provided in sub-section (5), a talaq unless revoked earlier, expressly or otherwise, shall not be effective until the expiration of ninety days from the day on which notice under sub-section (1) is delivered to the Chairman.(4) Within thirty days of the receipt of notice under sub-section (1), the Chairman shall constitute an Arbitration Council for the purpose of bringing about a reconciliation between the parties, and the Arbitration Council shall take all steps necessary to bring about such reconciliation.(5) If the wife be pregnant at the time talaq is pronounced, talaq shall not be effective until the period mentioned in sub-section (3) or the pregnancy, whichever be later, ends.(6) Nothing shall debar a wife whose marriage has been terminated by talaq effective under this section from re-marrying the same husband, without an intervening marriage with a third-person, unless such termination is for the third time so effective."
+চেয়ারম্যান এই নোটিশ পাওয়ার পর কী করবেন?,bn,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s7,"মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭(৪) অনুযায়ী নোটিশ পাওয়ার ৩০ দিনের মধ্যে চেয়ারম্যান স্বামী-স্ত্রীর মধ্যে সমঝোতার জন্য একটি সালিশি পরিষদ গঠন করবেন এবং সালিশি পরিষদ সমঝোতার জন্য প্রয়োজনীয় সব পদক্ষেপ নেবে।",claude,,d04-talaq.pdf,d04-talaq,text,yes,,"তালাকের নোটিশ
+
+বরাবর
+চেয়ারম্যান, ৫ নং মির্জাপুর ইউনিয়ন পরিষদ, টাঙ্গাইল
+
+বিষয়: মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭ অনুযায়ী তালাকের নোটিশ
+
+জনাব,
+আমি মোঃ সোহেল রানা, পিতা: মৃত আব্দুল জব্বার, গ্রাম: বাঁশতৈল। আমি আমার স্ত্রী মোসাঃ রুমানা আক্তারকে গত ১২ মার্চ ২০২৬ তারিখে তালাক প্রদান করিয়াছি। এই নোটিশের একটি অনুলিপি আমার স্ত্রীকে প্রদান করা হইল। উল্লেখ্য, আমার স্ত্রী বর্তমানে প্রায় পাঁচ মাসের অন্তঃসত্ত্বা।
+
+নোটিশ প্রদানের তারিখ: ১৪ মার্চ ২০২৬
+
+বিনীত
+মোঃ সোহেল রানা","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 7
+7. (1) Any man who wishes to divorce his wife shall, as soon as may be after the pronouncement of talaq in any form whatsoever, give the Chairman notice in writing of his having done so, and shall supply a copy thereof to the wife.(2) Whoever contravenes the provisions of sub-section (1) shall be punishable with simple imprisonment for term which may extend to one year or with fine which may extend to10[ten thousand taka] or with both.(3) Save as provided in sub-section (5), a talaq unless revoked earlier, expressly or otherwise, shall not be effective until the expiration of ninety days from the day on which notice under sub-section (1) is delivered to the Chairman.(4) Within thirty days of the receipt of notice under sub-section (1), the Chairman shall constitute an Arbitration Council for the purpose of bringing about a reconciliation between the parties, and the Arbitration Council shall take all steps necessary to bring about such reconciliation.(5) If the wife be pregnant at the time talaq is pronounced, talaq shall not be effective until the period mentioned in sub-section (3) or the pregnancy, whichever be later, ends.(6) Nothing shall debar a wife whose marriage has been terminated by talaq effective under this section from re-marrying the same husband, without an intervening marriage with a third-person, unless such termination is for the third time so effective."
+এই নোটিশ অনুযায়ী তালাক কবে কার্যকর হবে?,bn,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s7,"মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭(৩) অনুযায়ী আগে প্রত্যাহার না হলে চেয়ারম্যানের কাছে নোটিশ পৌঁছানোর দিন থেকে ৯০ দিন পর তালাক কার্যকর হয়। কিন্তু নোটিশে বলা আছে স্ত্রী অন্তঃসত্ত্বা, তাই ধারা ৭(৫) অনুযায়ী ৯০ দিন বা গর্ভাবস্থা, যেটি পরে শেষ হবে, তার আগে তালাক কার্যকর হবে না।",claude,,d04-talaq-scan.pdf,d04-talaq,scan,,,"তালাকের নোটিশ
+
+বরাবর
+চেয়ারম্যান, ৫ নং মির্জাপুর ইউনিয়ন পরিষদ, টাঙ্গাইল
+
+বিষয়: মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭ অনুযায়ী তালাকের নোটিশ
+
+জনাব,
+আমি মোঃ সোহেল রানা, পিতা: মৃত আব্দুল জব্বার, গ্রাম: বাঁশতৈল। আমি আমার স্ত্রী মোসাঃ রুমানা আক্তারকে গত ১২ মার্চ ২০২৬ তারিখে তালাক প্রদান করিয়াছি। এই নোটিশের একটি অনুলিপি আমার স্ত্রীকে প্রদান করা হইল। উল্লেখ্য, আমার স্ত্রী বর্তমানে প্রায় পাঁচ মাসের অন্তঃসত্ত্বা।
+
+নোটিশ প্রদানের তারিখ: ১৪ মার্চ ২০২৬
+
+বিনীত
+মোঃ সোহেল রানা","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 7
+7. (1) Any man who wishes to divorce his wife shall, as soon as may be after the pronouncement of talaq in any form whatsoever, give the Chairman notice in writing of his having done so, and shall supply a copy thereof to the wife.(2) Whoever contravenes the provisions of sub-section (1) shall be punishable with simple imprisonment for term which may extend to one year or with fine which may extend to10[ten thousand taka] or with both.(3) Save as provided in sub-section (5), a talaq unless revoked earlier, expressly or otherwise, shall not be effective until the expiration of ninety days from the day on which notice under sub-section (1) is delivered to the Chairman.(4) Within thirty days of the receipt of notice under sub-section (1), the Chairman shall constitute an Arbitration Council for the purpose of bringing about a reconciliation between the parties, and the Arbitration Council shall take all steps necessary to bring about such reconciliation.(5) If the wife be pregnant at the time talaq is pronounced, talaq shall not be effective until the period mentioned in sub-section (3) or the pregnancy, whichever be later, ends.(6) Nothing shall debar a wife whose marriage has been terminated by talaq effective under this section from re-marrying the same husband, without an intervening marriage with a third-person, unless such termination is for the third time so effective."
+চেয়ারম্যান এই নোটিশ পাওয়ার পর কী করবেন?,bn,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s7,"মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭(৪) অনুযায়ী নোটিশ পাওয়ার ৩০ দিনের মধ্যে চেয়ারম্যান স্বামী-স্ত্রীর মধ্যে সমঝোতার জন্য একটি সালিশি পরিষদ গঠন করবেন এবং সালিশি পরিষদ সমঝোতার জন্য প্রয়োজনীয় সব পদক্ষেপ নেবে।",claude,,d04-talaq-scan.pdf,d04-talaq,scan,,,"তালাকের নোটিশ
+
+বরাবর
+চেয়ারম্যান, ৫ নং মির্জাপুর ইউনিয়ন পরিষদ, টাঙ্গাইল
+
+বিষয়: মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭ অনুযায়ী তালাকের নোটিশ
+
+জনাব,
+আমি মোঃ সোহেল রানা, পিতা: মৃত আব্দুল জব্বার, গ্রাম: বাঁশতৈল। আমি আমার স্ত্রী মোসাঃ রুমানা আক্তারকে গত ১২ মার্চ ২০২৬ তারিখে তালাক প্রদান করিয়াছি। এই নোটিশের একটি অনুলিপি আমার স্ত্রীকে প্রদান করা হইল। উল্লেখ্য, আমার স্ত্রী বর্তমানে প্রায় পাঁচ মাসের অন্তঃসত্ত্বা।
+
+নোটিশ প্রদানের তারিখ: ১৪ মার্চ ২০২৬
+
+বিনীত
+মোঃ সোহেল রানা","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 7
+7. (1) Any man who wishes to divorce his wife shall, as soon as may be after the pronouncement of talaq in any form whatsoever, give the Chairman notice in writing of his having done so, and shall supply a copy thereof to the wife.(2) Whoever contravenes the provisions of sub-section (1) shall be punishable with simple imprisonment for term which may extend to one year or with fine which may extend to10[ten thousand taka] or with both.(3) Save as provided in sub-section (5), a talaq unless revoked earlier, expressly or otherwise, shall not be effective until the expiration of ninety days from the day on which notice under sub-section (1) is delivered to the Chairman.(4) Within thirty days of the receipt of notice under sub-section (1), the Chairman shall constitute an Arbitration Council for the purpose of bringing about a reconciliation between the parties, and the Arbitration Council shall take all steps necessary to bring about such reconciliation.(5) If the wife be pregnant at the time talaq is pronounced, talaq shall not be effective until the period mentioned in sub-section (3) or the pregnancy, whichever be later, ends.(6) Nothing shall debar a wife whose marriage has been terminated by talaq effective under this section from re-marrying the same husband, without an intervening marriage with a third-person, unless such termination is for the third time so effective."
+এই নোটিশ অনুযায়ী তালাক কবে কার্যকর হবে?,bn,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s7,"মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭(৩) অনুযায়ী আগে প্রত্যাহার না হলে চেয়ারম্যানের কাছে নোটিশ পৌঁছানোর দিন থেকে ৯০ দিন পর তালাক কার্যকর হয়। কিন্তু নোটিশে বলা আছে স্ত্রী অন্তঃসত্ত্বা, তাই ধারা ৭(৫) অনুযায়ী ৯০ দিন বা গর্ভাবস্থা, যেটি পরে শেষ হবে, তার আগে তালাক কার্যকর হবে না।",claude,,d04-talaq-photo.jpg,d04-talaq,photo,,,"তালাকের নোটিশ
+
+বরাবর
+চেয়ারম্যান, ৫ নং মির্জাপুর ইউনিয়ন পরিষদ, টাঙ্গাইল
+
+বিষয়: মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭ অনুযায়ী তালাকের নোটিশ
+
+জনাব,
+আমি মোঃ সোহেল রানা, পিতা: মৃত আব্দুল জব্বার, গ্রাম: বাঁশতৈল। আমি আমার স্ত্রী মোসাঃ রুমানা আক্তারকে গত ১২ মার্চ ২০২৬ তারিখে তালাক প্রদান করিয়াছি। এই নোটিশের একটি অনুলিপি আমার স্ত্রীকে প্রদান করা হইল। উল্লেখ্য, আমার স্ত্রী বর্তমানে প্রায় পাঁচ মাসের অন্তঃসত্ত্বা।
+
+নোটিশ প্রদানের তারিখ: ১৪ মার্চ ২০২৬
+
+বিনীত
+মোঃ সোহেল রানা","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 7
+7. (1) Any man who wishes to divorce his wife shall, as soon as may be after the pronouncement of talaq in any form whatsoever, give the Chairman notice in writing of his having done so, and shall supply a copy thereof to the wife.(2) Whoever contravenes the provisions of sub-section (1) shall be punishable with simple imprisonment for term which may extend to one year or with fine which may extend to10[ten thousand taka] or with both.(3) Save as provided in sub-section (5), a talaq unless revoked earlier, expressly or otherwise, shall not be effective until the expiration of ninety days from the day on which notice under sub-section (1) is delivered to the Chairman.(4) Within thirty days of the receipt of notice under sub-section (1), the Chairman shall constitute an Arbitration Council for the purpose of bringing about a reconciliation between the parties, and the Arbitration Council shall take all steps necessary to bring about such reconciliation.(5) If the wife be pregnant at the time talaq is pronounced, talaq shall not be effective until the period mentioned in sub-section (3) or the pregnancy, whichever be later, ends.(6) Nothing shall debar a wife whose marriage has been terminated by talaq effective under this section from re-marrying the same husband, without an intervening marriage with a third-person, unless such termination is for the third time so effective."
+চেয়ারম্যান এই নোটিশ পাওয়ার পর কী করবেন?,bn,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s7,"মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭(৪) অনুযায়ী নোটিশ পাওয়ার ৩০ দিনের মধ্যে চেয়ারম্যান স্বামী-স্ত্রীর মধ্যে সমঝোতার জন্য একটি সালিশি পরিষদ গঠন করবেন এবং সালিশি পরিষদ সমঝোতার জন্য প্রয়োজনীয় সব পদক্ষেপ নেবে।",claude,,d04-talaq-photo.jpg,d04-talaq,photo,,,"তালাকের নোটিশ
+
+বরাবর
+চেয়ারম্যান, ৫ নং মির্জাপুর ইউনিয়ন পরিষদ, টাঙ্গাইল
+
+বিষয়: মুসলিম পারিবারিক আইন অধ্যাদেশ, ১৯৬১-এর ধারা ৭ অনুযায়ী তালাকের নোটিশ
+
+জনাব,
+আমি মোঃ সোহেল রানা, পিতা: মৃত আব্দুল জব্বার, গ্রাম: বাঁশতৈল। আমি আমার স্ত্রী মোসাঃ রুমানা আক্তারকে গত ১২ মার্চ ২০২৬ তারিখে তালাক প্রদান করিয়াছি। এই নোটিশের একটি অনুলিপি আমার স্ত্রীকে প্রদান করা হইল। উল্লেখ্য, আমার স্ত্রী বর্তমানে প্রায় পাঁচ মাসের অন্তঃসত্ত্বা।
+
+নোটিশ প্রদানের তারিখ: ১৪ মার্চ ২০২৬
+
+বিনীত
+মোঃ সোহেল রানা","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 7
+7. (1) Any man who wishes to divorce his wife shall, as soon as may be after the pronouncement of talaq in any form whatsoever, give the Chairman notice in writing of his having done so, and shall supply a copy thereof to the wife.(2) Whoever contravenes the provisions of sub-section (1) shall be punishable with simple imprisonment for term which may extend to one year or with fine which may extend to10[ten thousand taka] or with both.(3) Save as provided in sub-section (5), a talaq unless revoked earlier, expressly or otherwise, shall not be effective until the expiration of ninety days from the day on which notice under sub-section (1) is delivered to the Chairman.(4) Within thirty days of the receipt of notice under sub-section (1), the Chairman shall constitute an Arbitration Council for the purpose of bringing about a reconciliation between the parties, and the Arbitration Council shall take all steps necessary to bring about such reconciliation.(5) If the wife be pregnant at the time talaq is pronounced, talaq shall not be effective until the period mentioned in sub-section (3) or the pregnancy, whichever be later, ends.(6) Nothing shall debar a wife whose marriage has been terminated by talaq effective under this section from re-marrying the same husband, without an intervening marriage with a third-person, unless such termination is for the third time so effective."
+My nikahnama does not say how the dower is to be paid. When can I claim it?,en,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s10,"Under section 10 of the Muslim Family Laws Ordinance, 1961, where the nikahnama or marriage contract gives no details about the mode of payment of dower, the entire dower (here Tk 5,00,000) is presumed to be payable on demand.",claude,,d05-nikahnama.docx,d05-nikahnama,text,yes,,"NIKAHNAMA (Extract, English translation)
+
+Office of the Nikah Registrar, Ward 22, Dhaka South City Corporation
+Registration No. 1187/2023                       Date of marriage: 17 August 2023
+
+Bridegroom: Mr. Tanvir Ahmed, age 29
+Bride: Ms. Farzana Islam, age 24
+
+Column 13 - Amount of dower (mohr): Tk 5,00,000 (five lakh)
+Column 14 - Portion of dower paid at the time of marriage (muajjal): ----
+Column 15 - Mode of payment of the remaining dower: ----
+Column 16 - Special conditions: none
+
+Signed by the parties, two witnesses and the Nikah Registrar.","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 10
+10. Where no details about the mode of payment of dower are specified in the nikah nama, or the marriage contract, the entire amount of the dower shall be prescribed to be payable on demand."
+My husband has stopped giving me maintenance. What can I do?,en,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s9,"Under section 9 of the Muslim Family Laws Ordinance, 1961, if a husband fails to maintain his wife adequately, she may, besides any other legal remedy, apply to the Chairman, who will set up an Arbitration Council; the Council may issue a certificate fixing the maintenance the husband must pay, which is recoverable as arrears of land revenue if not paid.",claude,,d05-nikahnama.docx,d05-nikahnama,text,yes,,"NIKAHNAMA (Extract, English translation)
+
+Office of the Nikah Registrar, Ward 22, Dhaka South City Corporation
+Registration No. 1187/2023                       Date of marriage: 17 August 2023
+
+Bridegroom: Mr. Tanvir Ahmed, age 29
+Bride: Ms. Farzana Islam, age 24
+
+Column 13 - Amount of dower (mohr): Tk 5,00,000 (five lakh)
+Column 14 - Portion of dower paid at the time of marriage (muajjal): ----
+Column 15 - Mode of payment of the remaining dower: ----
+Column 16 - Special conditions: none
+
+Signed by the parties, two witnesses and the Nikah Registrar.","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 9
+9. (1) If any husband fails to maintain his wife adequately, or where there are more wives than one, fails to maintain them equitably, the wife, or all or any of the wives, may in addition to seeking, any other legal remedy available apply to the Chairman who shall constitute an Arbitration Council to determine the matter, and the Arbitration Council may issue a certificate specifying the amount which shall be paid as maintenance by the husband.(2) A husband or wife may, in the prescribed manner, within the prescribed period, and on payment of the prescribed fee, prefer an application for revision of the certificate11[* * *] to the12[Assistant Judge] concerned and his decision shall be final and shall not be called in question in any Court.(3) Any amount payable under sub-section (1) or (2), if not paid in due time, shall be recoverable as arrears of land revenue."
+My nikahnama does not say how the dower is to be paid. When can I claim it?,en,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s10,"Under section 10 of the Muslim Family Laws Ordinance, 1961, where the nikahnama or marriage contract gives no details about the mode of payment of dower, the entire dower (here Tk 5,00,000) is presumed to be payable on demand.",claude,,d05-nikahnama-scan.pdf,d05-nikahnama,scan,,,"NIKAHNAMA (Extract, English translation)
+
+Office of the Nikah Registrar, Ward 22, Dhaka South City Corporation
+Registration No. 1187/2023                       Date of marriage: 17 August 2023
+
+Bridegroom: Mr. Tanvir Ahmed, age 29
+Bride: Ms. Farzana Islam, age 24
+
+Column 13 - Amount of dower (mohr): Tk 5,00,000 (five lakh)
+Column 14 - Portion of dower paid at the time of marriage (muajjal): ----
+Column 15 - Mode of payment of the remaining dower: ----
+Column 16 - Special conditions: none
+
+Signed by the parties, two witnesses and the Nikah Registrar.","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 10
+10. Where no details about the mode of payment of dower are specified in the nikah nama, or the marriage contract, the entire amount of the dower shall be prescribed to be payable on demand."
+My husband has stopped giving me maintenance. What can I do?,en,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s9,"Under section 9 of the Muslim Family Laws Ordinance, 1961, if a husband fails to maintain his wife adequately, she may, besides any other legal remedy, apply to the Chairman, who will set up an Arbitration Council; the Council may issue a certificate fixing the maintenance the husband must pay, which is recoverable as arrears of land revenue if not paid.",claude,,d05-nikahnama-scan.pdf,d05-nikahnama,scan,,,"NIKAHNAMA (Extract, English translation)
+
+Office of the Nikah Registrar, Ward 22, Dhaka South City Corporation
+Registration No. 1187/2023                       Date of marriage: 17 August 2023
+
+Bridegroom: Mr. Tanvir Ahmed, age 29
+Bride: Ms. Farzana Islam, age 24
+
+Column 13 - Amount of dower (mohr): Tk 5,00,000 (five lakh)
+Column 14 - Portion of dower paid at the time of marriage (muajjal): ----
+Column 15 - Mode of payment of the remaining dower: ----
+Column 16 - Special conditions: none
+
+Signed by the parties, two witnesses and the Nikah Registrar.","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 9
+9. (1) If any husband fails to maintain his wife adequately, or where there are more wives than one, fails to maintain them equitably, the wife, or all or any of the wives, may in addition to seeking, any other legal remedy available apply to the Chairman who shall constitute an Arbitration Council to determine the matter, and the Arbitration Council may issue a certificate specifying the amount which shall be paid as maintenance by the husband.(2) A husband or wife may, in the prescribed manner, within the prescribed period, and on payment of the prescribed fee, prefer an application for revision of the certificate11[* * *] to the12[Assistant Judge] concerned and his decision shall be final and shall not be called in question in any Court.(3) Any amount payable under sub-section (1) or (2), if not paid in due time, shall be recoverable as arrears of land revenue."
+My nikahnama does not say how the dower is to be paid. When can I claim it?,en,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s10,"Under section 10 of the Muslim Family Laws Ordinance, 1961, where the nikahnama or marriage contract gives no details about the mode of payment of dower, the entire dower (here Tk 5,00,000) is presumed to be payable on demand.",claude,,d05-nikahnama-photo.jpg,d05-nikahnama,photo,,,"NIKAHNAMA (Extract, English translation)
+
+Office of the Nikah Registrar, Ward 22, Dhaka South City Corporation
+Registration No. 1187/2023                       Date of marriage: 17 August 2023
+
+Bridegroom: Mr. Tanvir Ahmed, age 29
+Bride: Ms. Farzana Islam, age 24
+
+Column 13 - Amount of dower (mohr): Tk 5,00,000 (five lakh)
+Column 14 - Portion of dower paid at the time of marriage (muajjal): ----
+Column 15 - Mode of payment of the remaining dower: ----
+Column 16 - Special conditions: none
+
+Signed by the parties, two witnesses and the Nikah Registrar.","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 10
+10. Where no details about the mode of payment of dower are specified in the nikah nama, or the marriage contract, the entire amount of the dower shall be prescribed to be payable on demand."
+My husband has stopped giving me maintenance. What can I do?,en,file,law,family,the-muslim-family-laws-ordinance-1961-1961-s9,"Under section 9 of the Muslim Family Laws Ordinance, 1961, if a husband fails to maintain his wife adequately, she may, besides any other legal remedy, apply to the Chairman, who will set up an Arbitration Council; the Council may issue a certificate fixing the maintenance the husband must pay, which is recoverable as arrears of land revenue if not paid.",claude,,d05-nikahnama-photo.jpg,d05-nikahnama,photo,,,"NIKAHNAMA (Extract, English translation)
+
+Office of the Nikah Registrar, Ward 22, Dhaka South City Corporation
+Registration No. 1187/2023                       Date of marriage: 17 August 2023
+
+Bridegroom: Mr. Tanvir Ahmed, age 29
+Bride: Ms. Farzana Islam, age 24
+
+Column 13 - Amount of dower (mohr): Tk 5,00,000 (five lakh)
+Column 14 - Portion of dower paid at the time of marriage (muajjal): ----
+Column 15 - Mode of payment of the remaining dower: ----
+Column 16 - Special conditions: none
+
+Signed by the parties, two witnesses and the Nikah Registrar.","The Muslim Family Laws Ordinance, 1961 (Act No. VIII of 1961)
+Section 9
+9. (1) If any husband fails to maintain his wife adequately, or where there are more wives than one, fails to maintain them equitably, the wife, or all or any of the wives, may in addition to seeking, any other legal remedy available apply to the Chairman who shall constitute an Arbitration Council to determine the matter, and the Arbitration Council may issue a certificate specifying the amount which shall be paid as maintenance by the husband.(2) A husband or wife may, in the prescribed manner, within the prescribed period, and on payment of the prescribed fee, prefer an application for revision of the certificate11[* * *] to the12[Assistant Judge] concerned and his decision shall be final and shall not be called in question in any Court.(3) Any amount payable under sub-section (1) or (2), if not paid in due time, shall be recoverable as arrears of land revenue."
+এই দাওয়াতপত্রের বিয়েটা কি আইন অনুযায়ী বৈধ? বরের কী শাস্তি হতে পারে?,bn,file,law,children_women,বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s২;বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s৭,"না। বাল্যবিবাহ নিরোধ আইন, ২০১৭-এর ধারা ২ অনুযায়ী বিয়ের ক্ষেত্রে ১৮ বছরের কম বয়সী নারী অপ্রাপ্তবয়স্ক, আর যে বিয়ের কোনো পক্ষ অপ্রাপ্তবয়স্ক তা বাল্যবিবাহ; কনের বয়স ১৬, তাই এটি বাল্যবিবাহ। ধারা ৭ অনুযায়ী প্রাপ্তবয়স্ক বর (২৪ বছর) বাল্যবিবাহ করলে অনধিক দুই বছর কারাদণ্ড বা অনধিক এক লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ড হতে পারে।",claude,,d06-invitation.docx,d06-invitation,text,yes,,"শুভ বিবাহের নিমন্ত্রণ
+
+পরম করুণাময়ের নামে শুরু করছি।
+আগামী ১৮ এপ্রিল ২০২৬, শনিবার, আমার একমাত্র কন্যা
+সুমাইয়া আক্তার (বয়স ১৬ বছর, দশম শ্রেণির ছাত্রী)
+এর শুভ বিবাহ
+মোঃ জাহিদ হাসান (বয়স ২৪ বছর), পিতা: মোঃ আবুল কালাম, গ্রাম: চরপাড়া
+এর সহিত অনুষ্ঠিত হইবে।
+স্থান: নিজ বাসভবন, গ্রাম: কালিকাপুর, উপজেলা: নাগেশ্বরী, কুড়িগ্রাম
+আপনার সপরিবারে উপস্থিতি কামনা করি।
+নিবেদক: মোঃ সিরাজুল ইসলাম (কনের পিতা)","বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ২
+২। বিষয় বা প্রসঙ্গের পরিপন্থি কিছু না থাকিলে, এই আইনে-(১) “অপ্রাপ্ত বয়স্ক” অর্থ বিবাহের ক্ষেত্রে ২১ (একুশ) বৎসর পূর্ণ করেন নাই এমন কোনো পুরুষ এবং ১৮ (আঠারো) বৎসর পূর্ণ করেন নাই এমন কোনো নারী;(২) “অভিভাবক” অর্থGuardians and Wards Act, 1890(Act No. VIII of 1890) এর অধীন নিয়োগপ্রাপ্ত বা ঘোষিত অভিভাবক এবং অপ্রাপ্ত বয়স্ক ব্যক্তির ভরণ-পোষণ বহনকারী ব্যক্তিও ইহার অন্তর্ভুক্ত হইবে;(৩) “প্রাপ্ত বয়স্ক” অর্থ বিবাহের ক্ষেত্রে ২১ (একুশ) বৎসর পূর্ণ করিয়াছেন এমন কোনো পুরুষ এবং ১৮ (আঠারো) বৎসর পূর্ণ করিয়াছেন এমন কোনো নারী;(৪) “বাল্যবিবাহ” অর্থ এইরূপ বিবাহ যাহার কোন এক পক্ষ বা উভয় পক্ষ অপ্রাপ্ত বয়স্ক; এবং(৫) “বিধি” অর্থ এই আইনের অধীন প্রণীত বিধি।
+
+বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ৭
+৭। (১) প্রাপ্ত বয়স্ক কোন নারী বা পুরুষ বাল্যবিবাহ করিলে উহা হইবে একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ২ (দুই) বৎসর কারাদণ্ড বা অনধিক ১ (এক) লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডনীয় হইবেন এবং অর্থদণ্ড অনাদায়ে অনধিক ৩ (তিন) মাস কারাদণ্ডে দণ্ডনীয় হইবেন।(২) অপ্রাপ্ত বয়স্ক কোন নারী বা পুরুষ বাল্যবিবাহ করিলে তিনি অনধিক ১ (এক) মাসের আটকাদেশ বা অনধিক ৫০,০০০ (পঞ্চাশ) হাজার টাকা জরিমানা বা উভয় ধরনের শাস্তিযোগ্য হইবেন:তবে শর্ত থাকে যে, ধারা ৮ এর অধীন কোন ব্যক্তির বিরুদ্ধে মামলা দায়ের বা দণ্ড প্রদান করা হইলে উক্তরূপ অপ্রাপ্ত বয়স্ক নারী বা পুরুষকে শাস্তি প্রদান করা যাইবে না।(৩) উপ-ধারা (২) এর অধীন বিচার ও শাস্তি প্রদানের ক্ষেত্রেশিশু আইন, ২০১৩(২০১৩ সনের ২৪ নং আইন) এর বিধানাবলী প্রযোজ্য হইবে।"
+কনের বাবা-মায়ের কী শাস্তি হতে পারে?,bn,file,law,children_women,বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s৮,"বাল্যবিবাহ নিরোধ আইন, ২০১৭-এর ধারা ৮ অনুযায়ী মা-বাবা বা অভিভাবক বাল্যবিবাহ সম্পন্ন করার কাজ করলে, অনুমতি বা নির্দেশ দিলে বা অবহেলায় বন্ধ করতে ব্যর্থ হলে অন্যূন ছয় মাস ও অনধিক দুই বছর কারাদণ্ড বা অনধিক পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড হবে।",claude,,d06-invitation.docx,d06-invitation,text,yes,,"শুভ বিবাহের নিমন্ত্রণ
+
+পরম করুণাময়ের নামে শুরু করছি।
+আগামী ১৮ এপ্রিল ২০২৬, শনিবার, আমার একমাত্র কন্যা
+সুমাইয়া আক্তার (বয়স ১৬ বছর, দশম শ্রেণির ছাত্রী)
+এর শুভ বিবাহ
+মোঃ জাহিদ হাসান (বয়স ২৪ বছর), পিতা: মোঃ আবুল কালাম, গ্রাম: চরপাড়া
+এর সহিত অনুষ্ঠিত হইবে।
+স্থান: নিজ বাসভবন, গ্রাম: কালিকাপুর, উপজেলা: নাগেশ্বরী, কুড়িগ্রাম
+আপনার সপরিবারে উপস্থিতি কামনা করি।
+নিবেদক: মোঃ সিরাজুল ইসলাম (কনের পিতা)","বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ৮
+৮। পিতা-মাতা, অভিভাবক অথবা অন্য কোন ব্যক্তি, আইনগতভাবে বা আইনবহির্ভূতভাবে কোন অপ্রাপ্ত বয়স্ক ব্যক্তির উপর কর্তৃত্ব সম্পন্ন হইয়া বাল্যবিবাহ সম্পন্ন করিবার ক্ষেত্রে কোন কাজ করিলে অথবা করিবার অনুমতি বা নির্দেশ প্রদান করিলে অথবা স্বীয় অবহেলার কারণে বিবাহটি বন্ধ করিতে ব্যর্থ হইলে উহা হইবে একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ২ (দুই) বৎসর ও অন্যূন ৬ (ছয়) মাস কারাদণ্ড বা অনধিক ৫০ (পঞ্চাশ) হাজার টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডনীয় হইবেন এবং অর্থদণ্ড অনাদায়ে অনধিক ৩ (তিন) মাস কারাদণ্ডে দণ্ডনীয় হইবেন।"
+এই দাওয়াতপত্রের বিয়েটা কি আইন অনুযায়ী বৈধ? বরের কী শাস্তি হতে পারে?,bn,file,law,children_women,বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s২;বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s৭,"না। বাল্যবিবাহ নিরোধ আইন, ২০১৭-এর ধারা ২ অনুযায়ী বিয়ের ক্ষেত্রে ১৮ বছরের কম বয়সী নারী অপ্রাপ্তবয়স্ক, আর যে বিয়ের কোনো পক্ষ অপ্রাপ্তবয়স্ক তা বাল্যবিবাহ; কনের বয়স ১৬, তাই এটি বাল্যবিবাহ। ধারা ৭ অনুযায়ী প্রাপ্তবয়স্ক বর (২৪ বছর) বাল্যবিবাহ করলে অনধিক দুই বছর কারাদণ্ড বা অনধিক এক লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ড হতে পারে।",claude,,d06-invitation-scan.pdf,d06-invitation,scan,,,"শুভ বিবাহের নিমন্ত্রণ
+
+পরম করুণাময়ের নামে শুরু করছি।
+আগামী ১৮ এপ্রিল ২০২৬, শনিবার, আমার একমাত্র কন্যা
+সুমাইয়া আক্তার (বয়স ১৬ বছর, দশম শ্রেণির ছাত্রী)
+এর শুভ বিবাহ
+মোঃ জাহিদ হাসান (বয়স ২৪ বছর), পিতা: মোঃ আবুল কালাম, গ্রাম: চরপাড়া
+এর সহিত অনুষ্ঠিত হইবে।
+স্থান: নিজ বাসভবন, গ্রাম: কালিকাপুর, উপজেলা: নাগেশ্বরী, কুড়িগ্রাম
+আপনার সপরিবারে উপস্থিতি কামনা করি।
+নিবেদক: মোঃ সিরাজুল ইসলাম (কনের পিতা)","বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ২
+২। বিষয় বা প্রসঙ্গের পরিপন্থি কিছু না থাকিলে, এই আইনে-(১) “অপ্রাপ্ত বয়স্ক” অর্থ বিবাহের ক্ষেত্রে ২১ (একুশ) বৎসর পূর্ণ করেন নাই এমন কোনো পুরুষ এবং ১৮ (আঠারো) বৎসর পূর্ণ করেন নাই এমন কোনো নারী;(২) “অভিভাবক” অর্থGuardians and Wards Act, 1890(Act No. VIII of 1890) এর অধীন নিয়োগপ্রাপ্ত বা ঘোষিত অভিভাবক এবং অপ্রাপ্ত বয়স্ক ব্যক্তির ভরণ-পোষণ বহনকারী ব্যক্তিও ইহার অন্তর্ভুক্ত হইবে;(৩) “প্রাপ্ত বয়স্ক” অর্থ বিবাহের ক্ষেত্রে ২১ (একুশ) বৎসর পূর্ণ করিয়াছেন এমন কোনো পুরুষ এবং ১৮ (আঠারো) বৎসর পূর্ণ করিয়াছেন এমন কোনো নারী;(৪) “বাল্যবিবাহ” অর্থ এইরূপ বিবাহ যাহার কোন এক পক্ষ বা উভয় পক্ষ অপ্রাপ্ত বয়স্ক; এবং(৫) “বিধি” অর্থ এই আইনের অধীন প্রণীত বিধি।
+
+বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ৭
+৭। (১) প্রাপ্ত বয়স্ক কোন নারী বা পুরুষ বাল্যবিবাহ করিলে উহা হইবে একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ২ (দুই) বৎসর কারাদণ্ড বা অনধিক ১ (এক) লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডনীয় হইবেন এবং অর্থদণ্ড অনাদায়ে অনধিক ৩ (তিন) মাস কারাদণ্ডে দণ্ডনীয় হইবেন।(২) অপ্রাপ্ত বয়স্ক কোন নারী বা পুরুষ বাল্যবিবাহ করিলে তিনি অনধিক ১ (এক) মাসের আটকাদেশ বা অনধিক ৫০,০০০ (পঞ্চাশ) হাজার টাকা জরিমানা বা উভয় ধরনের শাস্তিযোগ্য হইবেন:তবে শর্ত থাকে যে, ধারা ৮ এর অধীন কোন ব্যক্তির বিরুদ্ধে মামলা দায়ের বা দণ্ড প্রদান করা হইলে উক্তরূপ অপ্রাপ্ত বয়স্ক নারী বা পুরুষকে শাস্তি প্রদান করা যাইবে না।(৩) উপ-ধারা (২) এর অধীন বিচার ও শাস্তি প্রদানের ক্ষেত্রেশিশু আইন, ২০১৩(২০১৩ সনের ২৪ নং আইন) এর বিধানাবলী প্রযোজ্য হইবে।"
+কনের বাবা-মায়ের কী শাস্তি হতে পারে?,bn,file,law,children_women,বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s৮,"বাল্যবিবাহ নিরোধ আইন, ২০১৭-এর ধারা ৮ অনুযায়ী মা-বাবা বা অভিভাবক বাল্যবিবাহ সম্পন্ন করার কাজ করলে, অনুমতি বা নির্দেশ দিলে বা অবহেলায় বন্ধ করতে ব্যর্থ হলে অন্যূন ছয় মাস ও অনধিক দুই বছর কারাদণ্ড বা অনধিক পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড হবে।",claude,,d06-invitation-scan.pdf,d06-invitation,scan,,,"শুভ বিবাহের নিমন্ত্রণ
+
+পরম করুণাময়ের নামে শুরু করছি।
+আগামী ১৮ এপ্রিল ২০২৬, শনিবার, আমার একমাত্র কন্যা
+সুমাইয়া আক্তার (বয়স ১৬ বছর, দশম শ্রেণির ছাত্রী)
+এর শুভ বিবাহ
+মোঃ জাহিদ হাসান (বয়স ২৪ বছর), পিতা: মোঃ আবুল কালাম, গ্রাম: চরপাড়া
+এর সহিত অনুষ্ঠিত হইবে।
+স্থান: নিজ বাসভবন, গ্রাম: কালিকাপুর, উপজেলা: নাগেশ্বরী, কুড়িগ্রাম
+আপনার সপরিবারে উপস্থিতি কামনা করি।
+নিবেদক: মোঃ সিরাজুল ইসলাম (কনের পিতা)","বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ৮
+৮। পিতা-মাতা, অভিভাবক অথবা অন্য কোন ব্যক্তি, আইনগতভাবে বা আইনবহির্ভূতভাবে কোন অপ্রাপ্ত বয়স্ক ব্যক্তির উপর কর্তৃত্ব সম্পন্ন হইয়া বাল্যবিবাহ সম্পন্ন করিবার ক্ষেত্রে কোন কাজ করিলে অথবা করিবার অনুমতি বা নির্দেশ প্রদান করিলে অথবা স্বীয় অবহেলার কারণে বিবাহটি বন্ধ করিতে ব্যর্থ হইলে উহা হইবে একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ২ (দুই) বৎসর ও অন্যূন ৬ (ছয়) মাস কারাদণ্ড বা অনধিক ৫০ (পঞ্চাশ) হাজার টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডনীয় হইবেন এবং অর্থদণ্ড অনাদায়ে অনধিক ৩ (তিন) মাস কারাদণ্ডে দণ্ডনীয় হইবেন।"
+এই দাওয়াতপত্রের বিয়েটা কি আইন অনুযায়ী বৈধ? বরের কী শাস্তি হতে পারে?,bn,file,law,children_women,বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s২;বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s৭,"না। বাল্যবিবাহ নিরোধ আইন, ২০১৭-এর ধারা ২ অনুযায়ী বিয়ের ক্ষেত্রে ১৮ বছরের কম বয়সী নারী অপ্রাপ্তবয়স্ক, আর যে বিয়ের কোনো পক্ষ অপ্রাপ্তবয়স্ক তা বাল্যবিবাহ; কনের বয়স ১৬, তাই এটি বাল্যবিবাহ। ধারা ৭ অনুযায়ী প্রাপ্তবয়স্ক বর (২৪ বছর) বাল্যবিবাহ করলে অনধিক দুই বছর কারাদণ্ড বা অনধিক এক লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ড হতে পারে।",claude,,d06-invitation-photo.jpg,d06-invitation,photo,,,"শুভ বিবাহের নিমন্ত্রণ
+
+পরম করুণাময়ের নামে শুরু করছি।
+আগামী ১৮ এপ্রিল ২০২৬, শনিবার, আমার একমাত্র কন্যা
+সুমাইয়া আক্তার (বয়স ১৬ বছর, দশম শ্রেণির ছাত্রী)
+এর শুভ বিবাহ
+মোঃ জাহিদ হাসান (বয়স ২৪ বছর), পিতা: মোঃ আবুল কালাম, গ্রাম: চরপাড়া
+এর সহিত অনুষ্ঠিত হইবে।
+স্থান: নিজ বাসভবন, গ্রাম: কালিকাপুর, উপজেলা: নাগেশ্বরী, কুড়িগ্রাম
+আপনার সপরিবারে উপস্থিতি কামনা করি।
+নিবেদক: মোঃ সিরাজুল ইসলাম (কনের পিতা)","বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ২
+২। বিষয় বা প্রসঙ্গের পরিপন্থি কিছু না থাকিলে, এই আইনে-(১) “অপ্রাপ্ত বয়স্ক” অর্থ বিবাহের ক্ষেত্রে ২১ (একুশ) বৎসর পূর্ণ করেন নাই এমন কোনো পুরুষ এবং ১৮ (আঠারো) বৎসর পূর্ণ করেন নাই এমন কোনো নারী;(২) “অভিভাবক” অর্থGuardians and Wards Act, 1890(Act No. VIII of 1890) এর অধীন নিয়োগপ্রাপ্ত বা ঘোষিত অভিভাবক এবং অপ্রাপ্ত বয়স্ক ব্যক্তির ভরণ-পোষণ বহনকারী ব্যক্তিও ইহার অন্তর্ভুক্ত হইবে;(৩) “প্রাপ্ত বয়স্ক” অর্থ বিবাহের ক্ষেত্রে ২১ (একুশ) বৎসর পূর্ণ করিয়াছেন এমন কোনো পুরুষ এবং ১৮ (আঠারো) বৎসর পূর্ণ করিয়াছেন এমন কোনো নারী;(৪) “বাল্যবিবাহ” অর্থ এইরূপ বিবাহ যাহার কোন এক পক্ষ বা উভয় পক্ষ অপ্রাপ্ত বয়স্ক; এবং(৫) “বিধি” অর্থ এই আইনের অধীন প্রণীত বিধি।
+
+বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ৭
+৭। (১) প্রাপ্ত বয়স্ক কোন নারী বা পুরুষ বাল্যবিবাহ করিলে উহা হইবে একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ২ (দুই) বৎসর কারাদণ্ড বা অনধিক ১ (এক) লক্ষ টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডনীয় হইবেন এবং অর্থদণ্ড অনাদায়ে অনধিক ৩ (তিন) মাস কারাদণ্ডে দণ্ডনীয় হইবেন।(২) অপ্রাপ্ত বয়স্ক কোন নারী বা পুরুষ বাল্যবিবাহ করিলে তিনি অনধিক ১ (এক) মাসের আটকাদেশ বা অনধিক ৫০,০০০ (পঞ্চাশ) হাজার টাকা জরিমানা বা উভয় ধরনের শাস্তিযোগ্য হইবেন:তবে শর্ত থাকে যে, ধারা ৮ এর অধীন কোন ব্যক্তির বিরুদ্ধে মামলা দায়ের বা দণ্ড প্রদান করা হইলে উক্তরূপ অপ্রাপ্ত বয়স্ক নারী বা পুরুষকে শাস্তি প্রদান করা যাইবে না।(৩) উপ-ধারা (২) এর অধীন বিচার ও শাস্তি প্রদানের ক্ষেত্রেশিশু আইন, ২০১৩(২০১৩ সনের ২৪ নং আইন) এর বিধানাবলী প্রযোজ্য হইবে।"
+কনের বাবা-মায়ের কী শাস্তি হতে পারে?,bn,file,law,children_women,বাল্যবিবাহ-নিরোধ-আইন-২০১৭-2017-s৮,"বাল্যবিবাহ নিরোধ আইন, ২০১৭-এর ধারা ৮ অনুযায়ী মা-বাবা বা অভিভাবক বাল্যবিবাহ সম্পন্ন করার কাজ করলে, অনুমতি বা নির্দেশ দিলে বা অবহেলায় বন্ধ করতে ব্যর্থ হলে অন্যূন ছয় মাস ও অনধিক দুই বছর কারাদণ্ড বা অনধিক পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড হবে।",claude,,d06-invitation-photo.jpg,d06-invitation,photo,,,"শুভ বিবাহের নিমন্ত্রণ
+
+পরম করুণাময়ের নামে শুরু করছি।
+আগামী ১৮ এপ্রিল ২০২৬, শনিবার, আমার একমাত্র কন্যা
+সুমাইয়া আক্তার (বয়স ১৬ বছর, দশম শ্রেণির ছাত্রী)
+এর শুভ বিবাহ
+মোঃ জাহিদ হাসান (বয়স ২৪ বছর), পিতা: মোঃ আবুল কালাম, গ্রাম: চরপাড়া
+এর সহিত অনুষ্ঠিত হইবে।
+স্থান: নিজ বাসভবন, গ্রাম: কালিকাপুর, উপজেলা: নাগেশ্বরী, কুড়িগ্রাম
+আপনার সপরিবারে উপস্থিতি কামনা করি।
+নিবেদক: মোঃ সিরাজুল ইসলাম (কনের পিতা)","বাল্যবিবাহ নিরোধ আইন, ২০১৭ (Act No. ৬ of 2017)
+Section ৮
+৮। পিতা-মাতা, অভিভাবক অথবা অন্য কোন ব্যক্তি, আইনগতভাবে বা আইনবহির্ভূতভাবে কোন অপ্রাপ্ত বয়স্ক ব্যক্তির উপর কর্তৃত্ব সম্পন্ন হইয়া বাল্যবিবাহ সম্পন্ন করিবার ক্ষেত্রে কোন কাজ করিলে অথবা করিবার অনুমতি বা নির্দেশ প্রদান করিলে অথবা স্বীয় অবহেলার কারণে বিবাহটি বন্ধ করিতে ব্যর্থ হইলে উহা হইবে একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ২ (দুই) বৎসর ও অন্যূন ৬ (ছয়) মাস কারাদণ্ড বা অনধিক ৫০ (পঞ্চাশ) হাজার টাকা অর্থদণ্ড বা উভয় দণ্ডে দণ্ডনীয় হইবেন এবং অর্থদণ্ড অনাদায়ে অনধিক ৩ (তিন) মাস কারাদণ্ডে দণ্ডনীয় হইবেন।"
+"Based on this letter, is it lawful for the police to keep my brother this long without taking him to a magistrate?",en,file,law,criminal,the-code-of-criminal-procedure-1898-1898-s61,"No. Under section 61 of the Code of Criminal Procedure, 1898, a person arrested without a warrant may not be detained by police longer than is reasonable, and in no case more than 24 hours (excluding travel time to the Magistrate's Court) without a special order of a magistrate under section 167. He has been held since 10 May.",claude,,d07-arrest.pdf,d07-arrest,text,yes,,"Letter to Advocate
+
+To: Advocate Nusrat Jahan, Dhaka Judge Court
+From: Md. Arif Hossain, Mirpur-10, Dhaka
+Date: 14 May 2026
+
+Dear Madam,
+My younger brother Md. Asif Hossain (22) was arrested by police from our house at about 9:00 PM on
+10 May 2026. They did not show any warrant. Nobody from the police informed our family where he was
+taken; we found him at Pallabi Police Station the next afternoon. Today, 14 May, he is still in the
+police station and has not been produced before any magistrate. No case number has been given to us.
+Please advise what we can do.
+
+Sincerely,
+Md. Arif Hossain","The Code of Criminal Procedure, 1898 (Act No. V of 1898)
+Section 61
+61. No police-officer shall detain in custody a person arrested without warrant for a longer period than under all the circumstances of the case is reasonable, and such period shall not, in the absence of a special order of a Magistrate under section 167, exceed twenty-four hours exclusive of the time necessary for the journey from the place of arrest to the Magistrate's Court."
+The police never told our family about the arrest. What should they have done according to the Appellate Division's guidelines?,en,file,law,criminal,scob-8-ad-1-p4,"Under the Appellate Division's guidelines in Bangladesh & ors Vs. BLAST & ors (8 SCOB [2016] AD 1), the arresting officer must prepare a memorandum of arrest signed by the arrestee with date and time, and inform a nearest relative (or a friend suggested by the arrestee) as soon as practicable and not later than 12 hours after the arrest, stating the time and place of arrest and the place of custody.",claude,,d07-arrest.pdf,d07-arrest,text,yes,,"Letter to Advocate
+
+To: Advocate Nusrat Jahan, Dhaka Judge Court
+From: Md. Arif Hossain, Mirpur-10, Dhaka
+Date: 14 May 2026
+
+Dear Madam,
+My younger brother Md. Asif Hossain (22) was arrested by police from our house at about 9:00 PM on
+10 May 2026. They did not show any warrant. Nobody from the police informed our family where he was
+taken; we found him at Pallabi Police Station the next afternoon. Today, 14 May, he is still in the
+police station and has not been produced before any magistrate. No case number has been given to us.
+Please advise what we can do.
+
+Sincerely,
+Md. Arif Hossain","Bangladesh & ors Vs. BLAST & ors
+8 SCOB [2016] AD 1 — Appellate Division (Surendra Kumar Sinha, CJ), judgment dated 24th May, 2016
+---
+Code of Criminal Procedure, 1898 Section 54 and 167: Special Powers Act, 1974 Section 3: Guide lines for the Law Enforcement Agencies: (i) A member law enforcement officer making the arrest of any person shall prepare a memorandum of arrest immediately after the arrest and such officer shall obtain the signature of the arrestee with the date and time of arrest in the said memorandum. (ii) A member law enforcement officer who arrests a person must intimate to a nearest relative of the arrestee and in the absence of his relative, to a friend to be suggested by the arrestee, as soon as practicable but not later than 12(twelve) hours of such arrest notifying the time and place of arrest and the place in custody. (iii) An entry must be made in the diary as to the ground of arrest and name of the person who informed the law enforcing officer to arrest the person or made the complaint along with his address and shall also disclose the names and particulars of the relative or the friend, as the case may be, to whom information is given about the arrest and the particulars of the law enforcing officer in whose custody the arrestee is staying. (iv) Registration of a case against the arrested person is sine-qua-non for seeking the detention of the arrestee either to the law enforcing officer’s custody or in the judicial custody under section 167(2) of the Code."
+"Based on this letter, is it lawful for the police to keep my brother this long without taking him to a magistrate?",en,file,law,criminal,the-code-of-criminal-procedure-1898-1898-s61,"No. Under section 61 of the Code of Criminal Procedure, 1898, a person arrested without a warrant may not be detained by police longer than is reasonable, and in no case more than 24 hours (excluding travel time to the Magistrate's Court) without a special order of a magistrate under section 167. He has been held since 10 May.",claude,,d07-arrest-scan.pdf,d07-arrest,scan,,,"Letter to Advocate
+
+To: Advocate Nusrat Jahan, Dhaka Judge Court
+From: Md. Arif Hossain, Mirpur-10, Dhaka
+Date: 14 May 2026
+
+Dear Madam,
+My younger brother Md. Asif Hossain (22) was arrested by police from our house at about 9:00 PM on
+10 May 2026. They did not show any warrant. Nobody from the police informed our family where he was
+taken; we found him at Pallabi Police Station the next afternoon. Today, 14 May, he is still in the
+police station and has not been produced before any magistrate. No case number has been given to us.
+Please advise what we can do.
+
+Sincerely,
+Md. Arif Hossain","The Code of Criminal Procedure, 1898 (Act No. V of 1898)
+Section 61
+61. No police-officer shall detain in custody a person arrested without warrant for a longer period than under all the circumstances of the case is reasonable, and such period shall not, in the absence of a special order of a Magistrate under section 167, exceed twenty-four hours exclusive of the time necessary for the journey from the place of arrest to the Magistrate's Court."
+The police never told our family about the arrest. What should they have done according to the Appellate Division's guidelines?,en,file,law,criminal,scob-8-ad-1-p4,"Under the Appellate Division's guidelines in Bangladesh & ors Vs. BLAST & ors (8 SCOB [2016] AD 1), the arresting officer must prepare a memorandum of arrest signed by the arrestee with date and time, and inform a nearest relative (or a friend suggested by the arrestee) as soon as practicable and not later than 12 hours after the arrest, stating the time and place of arrest and the place of custody.",claude,,d07-arrest-scan.pdf,d07-arrest,scan,,,"Letter to Advocate
+
+To: Advocate Nusrat Jahan, Dhaka Judge Court
+From: Md. Arif Hossain, Mirpur-10, Dhaka
+Date: 14 May 2026
+
+Dear Madam,
+My younger brother Md. Asif Hossain (22) was arrested by police from our house at about 9:00 PM on
+10 May 2026. They did not show any warrant. Nobody from the police informed our family where he was
+taken; we found him at Pallabi Police Station the next afternoon. Today, 14 May, he is still in the
+police station and has not been produced before any magistrate. No case number has been given to us.
+Please advise what we can do.
+
+Sincerely,
+Md. Arif Hossain","Bangladesh & ors Vs. BLAST & ors
+8 SCOB [2016] AD 1 — Appellate Division (Surendra Kumar Sinha, CJ), judgment dated 24th May, 2016
+---
+Code of Criminal Procedure, 1898 Section 54 and 167: Special Powers Act, 1974 Section 3: Guide lines for the Law Enforcement Agencies: (i) A member law enforcement officer making the arrest of any person shall prepare a memorandum of arrest immediately after the arrest and such officer shall obtain the signature of the arrestee with the date and time of arrest in the said memorandum. (ii) A member law enforcement officer who arrests a person must intimate to a nearest relative of the arrestee and in the absence of his relative, to a friend to be suggested by the arrestee, as soon as practicable but not later than 12(twelve) hours of such arrest notifying the time and place of arrest and the place in custody. (iii) An entry must be made in the diary as to the ground of arrest and name of the person who informed the law enforcing officer to arrest the person or made the complaint along with his address and shall also disclose the names and particulars of the relative or the friend, as the case may be, to whom information is given about the arrest and the particulars of the law enforcing officer in whose custody the arrestee is staying. (iv) Registration of a case against the arrested person is sine-qua-non for seeking the detention of the arrestee either to the law enforcing officer’s custody or in the judicial custody under section 167(2) of the Code."
+"Based on this letter, is it lawful for the police to keep my brother this long without taking him to a magistrate?",en,file,law,criminal,the-code-of-criminal-procedure-1898-1898-s61,"No. Under section 61 of the Code of Criminal Procedure, 1898, a person arrested without a warrant may not be detained by police longer than is reasonable, and in no case more than 24 hours (excluding travel time to the Magistrate's Court) without a special order of a magistrate under section 167. He has been held since 10 May.",claude,,d07-arrest-photo.jpg,d07-arrest,photo,,,"Letter to Advocate
+
+To: Advocate Nusrat Jahan, Dhaka Judge Court
+From: Md. Arif Hossain, Mirpur-10, Dhaka
+Date: 14 May 2026
+
+Dear Madam,
+My younger brother Md. Asif Hossain (22) was arrested by police from our house at about 9:00 PM on
+10 May 2026. They did not show any warrant. Nobody from the police informed our family where he was
+taken; we found him at Pallabi Police Station the next afternoon. Today, 14 May, he is still in the
+police station and has not been produced before any magistrate. No case number has been given to us.
+Please advise what we can do.
+
+Sincerely,
+Md. Arif Hossain","The Code of Criminal Procedure, 1898 (Act No. V of 1898)
+Section 61
+61. No police-officer shall detain in custody a person arrested without warrant for a longer period than under all the circumstances of the case is reasonable, and such period shall not, in the absence of a special order of a Magistrate under section 167, exceed twenty-four hours exclusive of the time necessary for the journey from the place of arrest to the Magistrate's Court."
+The police never told our family about the arrest. What should they have done according to the Appellate Division's guidelines?,en,file,law,criminal,scob-8-ad-1-p4,"Under the Appellate Division's guidelines in Bangladesh & ors Vs. BLAST & ors (8 SCOB [2016] AD 1), the arresting officer must prepare a memorandum of arrest signed by the arrestee with date and time, and inform a nearest relative (or a friend suggested by the arrestee) as soon as practicable and not later than 12 hours after the arrest, stating the time and place of arrest and the place of custody.",claude,,d07-arrest-photo.jpg,d07-arrest,photo,,,"Letter to Advocate
+
+To: Advocate Nusrat Jahan, Dhaka Judge Court
+From: Md. Arif Hossain, Mirpur-10, Dhaka
+Date: 14 May 2026
+
+Dear Madam,
+My younger brother Md. Asif Hossain (22) was arrested by police from our house at about 9:00 PM on
+10 May 2026. They did not show any warrant. Nobody from the police informed our family where he was
+taken; we found him at Pallabi Police Station the next afternoon. Today, 14 May, he is still in the
+police station and has not been produced before any magistrate. No case number has been given to us.
+Please advise what we can do.
+
+Sincerely,
+Md. Arif Hossain","Bangladesh & ors Vs. BLAST & ors
+8 SCOB [2016] AD 1 — Appellate Division (Surendra Kumar Sinha, CJ), judgment dated 24th May, 2016
+---
+Code of Criminal Procedure, 1898 Section 54 and 167: Special Powers Act, 1974 Section 3: Guide lines for the Law Enforcement Agencies: (i) A member law enforcement officer making the arrest of any person shall prepare a memorandum of arrest immediately after the arrest and such officer shall obtain the signature of the arrestee with the date and time of arrest in the said memorandum. (ii) A member law enforcement officer who arrests a person must intimate to a nearest relative of the arrestee and in the absence of his relative, to a friend to be suggested by the arrestee, as soon as practicable but not later than 12(twelve) hours of such arrest notifying the time and place of arrest and the place in custody. (iii) An entry must be made in the diary as to the ground of arrest and name of the person who informed the law enforcing officer to arrest the person or made the complaint along with his address and shall also disclose the names and particulars of the relative or the friend, as the case may be, to whom information is given about the arrest and the particulars of the law enforcing officer in whose custody the arrestee is staying. (iv) Registration of a case against the arrested person is sine-qua-non for seeking the detention of the arrestee either to the law enforcing officer’s custody or in the judicial custody under section 167(2) of the Code."
+এই মেসেজে যা চাওয়া হয়েছে তা কি অপরাধ? এর শাস্তি কী?,bn,file,law,uncategorized,যৌতুক-নিরোধ-আইন-২০১৮-2018-s৩,"হ্যাঁ, এটি যৌতুক দাবি। যৌতুক নিরোধ আইন, ২০১৮-এর ধারা ৩ অনুযায়ী বিবাহের কোনো পক্ষ প্রত্যক্ষ বা পরোক্ষভাবে অন্য পক্ষের কাছে যৌতুক দাবি করলে তা অপরাধ, যার শাস্তি অন্যূন এক বছর ও অনধিক পাঁচ বছর কারাদণ্ড বা অনধিক পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড।",claude,,d08-dowry-sms.docx,d08-dowry-sms,text,yes,,"মোবাইল বার্তা (স্ক্রিনশটের লিখিত রূপ)
+
+প্রেরক: ০১৭XXXXXX৫৬ (বরের মামা)
+তারিখ: ০৩ জানুয়ারি ২০২৬, রাত ১০:১৫
+
+""আসসালামু আলাইকুম বেয়াই সাহেব। বিয়ের তারিখ ঠিক রাখতে হলে ছেলেকে একটা পালসার মোটরসাইকেল আর নগদ দুই লাখ টাকা দিতে হবে। এগুলো না দিলে এই বিয়ে হবে না। বিষয়টা ভেবে আগামী শুক্রবারের মধ্যে জানাবেন।""
+
+প্রাপক: মোঃ হারুন অর রশিদ (কনের পিতা)","যৌতুক নিরোধ আইন, ২০১৮ (Act No. ৩৯ of 2018)
+Section ৩
+৩। যদি বিবাহের কোনো এক পক্ষ, প্রত্যক্ষ বা পরোক্ষভাবে, বিবাহের অন্য কোনো পক্ষের নিকট কোনো যৌতুক দাবি করেন, তাহা হইলে উহা হইবে এই আইনের অধীন একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ৫ (পাঁচ) বৎসর কিন্তু অন্যূন ১ (এক) বৎসর কারাদণ্ড বা অনধিক ৫০,০০০ (পঞ্চাশ হাজার) টাকা অর্থদণ্ড অথবা উভয় দণ্ডে দণ্ডনীয় হইবেন।"
+এই অপরাধের মামলার তদন্ত ও বিচার কোন আইন অনুযায়ী হবে?,bn,file,law,uncategorized,যৌতুক-নিরোধ-আইন-২০১৮-2018-s৮,"যৌতুক নিরোধ আইন, ২০১৮-এর ধারা ৮ অনুযায়ী এই আইনের অধীন অপরাধের তদন্ত, বিচার, আপিল ও সংশ্লিষ্ট অন্যান্য বিষয়ে ফৌজদারি কার্যবিধি, ১৮৯৮-এর বিধান প্রযোজ্য।",claude,,d08-dowry-sms.docx,d08-dowry-sms,text,yes,,"মোবাইল বার্তা (স্ক্রিনশটের লিখিত রূপ)
+
+প্রেরক: ০১৭XXXXXX৫৬ (বরের মামা)
+তারিখ: ০৩ জানুয়ারি ২০২৬, রাত ১০:১৫
+
+""আসসালামু আলাইকুম বেয়াই সাহেব। বিয়ের তারিখ ঠিক রাখতে হলে ছেলেকে একটা পালসার মোটরসাইকেল আর নগদ দুই লাখ টাকা দিতে হবে। এগুলো না দিলে এই বিয়ে হবে না। বিষয়টা ভেবে আগামী শুক্রবারের মধ্যে জানাবেন।""
+
+প্রাপক: মোঃ হারুন অর রশিদ (কনের পিতা)","যৌতুক নিরোধ আইন, ২০১৮ (Act No. ৩৯ of 2018)
+Section ৮
+৮। এই আইনের অধীন সংঘটিত অপরাধের তদন্ত, বিচার, আপীল এবং সংশ্লিষ্ট অন্যান্য বিষয়েCode of Criminal Procedure, 1898(Act No. V of 1898) এর বিধানাবলী প্রযোজ্য হইবে।"
+এই মেসেজে যা চাওয়া হয়েছে তা কি অপরাধ? এর শাস্তি কী?,bn,file,law,uncategorized,যৌতুক-নিরোধ-আইন-২০১৮-2018-s৩,"হ্যাঁ, এটি যৌতুক দাবি। যৌতুক নিরোধ আইন, ২০১৮-এর ধারা ৩ অনুযায়ী বিবাহের কোনো পক্ষ প্রত্যক্ষ বা পরোক্ষভাবে অন্য পক্ষের কাছে যৌতুক দাবি করলে তা অপরাধ, যার শাস্তি অন্যূন এক বছর ও অনধিক পাঁচ বছর কারাদণ্ড বা অনধিক পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড।",claude,,d08-dowry-sms-scan.pdf,d08-dowry-sms,scan,,,"মোবাইল বার্তা (স্ক্রিনশটের লিখিত রূপ)
+
+প্রেরক: ০১৭XXXXXX৫৬ (বরের মামা)
+তারিখ: ০৩ জানুয়ারি ২০২৬, রাত ১০:১৫
+
+""আসসালামু আলাইকুম বেয়াই সাহেব। বিয়ের তারিখ ঠিক রাখতে হলে ছেলেকে একটা পালসার মোটরসাইকেল আর নগদ দুই লাখ টাকা দিতে হবে। এগুলো না দিলে এই বিয়ে হবে না। বিষয়টা ভেবে আগামী শুক্রবারের মধ্যে জানাবেন।""
+
+প্রাপক: মোঃ হারুন অর রশিদ (কনের পিতা)","যৌতুক নিরোধ আইন, ২০১৮ (Act No. ৩৯ of 2018)
+Section ৩
+৩। যদি বিবাহের কোনো এক পক্ষ, প্রত্যক্ষ বা পরোক্ষভাবে, বিবাহের অন্য কোনো পক্ষের নিকট কোনো যৌতুক দাবি করেন, তাহা হইলে উহা হইবে এই আইনের অধীন একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ৫ (পাঁচ) বৎসর কিন্তু অন্যূন ১ (এক) বৎসর কারাদণ্ড বা অনধিক ৫০,০০০ (পঞ্চাশ হাজার) টাকা অর্থদণ্ড অথবা উভয় দণ্ডে দণ্ডনীয় হইবেন।"
+এই অপরাধের মামলার তদন্ত ও বিচার কোন আইন অনুযায়ী হবে?,bn,file,law,uncategorized,যৌতুক-নিরোধ-আইন-২০১৮-2018-s৮,"যৌতুক নিরোধ আইন, ২০১৮-এর ধারা ৮ অনুযায়ী এই আইনের অধীন অপরাধের তদন্ত, বিচার, আপিল ও সংশ্লিষ্ট অন্যান্য বিষয়ে ফৌজদারি কার্যবিধি, ১৮৯৮-এর বিধান প্রযোজ্য।",claude,,d08-dowry-sms-scan.pdf,d08-dowry-sms,scan,,,"মোবাইল বার্তা (স্ক্রিনশটের লিখিত রূপ)
+
+প্রেরক: ০১৭XXXXXX৫৬ (বরের মামা)
+তারিখ: ০৩ জানুয়ারি ২০২৬, রাত ১০:১৫
+
+""আসসালামু আলাইকুম বেয়াই সাহেব। বিয়ের তারিখ ঠিক রাখতে হলে ছেলেকে একটা পালসার মোটরসাইকেল আর নগদ দুই লাখ টাকা দিতে হবে। এগুলো না দিলে এই বিয়ে হবে না। বিষয়টা ভেবে আগামী শুক্রবারের মধ্যে জানাবেন।""
+
+প্রাপক: মোঃ হারুন অর রশিদ (কনের পিতা)","যৌতুক নিরোধ আইন, ২০১৮ (Act No. ৩৯ of 2018)
+Section ৮
+৮। এই আইনের অধীন সংঘটিত অপরাধের তদন্ত, বিচার, আপীল এবং সংশ্লিষ্ট অন্যান্য বিষয়েCode of Criminal Procedure, 1898(Act No. V of 1898) এর বিধানাবলী প্রযোজ্য হইবে।"
+এই মেসেজে যা চাওয়া হয়েছে তা কি অপরাধ? এর শাস্তি কী?,bn,file,law,uncategorized,যৌতুক-নিরোধ-আইন-২০১৮-2018-s৩,"হ্যাঁ, এটি যৌতুক দাবি। যৌতুক নিরোধ আইন, ২০১৮-এর ধারা ৩ অনুযায়ী বিবাহের কোনো পক্ষ প্রত্যক্ষ বা পরোক্ষভাবে অন্য পক্ষের কাছে যৌতুক দাবি করলে তা অপরাধ, যার শাস্তি অন্যূন এক বছর ও অনধিক পাঁচ বছর কারাদণ্ড বা অনধিক পঞ্চাশ হাজার টাকা অর্থদণ্ড বা উভয় দণ্ড।",claude,,d08-dowry-sms-photo.jpg,d08-dowry-sms,photo,,,"মোবাইল বার্তা (স্ক্রিনশটের লিখিত রূপ)
+
+প্রেরক: ০১৭XXXXXX৫৬ (বরের মামা)
+তারিখ: ০৩ জানুয়ারি ২০২৬, রাত ১০:১৫
+
+""আসসালামু আলাইকুম বেয়াই সাহেব। বিয়ের তারিখ ঠিক রাখতে হলে ছেলেকে একটা পালসার মোটরসাইকেল আর নগদ দুই লাখ টাকা দিতে হবে। এগুলো না দিলে এই বিয়ে হবে না। বিষয়টা ভেবে আগামী শুক্রবারের মধ্যে জানাবেন।""
+
+প্রাপক: মোঃ হারুন অর রশিদ (কনের পিতা)","যৌতুক নিরোধ আইন, ২০১৮ (Act No. ৩৯ of 2018)
+Section ৩
+৩। যদি বিবাহের কোনো এক পক্ষ, প্রত্যক্ষ বা পরোক্ষভাবে, বিবাহের অন্য কোনো পক্ষের নিকট কোনো যৌতুক দাবি করেন, তাহা হইলে উহা হইবে এই আইনের অধীন একটি অপরাধ এবং তজ্জন্য তিনি অনধিক ৫ (পাঁচ) বৎসর কিন্তু অন্যূন ১ (এক) বৎসর কারাদণ্ড বা অনধিক ৫০,০০০ (পঞ্চাশ হাজার) টাকা অর্থদণ্ড অথবা উভয় দণ্ডে দণ্ডনীয় হইবেন।"
+এই অপরাধের মামলার তদন্ত ও বিচার কোন আইন অনুযায়ী হবে?,bn,file,law,uncategorized,যৌতুক-নিরোধ-আইন-২০১৮-2018-s৮,"যৌতুক নিরোধ আইন, ২০১৮-এর ধারা ৮ অনুযায়ী এই আইনের অধীন অপরাধের তদন্ত, বিচার, আপিল ও সংশ্লিষ্ট অন্যান্য বিষয়ে ফৌজদারি কার্যবিধি, ১৮৯৮-এর বিধান প্রযোজ্য।",claude,,d08-dowry-sms-photo.jpg,d08-dowry-sms,photo,,,"মোবাইল বার্তা (স্ক্রিনশটের লিখিত রূপ)
+
+প্রেরক: ০১৭XXXXXX৫৬ (বরের মামা)
+তারিখ: ০৩ জানুয়ারি ২০২৬, রাত ১০:১৫
+
+""আসসালামু আলাইকুম বেয়াই সাহেব। বিয়ের তারিখ ঠিক রাখতে হলে ছেলেকে একটা পালসার মোটরসাইকেল আর নগদ দুই লাখ টাকা দিতে হবে। এগুলো না দিলে এই বিয়ে হবে না। বিষয়টা ভেবে আগামী শুক্রবারের মধ্যে জানাবেন।""
+
+প্রাপক: মোঃ হারুন অর রশিদ (কনের পিতা)","যৌতুক নিরোধ আইন, ২০১৮ (Act No. ৩৯ of 2018)
+Section ৮
+৮। এই আইনের অধীন সংঘটিত অপরাধের তদন্ত, বিচার, আপীল এবং সংশ্লিষ্ট অন্যান্য বিষয়েCode of Criminal Procedure, 1898(Act No. V of 1898) এর বিধানাবলী প্রযোজ্য হইবে।"
+এই দানপত্র এখনো রেজিস্ট্রি হয়নি। এতে কি জমির মালিকানা আমার নামে এসেছে?,bn,file,law,land,the-registration-act-1908-1908-s17-p1;the-registration-act-1908-1908-s49,"না। রেজিস্ট্রেশন অ্যাক্ট, ১৯০৮-এর ধারা ১৭(১) অনুযায়ী স্থাবর সম্পত্তির দানপত্র ও হেবার ঘোষণা নিবন্ধন বাধ্যতামূলক, এবং ধারা ৪৯ অনুযায়ী নিবন্ধন বাধ্যতামূলক এমন দলিল নিবন্ধিত না হলে তা স্থাবর সম্পত্তিতে কোনো অধিকার, স্বত্ব বা স্বার্থ সৃষ্টি বা হস্তান্তর করে না।",claude,,d09-gift-deed.pdf,d09-gift-deed,text,yes,,"হেবা (দান) দলিলের খসড়া
+
+দাতা: মোঃ আলতাফ হোসেন, পিতা: মৃত ইউসুফ আলী, সাং: পাটগ্রাম, লালমনিরহাট
+গ্রহীতা: মোঃ রাকিবুল হাসান (দাতার পুত্র)
+
+আমি স্বেচ্ছায় ও সজ্ঞানে আমার মালিকানাধীন পাটগ্রাম মৌজার জে.এল. নং ৪২, খতিয়ান নং ৩১৫, দাগ নং ১১৮৭-এর ৩৩ শতাংশ জমি আমার পুত্রকে হেবা (দান) করিলাম। আজ হইতে উক্ত জমিতে আমার আর কোনো স্বত্ব রহিল না।
+
+দলিল সম্পাদনের তারিখ: ০৫ জানুয়ারি ২০২৬
+সাক্ষী: ১. মোঃ জাকির হোসেন ২. মোঃ শফিকুল ইসলাম
+
+(দ্রষ্টব্য: দলিলটি এখনো সাব-রেজিস্ট্রি অফিসে নিবন্ধন করা হয় নাই।)","The Registration Act, 1908 (Act No. XVI of 1908)
+Section 17
+17. (1) The following documents shall be registered, if the property to which they relate is situate in a district in which, and if they have been executed on or after the date on which,7[* * *] this Act came or comes into force, namely:-(a) instruments of gift of immoveable property;8[(aa) declaration of heba under the Muslim Personal Law (Shariat);]9[(aaa) declaration of gift under the Hindu, Christian and Buddhist Personal Law;](b) other non-testamentary instruments which purport or operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent,10[* * *] to or in immoveable property;Explanation − In the case of an assignment of a mortgage the consideration for the deed of assignment shall be deemed to be the value for registration.(c) Non-testamentary instruments (other than the acknowledge-ment of a receipt or payment made in respect of any transaction to which an instrument registered under clause (o) relates) which acknowledge the receipt or payment of any consideration on account of the creation, declaration, assignment, limitation or extinction of any such right, title or interest;
+
+The Registration Act, 1908 (Act No. XVI of 1908)
+Section 49
+49. No document required to be registered under this Act or under any earlier law providing for or relating to registration of documents shall-(a) operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, to or in immoveable property, or(b) confer any power to adopt,unless it has been registered."
+এই দলিল কত দিনের মধ্যে রেজিস্ট্রির জন্য দাখিল করতে হবে?,bn,file,law,land,the-registration-act-1908-1908-s23,"রেজিস্ট্রেশন অ্যাক্ট, ১৯০৮-এর ধারা ২৩ অনুযায়ী উইল ছাড়া অন্য দলিল সম্পাদনের তারিখ থেকে তিন মাসের মধ্যে নিবন্ধনের জন্য দাখিল করতে হয়; দলিলটি ০৫ জানুয়ারি ২০২৬ সম্পাদিত, তাই এর তিন মাসের মধ্যে (ধারা ২৪-২৬-এর বিধান সাপেক্ষে)।",claude,,d09-gift-deed.pdf,d09-gift-deed,text,yes,,"হেবা (দান) দলিলের খসড়া
+
+দাতা: মোঃ আলতাফ হোসেন, পিতা: মৃত ইউসুফ আলী, সাং: পাটগ্রাম, লালমনিরহাট
+গ্রহীতা: মোঃ রাকিবুল হাসান (দাতার পুত্র)
+
+আমি স্বেচ্ছায় ও সজ্ঞানে আমার মালিকানাধীন পাটগ্রাম মৌজার জে.এল. নং ৪২, খতিয়ান নং ৩১৫, দাগ নং ১১৮৭-এর ৩৩ শতাংশ জমি আমার পুত্রকে হেবা (দান) করিলাম। আজ হইতে উক্ত জমিতে আমার আর কোনো স্বত্ব রহিল না।
+
+দলিল সম্পাদনের তারিখ: ০৫ জানুয়ারি ২০২৬
+সাক্ষী: ১. মোঃ জাকির হোসেন ২. মোঃ শফিকুল ইসলাম
+
+(দ্রষ্টব্য: দলিলটি এখনো সাব-রেজিস্ট্রি অফিসে নিবন্ধন করা হয় নাই।)","The Registration Act, 1908 (Act No. XVI of 1908)
+Section 23
+23. Subject to the provisions contained in sections 24, 25 and 26, no document other than a will shall be accepted for registration unless presented for that purpose to the proper officer within19[three months] from the date of its execution:Provided that a copy of a decree or order may be presented within20[three months] from the day on which the decree or order was made, or, where it is appealable, within21[three months] from the day on which it becomes final."
+এই দানপত্র এখনো রেজিস্ট্রি হয়নি। এতে কি জমির মালিকানা আমার নামে এসেছে?,bn,file,law,land,the-registration-act-1908-1908-s17-p1;the-registration-act-1908-1908-s49,"না। রেজিস্ট্রেশন অ্যাক্ট, ১৯০৮-এর ধারা ১৭(১) অনুযায়ী স্থাবর সম্পত্তির দানপত্র ও হেবার ঘোষণা নিবন্ধন বাধ্যতামূলক, এবং ধারা ৪৯ অনুযায়ী নিবন্ধন বাধ্যতামূলক এমন দলিল নিবন্ধিত না হলে তা স্থাবর সম্পত্তিতে কোনো অধিকার, স্বত্ব বা স্বার্থ সৃষ্টি বা হস্তান্তর করে না।",claude,,d09-gift-deed-scan.pdf,d09-gift-deed,scan,,,"হেবা (দান) দলিলের খসড়া
+
+দাতা: মোঃ আলতাফ হোসেন, পিতা: মৃত ইউসুফ আলী, সাং: পাটগ্রাম, লালমনিরহাট
+গ্রহীতা: মোঃ রাকিবুল হাসান (দাতার পুত্র)
+
+আমি স্বেচ্ছায় ও সজ্ঞানে আমার মালিকানাধীন পাটগ্রাম মৌজার জে.এল. নং ৪২, খতিয়ান নং ৩১৫, দাগ নং ১১৮৭-এর ৩৩ শতাংশ জমি আমার পুত্রকে হেবা (দান) করিলাম। আজ হইতে উক্ত জমিতে আমার আর কোনো স্বত্ব রহিল না।
+
+দলিল সম্পাদনের তারিখ: ০৫ জানুয়ারি ২০২৬
+সাক্ষী: ১. মোঃ জাকির হোসেন ২. মোঃ শফিকুল ইসলাম
+
+(দ্রষ্টব্য: দলিলটি এখনো সাব-রেজিস্ট্রি অফিসে নিবন্ধন করা হয় নাই।)","The Registration Act, 1908 (Act No. XVI of 1908)
+Section 17
+17. (1) The following documents shall be registered, if the property to which they relate is situate in a district in which, and if they have been executed on or after the date on which,7[* * *] this Act came or comes into force, namely:-(a) instruments of gift of immoveable property;8[(aa) declaration of heba under the Muslim Personal Law (Shariat);]9[(aaa) declaration of gift under the Hindu, Christian and Buddhist Personal Law;](b) other non-testamentary instruments which purport or operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent,10[* * *] to or in immoveable property;Explanation − In the case of an assignment of a mortgage the consideration for the deed of assignment shall be deemed to be the value for registration.(c) Non-testamentary instruments (other than the acknowledge-ment of a receipt or payment made in respect of any transaction to which an instrument registered under clause (o) relates) which acknowledge the receipt or payment of any consideration on account of the creation, declaration, assignment, limitation or extinction of any such right, title or interest;
+
+The Registration Act, 1908 (Act No. XVI of 1908)
+Section 49
+49. No document required to be registered under this Act or under any earlier law providing for or relating to registration of documents shall-(a) operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, to or in immoveable property, or(b) confer any power to adopt,unless it has been registered."
+এই দলিল কত দিনের মধ্যে রেজিস্ট্রির জন্য দাখিল করতে হবে?,bn,file,law,land,the-registration-act-1908-1908-s23,"রেজিস্ট্রেশন অ্যাক্ট, ১৯০৮-এর ধারা ২৩ অনুযায়ী উইল ছাড়া অন্য দলিল সম্পাদনের তারিখ থেকে তিন মাসের মধ্যে নিবন্ধনের জন্য দাখিল করতে হয়; দলিলটি ০৫ জানুয়ারি ২০২৬ সম্পাদিত, তাই এর তিন মাসের মধ্যে (ধারা ২৪-২৬-এর বিধান সাপেক্ষে)।",claude,,d09-gift-deed-scan.pdf,d09-gift-deed,scan,,,"হেবা (দান) দলিলের খসড়া
+
+দাতা: মোঃ আলতাফ হোসেন, পিতা: মৃত ইউসুফ আলী, সাং: পাটগ্রাম, লালমনিরহাট
+গ্রহীতা: মোঃ রাকিবুল হাসান (দাতার পুত্র)
+
+আমি স্বেচ্ছায় ও সজ্ঞানে আমার মালিকানাধীন পাটগ্রাম মৌজার জে.এল. নং ৪২, খতিয়ান নং ৩১৫, দাগ নং ১১৮৭-এর ৩৩ শতাংশ জমি আমার পুত্রকে হেবা (দান) করিলাম। আজ হইতে উক্ত জমিতে আমার আর কোনো স্বত্ব রহিল না।
+
+দলিল সম্পাদনের তারিখ: ০৫ জানুয়ারি ২০২৬
+সাক্ষী: ১. মোঃ জাকির হোসেন ২. মোঃ শফিকুল ইসলাম
+
+(দ্রষ্টব্য: দলিলটি এখনো সাব-রেজিস্ট্রি অফিসে নিবন্ধন করা হয় নাই।)","The Registration Act, 1908 (Act No. XVI of 1908)
+Section 23
+23. Subject to the provisions contained in sections 24, 25 and 26, no document other than a will shall be accepted for registration unless presented for that purpose to the proper officer within19[three months] from the date of its execution:Provided that a copy of a decree or order may be presented within20[three months] from the day on which the decree or order was made, or, where it is appealable, within21[three months] from the day on which it becomes final."
+এই দানপত্র এখনো রেজিস্ট্রি হয়নি। এতে কি জমির মালিকানা আমার নামে এসেছে?,bn,file,law,land,the-registration-act-1908-1908-s17-p1;the-registration-act-1908-1908-s49,"না। রেজিস্ট্রেশন অ্যাক্ট, ১৯০৮-এর ধারা ১৭(১) অনুযায়ী স্থাবর সম্পত্তির দানপত্র ও হেবার ঘোষণা নিবন্ধন বাধ্যতামূলক, এবং ধারা ৪৯ অনুযায়ী নিবন্ধন বাধ্যতামূলক এমন দলিল নিবন্ধিত না হলে তা স্থাবর সম্পত্তিতে কোনো অধিকার, স্বত্ব বা স্বার্থ সৃষ্টি বা হস্তান্তর করে না।",claude,,d09-gift-deed-photo.jpg,d09-gift-deed,photo,,,"হেবা (দান) দলিলের খসড়া
+
+দাতা: মোঃ আলতাফ হোসেন, পিতা: মৃত ইউসুফ আলী, সাং: পাটগ্রাম, লালমনিরহাট
+গ্রহীতা: মোঃ রাকিবুল হাসান (দাতার পুত্র)
+
+আমি স্বেচ্ছায় ও সজ্ঞানে আমার মালিকানাধীন পাটগ্রাম মৌজার জে.এল. নং ৪২, খতিয়ান নং ৩১৫, দাগ নং ১১৮৭-এর ৩৩ শতাংশ জমি আমার পুত্রকে হেবা (দান) করিলাম। আজ হইতে উক্ত জমিতে আমার আর কোনো স্বত্ব রহিল না।
+
+দলিল সম্পাদনের তারিখ: ০৫ জানুয়ারি ২০২৬
+সাক্ষী: ১. মোঃ জাকির হোসেন ২. মোঃ শফিকুল ইসলাম
+
+(দ্রষ্টব্য: দলিলটি এখনো সাব-রেজিস্ট্রি অফিসে নিবন্ধন করা হয় নাই।)","The Registration Act, 1908 (Act No. XVI of 1908)
+Section 17
+17. (1) The following documents shall be registered, if the property to which they relate is situate in a district in which, and if they have been executed on or after the date on which,7[* * *] this Act came or comes into force, namely:-(a) instruments of gift of immoveable property;8[(aa) declaration of heba under the Muslim Personal Law (Shariat);]9[(aaa) declaration of gift under the Hindu, Christian and Buddhist Personal Law;](b) other non-testamentary instruments which purport or operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent,10[* * *] to or in immoveable property;Explanation − In the case of an assignment of a mortgage the consideration for the deed of assignment shall be deemed to be the value for registration.(c) Non-testamentary instruments (other than the acknowledge-ment of a receipt or payment made in respect of any transaction to which an instrument registered under clause (o) relates) which acknowledge the receipt or payment of any consideration on account of the creation, declaration, assignment, limitation or extinction of any such right, title or interest;
+
+The Registration Act, 1908 (Act No. XVI of 1908)
+Section 49
+49. No document required to be registered under this Act or under any earlier law providing for or relating to registration of documents shall-(a) operate to create, declare, assign, limit or extinguish, whether in present or in future, any right, title or interest, whether vested or contingent, to or in immoveable property, or(b) confer any power to adopt,unless it has been registered."
+এই দলিল কত দিনের মধ্যে রেজিস্ট্রির জন্য দাখিল করতে হবে?,bn,file,law,land,the-registration-act-1908-1908-s23,"রেজিস্ট্রেশন অ্যাক্ট, ১৯০৮-এর ধারা ২৩ অনুযায়ী উইল ছাড়া অন্য দলিল সম্পাদনের তারিখ থেকে তিন মাসের মধ্যে নিবন্ধনের জন্য দাখিল করতে হয়; দলিলটি ০৫ জানুয়ারি ২০২৬ সম্পাদিত, তাই এর তিন মাসের মধ্যে (ধারা ২৪-২৬-এর বিধান সাপেক্ষে)।",claude,,d09-gift-deed-photo.jpg,d09-gift-deed,photo,,,"হেবা (দান) দলিলের খসড়া
+
+দাতা: মোঃ আলতাফ হোসেন, পিতা: মৃত ইউসুফ আলী, সাং: পাটগ্রাম, লালমনিরহাট
+গ্রহীতা: মোঃ রাকিবুল হাসান (দাতার পুত্র)
+
+আমি স্বেচ্ছায় ও সজ্ঞানে আমার মালিকানাধীন পাটগ্রাম মৌজার জে.এল. নং ৪২, খতিয়ান নং ৩১৫, দাগ নং ১১৮৭-এর ৩৩ শতাংশ জমি আমার পুত্রকে হেবা (দান) করিলাম। আজ হইতে উক্ত জমিতে আমার আর কোনো স্বত্ব রহিল না।
+
+দলিল সম্পাদনের তারিখ: ০৫ জানুয়ারি ২০২৬
+সাক্ষী: ১. মোঃ জাকির হোসেন ২. মোঃ শফিকুল ইসলাম
+
+(দ্রষ্টব্য: দলিলটি এখনো সাব-রেজিস্ট্রি অফিসে নিবন্ধন করা হয় নাই।)","The Registration Act, 1908 (Act No. XVI of 1908)
+Section 23
+23. Subject to the provisions contained in sections 24, 25 and 26, no document other than a will shall be accepted for registration unless presented for that purpose to the proper officer within19[three months] from the date of its execution:Provided that a copy of a decree or order may be presented within20[three months] from the day on which the decree or order was made, or, where it is appealable, within21[three months] from the day on which it becomes final."
+My landlord took three months' rent in advance under this agreement. Is that allowed?,en,file,law,uncategorized,বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১০;বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s২৩,"No, not without the Controller's approval. Under section 10 of the House Rent Control Act, 1991, a landlord may not demand or accept more than one month's rent as advance without the prior approval of the Controller. Under section 23(c), knowingly taking more than one month's advance rent without the Controller's written consent is an offence punishable with a fine.",claude,,d10-rent.pdf,d10-rent,text,yes,,"HOUSE RENT AGREEMENT
+
+This agreement is made on 01 December 2025 at Dhaka between
+Landlord: Mr. Mahbubur Rahman, House 37, Road 6, Block C, Mohammadpur, Dhaka
+Tenant: Mr. Saiful Islam
+
+1. The tenant takes the 3-bedroom flat on the 4th floor from 01 January 2026.
+2. Monthly rent: Tk 25,000 (twenty-five thousand), payable by the 5th of each month.
+3. Advance: the tenant has paid Tk 75,000 (three months' rent) as advance rent.
+4. The rent will increase by 15% every year on 1 January.
+5. Either party may end this agreement with two months' notice.
+
+Signed: Landlord ..................   Tenant ..................
+Witnesses: 1. ............  2. ............","বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১০
+১০৷ ভাড়া দেওয়া বা ভাড়া নবায়ন করা বা ভাড়ার মেয়াদ বৃদ্ধি করার কারণে কোন ব্যক্তি-(ক) ভাড়ার অতিরিক্ত কোন প্রিমিয়াম, সালামী, জামানত বা অনুরূপ কোন অর্থ দাবী বা গ্রহণ করিতে বা প্রদানের জন্য বলিতে পারিবেন না, অথবা(খ) নিয়ন্ত্রকের পূর্বানুমোদন ব্যতিরেকে, অগ্রীম ভাড়া হিসাবে এক মাসের ভাড়ার অতিরিক্ত টাকা দাবী বা গ্রহণ করিতে পারিবেন না৷
+
+বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ২৩
+২৩৷ যদি কোন ব্যক্তি জ্ঞাতসারে-(ক) ধারা ৮ বা ধারা ৯ এ বিবৃত কারণ ব্যতিরেকে অন্য কোন কারণে মানসম্মত ভাড়া অপেক্ষা অধিক ভাড়া প্রত্যক্ষ বা পরোক্ষভাবে গ্রহণ করেন; বা(খ) ধারা ১১ এ বিবৃত কারণ ব্যতিরেকে অন্য কোন কারণে মানসম্মত ভাড়ার অতিরিক্ত হিসাব প্রত্যক্ষ বা পরোক্ষভাবে প্রিমিয়াম, সালামী, জামানত বা অনুরূপ কোন টাকা গ্রহণ করেন বা দাবী করেন বা দেওয়ার জন্য প্রস্তাব করেন; বা(গ) নিয়ন্ত্রকের লিখিত সম্মতি ব্যতিরেকে অগ্রিম ভাড়া বাবদ এক মাসের ভাড়ার অধিক ভাড়া গ্রহণ করেন;তাহা হইলে তিনি সংক্ষুব্ধ ব্যক্তি বা সরকারের অভিযোগের ভিত্তিতে-(অ) দফা (ক) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য মানসম্মত ভাড়ার অতিরিক্ত আদায়কৃত টাকার দ্বিগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন এবং পরবর্তী প্রত্যেকবারের অপরাধের জন্য উক্ত অতিরিক্ত টাকার তিনগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন;(আ) দফা (খ) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য দুই হাজার টাকা পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন এবং পরবর্তী প্রত্যেক বারের অপরাধের জন্য পাঁচ হাজার টাকা পর্যন্ত্ম অর্থদণ্ডে দণ্ডনীয় হইবে;(ই) দফা (গ) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য এক মাসের ভাড়ার অতিরিক্ত যে টাকা আদায় করা হইয়াছে উহার দ্বিগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন, এবং পরবর্তী প্রত্যেক বারের অপরাধের জন্য এক মাসের ভাড়ার অতিরিক্ত যে টাকা আদায় করা হইয়াছে উহার তিনগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন৷"
+Can the rent be raised by 15% every year as this agreement says?,en,file,law,uncategorized,বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১৫;বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১৬,"Not freely. Under section 15 of the House Rent Control Act, 1991, the Controller fixes the standard rent of a house, on the application of the landlord or tenant, so that the yearly rent equals 15% of the market value of the house; under section 16 the standard rent may be re-fixed on application every two years.",claude,,d10-rent.pdf,d10-rent,text,yes,,"HOUSE RENT AGREEMENT
+
+This agreement is made on 01 December 2025 at Dhaka between
+Landlord: Mr. Mahbubur Rahman, House 37, Road 6, Block C, Mohammadpur, Dhaka
+Tenant: Mr. Saiful Islam
+
+1. The tenant takes the 3-bedroom flat on the 4th floor from 01 January 2026.
+2. Monthly rent: Tk 25,000 (twenty-five thousand), payable by the 5th of each month.
+3. Advance: the tenant has paid Tk 75,000 (three months' rent) as advance rent.
+4. The rent will increase by 15% every year on 1 January.
+5. Either party may end this agreement with two months' notice.
+
+Signed: Landlord ..................   Tenant ..................
+Witnesses: 1. ............  2. ............","বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১৫
+১৫৷ নিয়ন্ত্রক, বাড়ী-মালিক বা ভাড়াটিয়ার আবেদনের ভিত্তিতে, কোন বাড়ীর মানসম্মত ভাড়া নির্ধারণ করিবেন এবং এমনভাবে উহা নির্ধারণ করিবেন যেন উহার বাত্সরিক পরিমাণ বিধি দ্বারা নির্ধারিত পদ্ধতিতে স্থিরকৃত উক্ত বাড়ীর বাজার মূল্যের ১৫% শতাংশের সমান হয় :তবে শর্ত থাকে যে, যেক্ষেত্রে মানসম্মত ভাড়ার পরিমাণ Premises Rent Control Ordinance, 1986 (XXII of 1986) এর অধীন নির্ধারণ করা হইয়াছে সেক্ষেত্রে অনুরূপভাবে নির্ধারিত মানসম্মত ভাড়া, নিয়ন্ত্রক কর্তৃক সংশোধন বা পরিবর্তন না করা পর্যন্ত, এই ধারার অধীন নির্ধারিত মানসম্মত ভাড়া হিসাবে গণ্য হইবে৷
+
+বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১৬
+১৬৷ (১) যেক্ষেত্রে ধারা ১৫ এর অধীন মানসম্মত ভাড়া নির্ধারণকালে দরখাস্ত পেশ করার সময়ে প্রদেয় ভাড়া বৃদ্ধি বা হ্রাস করা হয় সেক্ষেত্রে দরখাস্ত পেশের তারিখের অব্যবহিত পরের মাস হইতে মানসম্মত ভাড়া প্রদেয় হইবে৷(২) মানসম্মত ভাড়া, বাড়ী-মালিক বা ভাড়াটিয়ার আবেদনের ভিত্তিতে, প্রতি দুই বত্সর পর নিয়ন্ত্রক কর্তৃক ধারা ১৫ এর বিধান অনুযায়ী পুনঃ নির্ধারণ করা যাইবে৷"
+My landlord took three months' rent in advance under this agreement. Is that allowed?,en,file,law,uncategorized,বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১০;বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s২৩,"No, not without the Controller's approval. Under section 10 of the House Rent Control Act, 1991, a landlord may not demand or accept more than one month's rent as advance without the prior approval of the Controller. Under section 23(c), knowingly taking more than one month's advance rent without the Controller's written consent is an offence punishable with a fine.",claude,,d10-rent-scan.pdf,d10-rent,scan,,,"HOUSE RENT AGREEMENT
+
+This agreement is made on 01 December 2025 at Dhaka between
+Landlord: Mr. Mahbubur Rahman, House 37, Road 6, Block C, Mohammadpur, Dhaka
+Tenant: Mr. Saiful Islam
+
+1. The tenant takes the 3-bedroom flat on the 4th floor from 01 January 2026.
+2. Monthly rent: Tk 25,000 (twenty-five thousand), payable by the 5th of each month.
+3. Advance: the tenant has paid Tk 75,000 (three months' rent) as advance rent.
+4. The rent will increase by 15% every year on 1 January.
+5. Either party may end this agreement with two months' notice.
+
+Signed: Landlord ..................   Tenant ..................
+Witnesses: 1. ............  2. ............","বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১০
+১০৷ ভাড়া দেওয়া বা ভাড়া নবায়ন করা বা ভাড়ার মেয়াদ বৃদ্ধি করার কারণে কোন ব্যক্তি-(ক) ভাড়ার অতিরিক্ত কোন প্রিমিয়াম, সালামী, জামানত বা অনুরূপ কোন অর্থ দাবী বা গ্রহণ করিতে বা প্রদানের জন্য বলিতে পারিবেন না, অথবা(খ) নিয়ন্ত্রকের পূর্বানুমোদন ব্যতিরেকে, অগ্রীম ভাড়া হিসাবে এক মাসের ভাড়ার অতিরিক্ত টাকা দাবী বা গ্রহণ করিতে পারিবেন না৷
+
+বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ২৩
+২৩৷ যদি কোন ব্যক্তি জ্ঞাতসারে-(ক) ধারা ৮ বা ধারা ৯ এ বিবৃত কারণ ব্যতিরেকে অন্য কোন কারণে মানসম্মত ভাড়া অপেক্ষা অধিক ভাড়া প্রত্যক্ষ বা পরোক্ষভাবে গ্রহণ করেন; বা(খ) ধারা ১১ এ বিবৃত কারণ ব্যতিরেকে অন্য কোন কারণে মানসম্মত ভাড়ার অতিরিক্ত হিসাব প্রত্যক্ষ বা পরোক্ষভাবে প্রিমিয়াম, সালামী, জামানত বা অনুরূপ কোন টাকা গ্রহণ করেন বা দাবী করেন বা দেওয়ার জন্য প্রস্তাব করেন; বা(গ) নিয়ন্ত্রকের লিখিত সম্মতি ব্যতিরেকে অগ্রিম ভাড়া বাবদ এক মাসের ভাড়ার অধিক ভাড়া গ্রহণ করেন;তাহা হইলে তিনি সংক্ষুব্ধ ব্যক্তি বা সরকারের অভিযোগের ভিত্তিতে-(অ) দফা (ক) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য মানসম্মত ভাড়ার অতিরিক্ত আদায়কৃত টাকার দ্বিগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন এবং পরবর্তী প্রত্যেকবারের অপরাধের জন্য উক্ত অতিরিক্ত টাকার তিনগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন;(আ) দফা (খ) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য দুই হাজার টাকা পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন এবং পরবর্তী প্রত্যেক বারের অপরাধের জন্য পাঁচ হাজার টাকা পর্যন্ত্ম অর্থদণ্ডে দণ্ডনীয় হইবে;(ই) দফা (গ) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য এক মাসের ভাড়ার অতিরিক্ত যে টাকা আদায় করা হইয়াছে উহার দ্বিগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন, এবং পরবর্তী প্রত্যেক বারের অপরাধের জন্য এক মাসের ভাড়ার অতিরিক্ত যে টাকা আদায় করা হইয়াছে উহার তিনগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন৷"
+Can the rent be raised by 15% every year as this agreement says?,en,file,law,uncategorized,বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১৫;বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১৬,"Not freely. Under section 15 of the House Rent Control Act, 1991, the Controller fixes the standard rent of a house, on the application of the landlord or tenant, so that the yearly rent equals 15% of the market value of the house; under section 16 the standard rent may be re-fixed on application every two years.",claude,,d10-rent-scan.pdf,d10-rent,scan,,,"HOUSE RENT AGREEMENT
+
+This agreement is made on 01 December 2025 at Dhaka between
+Landlord: Mr. Mahbubur Rahman, House 37, Road 6, Block C, Mohammadpur, Dhaka
+Tenant: Mr. Saiful Islam
+
+1. The tenant takes the 3-bedroom flat on the 4th floor from 01 January 2026.
+2. Monthly rent: Tk 25,000 (twenty-five thousand), payable by the 5th of each month.
+3. Advance: the tenant has paid Tk 75,000 (three months' rent) as advance rent.
+4. The rent will increase by 15% every year on 1 January.
+5. Either party may end this agreement with two months' notice.
+
+Signed: Landlord ..................   Tenant ..................
+Witnesses: 1. ............  2. ............","বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১৫
+১৫৷ নিয়ন্ত্রক, বাড়ী-মালিক বা ভাড়াটিয়ার আবেদনের ভিত্তিতে, কোন বাড়ীর মানসম্মত ভাড়া নির্ধারণ করিবেন এবং এমনভাবে উহা নির্ধারণ করিবেন যেন উহার বাত্সরিক পরিমাণ বিধি দ্বারা নির্ধারিত পদ্ধতিতে স্থিরকৃত উক্ত বাড়ীর বাজার মূল্যের ১৫% শতাংশের সমান হয় :তবে শর্ত থাকে যে, যেক্ষেত্রে মানসম্মত ভাড়ার পরিমাণ Premises Rent Control Ordinance, 1986 (XXII of 1986) এর অধীন নির্ধারণ করা হইয়াছে সেক্ষেত্রে অনুরূপভাবে নির্ধারিত মানসম্মত ভাড়া, নিয়ন্ত্রক কর্তৃক সংশোধন বা পরিবর্তন না করা পর্যন্ত, এই ধারার অধীন নির্ধারিত মানসম্মত ভাড়া হিসাবে গণ্য হইবে৷
+
+বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১৬
+১৬৷ (১) যেক্ষেত্রে ধারা ১৫ এর অধীন মানসম্মত ভাড়া নির্ধারণকালে দরখাস্ত পেশ করার সময়ে প্রদেয় ভাড়া বৃদ্ধি বা হ্রাস করা হয় সেক্ষেত্রে দরখাস্ত পেশের তারিখের অব্যবহিত পরের মাস হইতে মানসম্মত ভাড়া প্রদেয় হইবে৷(২) মানসম্মত ভাড়া, বাড়ী-মালিক বা ভাড়াটিয়ার আবেদনের ভিত্তিতে, প্রতি দুই বত্সর পর নিয়ন্ত্রক কর্তৃক ধারা ১৫ এর বিধান অনুযায়ী পুনঃ নির্ধারণ করা যাইবে৷"
+My landlord took three months' rent in advance under this agreement. Is that allowed?,en,file,law,uncategorized,বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১০;বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s২৩,"No, not without the Controller's approval. Under section 10 of the House Rent Control Act, 1991, a landlord may not demand or accept more than one month's rent as advance without the prior approval of the Controller. Under section 23(c), knowingly taking more than one month's advance rent without the Controller's written consent is an offence punishable with a fine.",claude,,d10-rent-photo.jpg,d10-rent,photo,,,"HOUSE RENT AGREEMENT
+
+This agreement is made on 01 December 2025 at Dhaka between
+Landlord: Mr. Mahbubur Rahman, House 37, Road 6, Block C, Mohammadpur, Dhaka
+Tenant: Mr. Saiful Islam
+
+1. The tenant takes the 3-bedroom flat on the 4th floor from 01 January 2026.
+2. Monthly rent: Tk 25,000 (twenty-five thousand), payable by the 5th of each month.
+3. Advance: the tenant has paid Tk 75,000 (three months' rent) as advance rent.
+4. The rent will increase by 15% every year on 1 January.
+5. Either party may end this agreement with two months' notice.
+
+Signed: Landlord ..................   Tenant ..................
+Witnesses: 1. ............  2. ............","বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১০
+১০৷ ভাড়া দেওয়া বা ভাড়া নবায়ন করা বা ভাড়ার মেয়াদ বৃদ্ধি করার কারণে কোন ব্যক্তি-(ক) ভাড়ার অতিরিক্ত কোন প্রিমিয়াম, সালামী, জামানত বা অনুরূপ কোন অর্থ দাবী বা গ্রহণ করিতে বা প্রদানের জন্য বলিতে পারিবেন না, অথবা(খ) নিয়ন্ত্রকের পূর্বানুমোদন ব্যতিরেকে, অগ্রীম ভাড়া হিসাবে এক মাসের ভাড়ার অতিরিক্ত টাকা দাবী বা গ্রহণ করিতে পারিবেন না৷
+
+বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ২৩
+২৩৷ যদি কোন ব্যক্তি জ্ঞাতসারে-(ক) ধারা ৮ বা ধারা ৯ এ বিবৃত কারণ ব্যতিরেকে অন্য কোন কারণে মানসম্মত ভাড়া অপেক্ষা অধিক ভাড়া প্রত্যক্ষ বা পরোক্ষভাবে গ্রহণ করেন; বা(খ) ধারা ১১ এ বিবৃত কারণ ব্যতিরেকে অন্য কোন কারণে মানসম্মত ভাড়ার অতিরিক্ত হিসাব প্রত্যক্ষ বা পরোক্ষভাবে প্রিমিয়াম, সালামী, জামানত বা অনুরূপ কোন টাকা গ্রহণ করেন বা দাবী করেন বা দেওয়ার জন্য প্রস্তাব করেন; বা(গ) নিয়ন্ত্রকের লিখিত সম্মতি ব্যতিরেকে অগ্রিম ভাড়া বাবদ এক মাসের ভাড়ার অধিক ভাড়া গ্রহণ করেন;তাহা হইলে তিনি সংক্ষুব্ধ ব্যক্তি বা সরকারের অভিযোগের ভিত্তিতে-(অ) দফা (ক) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য মানসম্মত ভাড়ার অতিরিক্ত আদায়কৃত টাকার দ্বিগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন এবং পরবর্তী প্রত্যেকবারের অপরাধের জন্য উক্ত অতিরিক্ত টাকার তিনগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন;(আ) দফা (খ) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য দুই হাজার টাকা পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন এবং পরবর্তী প্রত্যেক বারের অপরাধের জন্য পাঁচ হাজার টাকা পর্যন্ত্ম অর্থদণ্ডে দণ্ডনীয় হইবে;(ই) দফা (গ) এ উল্লেখিতক্ষেত্রে, প্রথমবারের অপরাধের জন্য এক মাসের ভাড়ার অতিরিক্ত যে টাকা আদায় করা হইয়াছে উহার দ্বিগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন, এবং পরবর্তী প্রত্যেক বারের অপরাধের জন্য এক মাসের ভাড়ার অতিরিক্ত যে টাকা আদায় করা হইয়াছে উহার তিনগুণ পর্যন্ত অর্থদণ্ডে দণ্ডনীয় হইবেন৷"
+Can the rent be raised by 15% every year as this agreement says?,en,file,law,uncategorized,বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১৫;বাড়ী-ভাড়া-নিয়ন্ত্রণ-আইন-১৯৯১-1991-s১৬,"Not freely. Under section 15 of the House Rent Control Act, 1991, the Controller fixes the standard rent of a house, on the application of the landlord or tenant, so that the yearly rent equals 15% of the market value of the house; under section 16 the standard rent may be re-fixed on application every two years.",claude,,d10-rent-photo.jpg,d10-rent,photo,,,"HOUSE RENT AGREEMENT
+
+This agreement is made on 01 December 2025 at Dhaka between
+Landlord: Mr. Mahbubur Rahman, House 37, Road 6, Block C, Mohammadpur, Dhaka
+Tenant: Mr. Saiful Islam
+
+1. The tenant takes the 3-bedroom flat on the 4th floor from 01 January 2026.
+2. Monthly rent: Tk 25,000 (twenty-five thousand), payable by the 5th of each month.
+3. Advance: the tenant has paid Tk 75,000 (three months' rent) as advance rent.
+4. The rent will increase by 15% every year on 1 January.
+5. Either party may end this agreement with two months' notice.
+
+Signed: Landlord ..................   Tenant ..................
+Witnesses: 1. ............  2. ............","বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১৫
+১৫৷ নিয়ন্ত্রক, বাড়ী-মালিক বা ভাড়াটিয়ার আবেদনের ভিত্তিতে, কোন বাড়ীর মানসম্মত ভাড়া নির্ধারণ করিবেন এবং এমনভাবে উহা নির্ধারণ করিবেন যেন উহার বাত্সরিক পরিমাণ বিধি দ্বারা নির্ধারিত পদ্ধতিতে স্থিরকৃত উক্ত বাড়ীর বাজার মূল্যের ১৫% শতাংশের সমান হয় :তবে শর্ত থাকে যে, যেক্ষেত্রে মানসম্মত ভাড়ার পরিমাণ Premises Rent Control Ordinance, 1986 (XXII of 1986) এর অধীন নির্ধারণ করা হইয়াছে সেক্ষেত্রে অনুরূপভাবে নির্ধারিত মানসম্মত ভাড়া, নিয়ন্ত্রক কর্তৃক সংশোধন বা পরিবর্তন না করা পর্যন্ত, এই ধারার অধীন নির্ধারিত মানসম্মত ভাড়া হিসাবে গণ্য হইবে৷
+
+বাড়ী ভাড়া নিয়ন্ত্রণ আইন, ১৯৯১ (Act No. ৩ of 1991)
+Section ১৬
+১৬৷ (১) যেক্ষেত্রে ধারা ১৫ এর অধীন মানসম্মত ভাড়া নির্ধারণকালে দরখাস্ত পেশ করার সময়ে প্রদেয় ভাড়া বৃদ্ধি বা হ্রাস করা হয় সেক্ষেত্রে দরখাস্ত পেশের তারিখের অব্যবহিত পরের মাস হইতে মানসম্মত ভাড়া প্রদেয় হইবে৷(২) মানসম্মত ভাড়া, বাড়ী-মালিক বা ভাড়াটিয়ার আবেদনের ভিত্তিতে, প্রতি দুই বত্সর পর নিয়ন্ত্রক কর্তৃক ধারা ১৫ এর বিধান অনুযায়ী পুনঃ নির্ধারণ করা যাইবে৷"
+How much tax will be deducted from the prize in this letter?,en,file,law,tax,আয়কর-আইন-২০২৩-2023-s১১৮,"Under section 118 of the Income Tax Act, 2023, tax is deducted at 20% on winnings from a lottery or similar game, and the amount includes the value of any goods or property given to the winner. On a prize of Tk 10,00,000 cash plus a motorcycle worth Tk 2,50,000 (Tk 12,50,000 in total) that is Tk 2,50,000.",claude,,d11-lottery.docx,d11-lottery,text,yes,,"PRIZE NOTIFICATION
+
+Bangla Shopping Festival 2026 - Lucky Coupon Draw
+Organiser: Shapla Retail Ltd., Gulshan-2, Dhaka                Date: 28 February 2026
+
+Dear Mr. Rakibul Hasan (Coupon No. 0451277),
+Congratulations! You have won the FIRST PRIZE in our lucky coupon draw:
+  - Cash prize: Tk 10,00,000 (ten lakh)
+  - A motorcycle worth Tk 2,50,000
+Please collect your prize from our head office within 30 days with your NID card.
+Income tax will be deducted at source as required by law before the prize is handed over.
+
+Fahim Chowdhury, Head of Marketing","আয়কর আইন, ২০২৩ (Act No. ১২ of 2023)
+Section ১১৮
+১১৮। লটারি, শব্দজট, কার্ড গেইম, অনলাইন গেইম অথবা এইরূপ যেকোনো প্রকৃতির খেলায় জয় লাভ করিয়া কোনো অর্থ প্রাপ্ত হইলে অর্থ পরিশোধের জন্য দায়িত্বপ্রাপ্ত ব্যক্তি, উক্তরূপ অর্থ প্রদানকালে, ২০% (বিশ শতাংশ) হারে কর কর্তন করিবেন।ব্যাখ্যা।-এই ধারার উদ্দেশ্যপূরণকল্পে, “যেকোনো পরিমাণ"" অভিব্যক্তিটির অর্থ কোনো পণ্য বা সম্পত্তির মূল্য যেখানে উক্ত বিজয়ীর হিসাবে নগদে অর্থ বা সম্পদ দ্বারা প্রদান করা হয়।"
+Who is responsible for deducting this tax?,en,file,law,tax,আয়কর-আইন-২০২৩-2023-s১১৮,"Under section 118 of the Income Tax Act, 2023, the person responsible for paying the winnings (here the organiser, Shapla Retail Ltd.) must deduct the tax at 20% when making the payment.",claude,,d11-lottery.docx,d11-lottery,text,yes,,"PRIZE NOTIFICATION
+
+Bangla Shopping Festival 2026 - Lucky Coupon Draw
+Organiser: Shapla Retail Ltd., Gulshan-2, Dhaka                Date: 28 February 2026
+
+Dear Mr. Rakibul Hasan (Coupon No. 0451277),
+Congratulations! You have won the FIRST PRIZE in our lucky coupon draw:
+  - Cash prize: Tk 10,00,000 (ten lakh)
+  - A motorcycle worth Tk 2,50,000
+Please collect your prize from our head office within 30 days with your NID card.
+Income tax will be deducted at source as required by law before the prize is handed over.
+
+Fahim Chowdhury, Head of Marketing","আয়কর আইন, ২০২৩ (Act No. ১২ of 2023)
+Section ১১৮
+১১৮। লটারি, শব্দজট, কার্ড গেইম, অনলাইন গেইম অথবা এইরূপ যেকোনো প্রকৃতির খেলায় জয় লাভ করিয়া কোনো অর্থ প্রাপ্ত হইলে অর্থ পরিশোধের জন্য দায়িত্বপ্রাপ্ত ব্যক্তি, উক্তরূপ অর্থ প্রদানকালে, ২০% (বিশ শতাংশ) হারে কর কর্তন করিবেন।ব্যাখ্যা।-এই ধারার উদ্দেশ্যপূরণকল্পে, “যেকোনো পরিমাণ"" অভিব্যক্তিটির অর্থ কোনো পণ্য বা সম্পত্তির মূল্য যেখানে উক্ত বিজয়ীর হিসাবে নগদে অর্থ বা সম্পদ দ্বারা প্রদান করা হয়।"
+How much tax will be deducted from the prize in this letter?,en,file,law,tax,আয়কর-আইন-২০২৩-2023-s১১৮,"Under section 118 of the Income Tax Act, 2023, tax is deducted at 20% on winnings from a lottery or similar game, and the amount includes the value of any goods or property given to the winner. On a prize of Tk 10,00,000 cash plus a motorcycle worth Tk 2,50,000 (Tk 12,50,000 in total) that is Tk 2,50,000.",claude,,d11-lottery-scan.pdf,d11-lottery,scan,,,"PRIZE NOTIFICATION
+
+Bangla Shopping Festival 2026 - Lucky Coupon Draw
+Organiser: Shapla Retail Ltd., Gulshan-2, Dhaka                Date: 28 February 2026
+
+Dear Mr. Rakibul Hasan (Coupon No. 0451277),
+Congratulations! You have won the FIRST PRIZE in our lucky coupon draw:
+  - Cash prize: Tk 10,00,000 (ten lakh)
+  - A motorcycle worth Tk 2,50,000
+Please collect your prize from our head office within 30 days with your NID card.
+Income tax will be deducted at source as required by law before the prize is handed over.
+
+Fahim Chowdhury, Head of Marketing","আয়কর আইন, ২০২৩ (Act No. ১২ of 2023)
+Section ১১৮
+১১৮। লটারি, শব্দজট, কার্ড গেইম, অনলাইন গেইম অথবা এইরূপ যেকোনো প্রকৃতির খেলায় জয় লাভ করিয়া কোনো অর্থ প্রাপ্ত হইলে অর্থ পরিশোধের জন্য দায়িত্বপ্রাপ্ত ব্যক্তি, উক্তরূপ অর্থ প্রদানকালে, ২০% (বিশ শতাংশ) হারে কর কর্তন করিবেন।ব্যাখ্যা।-এই ধারার উদ্দেশ্যপূরণকল্পে, “যেকোনো পরিমাণ"" অভিব্যক্তিটির অর্থ কোনো পণ্য বা সম্পত্তির মূল্য যেখানে উক্ত বিজয়ীর হিসাবে নগদে অর্থ বা সম্পদ দ্বারা প্রদান করা হয়।"
+Who is responsible for deducting this tax?,en,file,law,tax,আয়কর-আইন-২০২৩-2023-s১১৮,"Under section 118 of the Income Tax Act, 2023, the person responsible for paying the winnings (here the organiser, Shapla Retail Ltd.) must deduct the tax at 20% when making the payment.",claude,,d11-lottery-scan.pdf,d11-lottery,scan,,,"PRIZE NOTIFICATION
+
+Bangla Shopping Festival 2026 - Lucky Coupon Draw
+Organiser: Shapla Retail Ltd., Gulshan-2, Dhaka                Date: 28 February 2026
+
+Dear Mr. Rakibul Hasan (Coupon No. 0451277),
+Congratulations! You have won the FIRST PRIZE in our lucky coupon draw:
+  - Cash prize: Tk 10,00,000 (ten lakh)
+  - A motorcycle worth Tk 2,50,000
+Please collect your prize from our head office within 30 days with your NID card.
+Income tax will be deducted at source as required by law before the prize is handed over.
+
+Fahim Chowdhury, Head of Marketing","আয়কর আইন, ২০২৩ (Act No. ১২ of 2023)
+Section ১১৮
+১১৮। লটারি, শব্দজট, কার্ড গেইম, অনলাইন গেইম অথবা এইরূপ যেকোনো প্রকৃতির খেলায় জয় লাভ করিয়া কোনো অর্থ প্রাপ্ত হইলে অর্থ পরিশোধের জন্য দায়িত্বপ্রাপ্ত ব্যক্তি, উক্তরূপ অর্থ প্রদানকালে, ২০% (বিশ শতাংশ) হারে কর কর্তন করিবেন।ব্যাখ্যা।-এই ধারার উদ্দেশ্যপূরণকল্পে, “যেকোনো পরিমাণ"" অভিব্যক্তিটির অর্থ কোনো পণ্য বা সম্পত্তির মূল্য যেখানে উক্ত বিজয়ীর হিসাবে নগদে অর্থ বা সম্পদ দ্বারা প্রদান করা হয়।"
+How much tax will be deducted from the prize in this letter?,en,file,law,tax,আয়কর-আইন-২০২৩-2023-s১১৮,"Under section 118 of the Income Tax Act, 2023, tax is deducted at 20% on winnings from a lottery or similar game, and the amount includes the value of any goods or property given to the winner. On a prize of Tk 10,00,000 cash plus a motorcycle worth Tk 2,50,000 (Tk 12,50,000 in total) that is Tk 2,50,000.",claude,,d11-lottery-photo.jpg,d11-lottery,photo,,,"PRIZE NOTIFICATION
+
+Bangla Shopping Festival 2026 - Lucky Coupon Draw
+Organiser: Shapla Retail Ltd., Gulshan-2, Dhaka                Date: 28 February 2026
+
+Dear Mr. Rakibul Hasan (Coupon No. 0451277),
+Congratulations! You have won the FIRST PRIZE in our lucky coupon draw:
+  - Cash prize: Tk 10,00,000 (ten lakh)
+  - A motorcycle worth Tk 2,50,000
+Please collect your prize from our head office within 30 days with your NID card.
+Income tax will be deducted at source as required by law before the prize is handed over.
+
+Fahim Chowdhury, Head of Marketing","আয়কর আইন, ২০২৩ (Act No. ১২ of 2023)
+Section ১১৮
+১১৮। লটারি, শব্দজট, কার্ড গেইম, অনলাইন গেইম অথবা এইরূপ যেকোনো প্রকৃতির খেলায় জয় লাভ করিয়া কোনো অর্থ প্রাপ্ত হইলে অর্থ পরিশোধের জন্য দায়িত্বপ্রাপ্ত ব্যক্তি, উক্তরূপ অর্থ প্রদানকালে, ২০% (বিশ শতাংশ) হারে কর কর্তন করিবেন।ব্যাখ্যা।-এই ধারার উদ্দেশ্যপূরণকল্পে, “যেকোনো পরিমাণ"" অভিব্যক্তিটির অর্থ কোনো পণ্য বা সম্পত্তির মূল্য যেখানে উক্ত বিজয়ীর হিসাবে নগদে অর্থ বা সম্পদ দ্বারা প্রদান করা হয়।"
+Who is responsible for deducting this tax?,en,file,law,tax,আয়কর-আইন-২০২৩-2023-s১১৮,"Under section 118 of the Income Tax Act, 2023, the person responsible for paying the winnings (here the organiser, Shapla Retail Ltd.) must deduct the tax at 20% when making the payment.",claude,,d11-lottery-photo.jpg,d11-lottery,photo,,,"PRIZE NOTIFICATION
+
+Bangla Shopping Festival 2026 - Lucky Coupon Draw
+Organiser: Shapla Retail Ltd., Gulshan-2, Dhaka                Date: 28 February 2026
+
+Dear Mr. Rakibul Hasan (Coupon No. 0451277),
+Congratulations! You have won the FIRST PRIZE in our lucky coupon draw:
+  - Cash prize: Tk 10,00,000 (ten lakh)
+  - A motorcycle worth Tk 2,50,000
+Please collect your prize from our head office within 30 days with your NID card.
+Income tax will be deducted at source as required by law before the prize is handed over.
+
+Fahim Chowdhury, Head of Marketing","আয়কর আইন, ২০২৩ (Act No. ১২ of 2023)
+Section ১১৮
+১১৮। লটারি, শব্দজট, কার্ড গেইম, অনলাইন গেইম অথবা এইরূপ যেকোনো প্রকৃতির খেলায় জয় লাভ করিয়া কোনো অর্থ প্রাপ্ত হইলে অর্থ পরিশোধের জন্য দায়িত্বপ্রাপ্ত ব্যক্তি, উক্তরূপ অর্থ প্রদানকালে, ২০% (বিশ শতাংশ) হারে কর কর্তন করিবেন।ব্যাখ্যা।-এই ধারার উদ্দেশ্যপূরণকল্পে, “যেকোনো পরিমাণ"" অভিব্যক্তিটির অর্থ কোনো পণ্য বা সম্পত্তির মূল্য যেখানে উক্ত বিজয়ীর হিসাবে নগদে অর্থ বা সম্পদ দ্বারা প্রদান করা হয়।"
+"নোটিশটি আমার হাতে পৌঁছায়নি, শুধু অফিসের নোটিশ বোর্ডে লাগানো হয়েছে। এটা কি বৈধভাবে জারি হয়েছে?",bn,file,law,tax,মূল্য-সংযোজন-কর-ও-সম্পূরক-শুল্ক-আইন-২০১২-2012-s১০৯,"হ্যাঁ। মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২-এর ধারা ১০৯(১) অনুযায়ী ব্যক্তিগতভাবে, সর্বশেষ জ্ঞাত ঠিকানায়, রেজিস্ট্রি ডাকে বা ইলেকট্রনিক পদ্ধতিতে জারি করা না গেলে সংশ্লিষ্ট মূসক কার্যালয়ের নোটিশ বোর্ডে আঁটিয়ে দিলেই তা যথাযথভাবে জারি হয়েছে বলে গণ্য হয়; নোটিশে লেখা আছে এর আগের পদ্ধতিগুলো সম্ভব হয়নি।",claude,,d12-vat-notice.pdf,d12-vat-notice,text,yes,,"কাস্টমস, এক্সাইজ ও ভ্যাট বিভাগীয় দপ্তর, ধানমন্ডি
+
+নথি নং: ৫/মূসক/দাবিনামা/২০২৬/২১৪                    তারিখ: ১৫ মার্চ ২০২৬
+
+প্রতি: মেসার্স রহমান ট্রেডার্স, বিআইএন: ০০০৪৫৬৭৮৯-০২০১
+
+বিষয়: অপরিশোধিত মূল্য সংযোজন কর পরিশোধের দাবিনামা
+
+আপনার প্রতিষ্ঠানের ২০২৫ সালের দাখিলপত্র পর্যালোচনায় ৩,৪০,০০০ টাকা মূসক অপরিশোধিত পাওয়া গিয়াছে। আগামী ৩০ দিনের মধ্যে উক্ত অর্থ পরিশোধ করিবার জন্য নির্দেশ দেওয়া হইল।
+
+জারিকারকের মন্তব্য: প্রতিষ্ঠানটি সর্বশেষ জ্ঞাত ঠিকানায় পাওয়া যায় নাই এবং রেজিস্ট্রি ডাকযোগে প্রেরিত নোটিশ ফেরত আসিয়াছে; ইলেকট্রনিক পদ্ধতিতেও প্রেরণ সম্ভব হয় নাই। তাই নোটিশটি অত্র দপ্তরের নোটিশ বোর্ডে আঁটিয়া দেওয়া হইল।
+
+সহকারী কমিশনার","মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২ (Act No. ৪৭ of 2012)
+Section ১০৯
+১০৯। (১) এই আইনের উদ্দেশ্য পূরণকল্পে, কোন সমন বা নোটিশ বা সিদ্ধান্ত বা আদেশ বা নির্দেশ কোন ব্যক্তির উপর জারি করা প্রয়োজন হইলে, উহা উক্ত ব্যক্তির উপরে যথাযথভাবে জারি করা হইয়াছে বলিয়া গণ্য হইবে, যদি উহা―(ক) উক্ত ব্যক্তি বা তাহার প্রতিনিধি কর্তৃক ব্যক্তিগতভাবে গ্রহণ করা হয়;(খ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত বাংলাদেশের বাসস্থানে বা ব্যবসায়ের স্থানে প্রেরণ করা হয়;(গ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত ঠিকানায় রেজিস্ট্রিকৃত ডাকযোগে প্রেরণ করা হয়;(ঘ) ইলেকট্রনিক পদ্ধতিতে প্রেরণ করা হয়; বা(ঙ) দফা (ক) হইতে দফা (ঘ) এ উল্লিখিত পদ্ধতিতে জারি করা না যায়;তাহা হইলে সংশ্লিষ্ট মূল্য সংযোজন কর কার্যালয়ের নোটিশ বোর্ডে আঁটিয়া দেওয়া হয়।(২) এই আইন বা তদধীন প্রণীত বিধিমালার অধীন জারিকৃত নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা সম্পর্কে কোন প্রশ্ন উত্থাপন করা যাইবে না।"
+আমি নোটিশের দাবির কিছু অংশ পরিশোধ করেছি। এখন কি নোটিশটি বৈধভাবে জারি হয়নি বলে আপত্তি তুলতে পারব?,bn,file,law,tax,মূল্য-সংযোজন-কর-ও-সম্পূরক-শুল্ক-আইন-২০১২-2012-s১০৯,"না। মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২-এর ধারা ১০৯(২) অনুযায়ী নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা নিয়ে কোনো প্রশ্ন তোলা যাবে না।",claude,,d12-vat-notice.pdf,d12-vat-notice,text,yes,,"কাস্টমস, এক্সাইজ ও ভ্যাট বিভাগীয় দপ্তর, ধানমন্ডি
+
+নথি নং: ৫/মূসক/দাবিনামা/২০২৬/২১৪                    তারিখ: ১৫ মার্চ ২০২৬
+
+প্রতি: মেসার্স রহমান ট্রেডার্স, বিআইএন: ০০০৪৫৬৭৮৯-০২০১
+
+বিষয়: অপরিশোধিত মূল্য সংযোজন কর পরিশোধের দাবিনামা
+
+আপনার প্রতিষ্ঠানের ২০২৫ সালের দাখিলপত্র পর্যালোচনায় ৩,৪০,০০০ টাকা মূসক অপরিশোধিত পাওয়া গিয়াছে। আগামী ৩০ দিনের মধ্যে উক্ত অর্থ পরিশোধ করিবার জন্য নির্দেশ দেওয়া হইল।
+
+জারিকারকের মন্তব্য: প্রতিষ্ঠানটি সর্বশেষ জ্ঞাত ঠিকানায় পাওয়া যায় নাই এবং রেজিস্ট্রি ডাকযোগে প্রেরিত নোটিশ ফেরত আসিয়াছে; ইলেকট্রনিক পদ্ধতিতেও প্রেরণ সম্ভব হয় নাই। তাই নোটিশটি অত্র দপ্তরের নোটিশ বোর্ডে আঁটিয়া দেওয়া হইল।
+
+সহকারী কমিশনার","মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২ (Act No. ৪৭ of 2012)
+Section ১০৯
+১০৯। (১) এই আইনের উদ্দেশ্য পূরণকল্পে, কোন সমন বা নোটিশ বা সিদ্ধান্ত বা আদেশ বা নির্দেশ কোন ব্যক্তির উপর জারি করা প্রয়োজন হইলে, উহা উক্ত ব্যক্তির উপরে যথাযথভাবে জারি করা হইয়াছে বলিয়া গণ্য হইবে, যদি উহা―(ক) উক্ত ব্যক্তি বা তাহার প্রতিনিধি কর্তৃক ব্যক্তিগতভাবে গ্রহণ করা হয়;(খ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত বাংলাদেশের বাসস্থানে বা ব্যবসায়ের স্থানে প্রেরণ করা হয়;(গ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত ঠিকানায় রেজিস্ট্রিকৃত ডাকযোগে প্রেরণ করা হয়;(ঘ) ইলেকট্রনিক পদ্ধতিতে প্রেরণ করা হয়; বা(ঙ) দফা (ক) হইতে দফা (ঘ) এ উল্লিখিত পদ্ধতিতে জারি করা না যায়;তাহা হইলে সংশ্লিষ্ট মূল্য সংযোজন কর কার্যালয়ের নোটিশ বোর্ডে আঁটিয়া দেওয়া হয়।(২) এই আইন বা তদধীন প্রণীত বিধিমালার অধীন জারিকৃত নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা সম্পর্কে কোন প্রশ্ন উত্থাপন করা যাইবে না।"
+"নোটিশটি আমার হাতে পৌঁছায়নি, শুধু অফিসের নোটিশ বোর্ডে লাগানো হয়েছে। এটা কি বৈধভাবে জারি হয়েছে?",bn,file,law,tax,মূল্য-সংযোজন-কর-ও-সম্পূরক-শুল্ক-আইন-২০১২-2012-s১০৯,"হ্যাঁ। মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২-এর ধারা ১০৯(১) অনুযায়ী ব্যক্তিগতভাবে, সর্বশেষ জ্ঞাত ঠিকানায়, রেজিস্ট্রি ডাকে বা ইলেকট্রনিক পদ্ধতিতে জারি করা না গেলে সংশ্লিষ্ট মূসক কার্যালয়ের নোটিশ বোর্ডে আঁটিয়ে দিলেই তা যথাযথভাবে জারি হয়েছে বলে গণ্য হয়; নোটিশে লেখা আছে এর আগের পদ্ধতিগুলো সম্ভব হয়নি।",claude,,d12-vat-notice-scan.pdf,d12-vat-notice,scan,,,"কাস্টমস, এক্সাইজ ও ভ্যাট বিভাগীয় দপ্তর, ধানমন্ডি
+
+নথি নং: ৫/মূসক/দাবিনামা/২০২৬/২১৪                    তারিখ: ১৫ মার্চ ২০২৬
+
+প্রতি: মেসার্স রহমান ট্রেডার্স, বিআইএন: ০০০৪৫৬৭৮৯-০২০১
+
+বিষয়: অপরিশোধিত মূল্য সংযোজন কর পরিশোধের দাবিনামা
+
+আপনার প্রতিষ্ঠানের ২০২৫ সালের দাখিলপত্র পর্যালোচনায় ৩,৪০,০০০ টাকা মূসক অপরিশোধিত পাওয়া গিয়াছে। আগামী ৩০ দিনের মধ্যে উক্ত অর্থ পরিশোধ করিবার জন্য নির্দেশ দেওয়া হইল।
+
+জারিকারকের মন্তব্য: প্রতিষ্ঠানটি সর্বশেষ জ্ঞাত ঠিকানায় পাওয়া যায় নাই এবং রেজিস্ট্রি ডাকযোগে প্রেরিত নোটিশ ফেরত আসিয়াছে; ইলেকট্রনিক পদ্ধতিতেও প্রেরণ সম্ভব হয় নাই। তাই নোটিশটি অত্র দপ্তরের নোটিশ বোর্ডে আঁটিয়া দেওয়া হইল।
+
+সহকারী কমিশনার","মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২ (Act No. ৪৭ of 2012)
+Section ১০৯
+১০৯। (১) এই আইনের উদ্দেশ্য পূরণকল্পে, কোন সমন বা নোটিশ বা সিদ্ধান্ত বা আদেশ বা নির্দেশ কোন ব্যক্তির উপর জারি করা প্রয়োজন হইলে, উহা উক্ত ব্যক্তির উপরে যথাযথভাবে জারি করা হইয়াছে বলিয়া গণ্য হইবে, যদি উহা―(ক) উক্ত ব্যক্তি বা তাহার প্রতিনিধি কর্তৃক ব্যক্তিগতভাবে গ্রহণ করা হয়;(খ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত বাংলাদেশের বাসস্থানে বা ব্যবসায়ের স্থানে প্রেরণ করা হয়;(গ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত ঠিকানায় রেজিস্ট্রিকৃত ডাকযোগে প্রেরণ করা হয়;(ঘ) ইলেকট্রনিক পদ্ধতিতে প্রেরণ করা হয়; বা(ঙ) দফা (ক) হইতে দফা (ঘ) এ উল্লিখিত পদ্ধতিতে জারি করা না যায়;তাহা হইলে সংশ্লিষ্ট মূল্য সংযোজন কর কার্যালয়ের নোটিশ বোর্ডে আঁটিয়া দেওয়া হয়।(২) এই আইন বা তদধীন প্রণীত বিধিমালার অধীন জারিকৃত নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা সম্পর্কে কোন প্রশ্ন উত্থাপন করা যাইবে না।"
+আমি নোটিশের দাবির কিছু অংশ পরিশোধ করেছি। এখন কি নোটিশটি বৈধভাবে জারি হয়নি বলে আপত্তি তুলতে পারব?,bn,file,law,tax,মূল্য-সংযোজন-কর-ও-সম্পূরক-শুল্ক-আইন-২০১২-2012-s১০৯,"না। মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২-এর ধারা ১০৯(২) অনুযায়ী নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা নিয়ে কোনো প্রশ্ন তোলা যাবে না।",claude,,d12-vat-notice-scan.pdf,d12-vat-notice,scan,,,"কাস্টমস, এক্সাইজ ও ভ্যাট বিভাগীয় দপ্তর, ধানমন্ডি
+
+নথি নং: ৫/মূসক/দাবিনামা/২০২৬/২১৪                    তারিখ: ১৫ মার্চ ২০২৬
+
+প্রতি: মেসার্স রহমান ট্রেডার্স, বিআইএন: ০০০৪৫৬৭৮৯-০২০১
+
+বিষয়: অপরিশোধিত মূল্য সংযোজন কর পরিশোধের দাবিনামা
+
+আপনার প্রতিষ্ঠানের ২০২৫ সালের দাখিলপত্র পর্যালোচনায় ৩,৪০,০০০ টাকা মূসক অপরিশোধিত পাওয়া গিয়াছে। আগামী ৩০ দিনের মধ্যে উক্ত অর্থ পরিশোধ করিবার জন্য নির্দেশ দেওয়া হইল।
+
+জারিকারকের মন্তব্য: প্রতিষ্ঠানটি সর্বশেষ জ্ঞাত ঠিকানায় পাওয়া যায় নাই এবং রেজিস্ট্রি ডাকযোগে প্রেরিত নোটিশ ফেরত আসিয়াছে; ইলেকট্রনিক পদ্ধতিতেও প্রেরণ সম্ভব হয় নাই। তাই নোটিশটি অত্র দপ্তরের নোটিশ বোর্ডে আঁটিয়া দেওয়া হইল।
+
+সহকারী কমিশনার","মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২ (Act No. ৪৭ of 2012)
+Section ১০৯
+১০৯। (১) এই আইনের উদ্দেশ্য পূরণকল্পে, কোন সমন বা নোটিশ বা সিদ্ধান্ত বা আদেশ বা নির্দেশ কোন ব্যক্তির উপর জারি করা প্রয়োজন হইলে, উহা উক্ত ব্যক্তির উপরে যথাযথভাবে জারি করা হইয়াছে বলিয়া গণ্য হইবে, যদি উহা―(ক) উক্ত ব্যক্তি বা তাহার প্রতিনিধি কর্তৃক ব্যক্তিগতভাবে গ্রহণ করা হয়;(খ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত বাংলাদেশের বাসস্থানে বা ব্যবসায়ের স্থানে প্রেরণ করা হয়;(গ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত ঠিকানায় রেজিস্ট্রিকৃত ডাকযোগে প্রেরণ করা হয়;(ঘ) ইলেকট্রনিক পদ্ধতিতে প্রেরণ করা হয়; বা(ঙ) দফা (ক) হইতে দফা (ঘ) এ উল্লিখিত পদ্ধতিতে জারি করা না যায়;তাহা হইলে সংশ্লিষ্ট মূল্য সংযোজন কর কার্যালয়ের নোটিশ বোর্ডে আঁটিয়া দেওয়া হয়।(২) এই আইন বা তদধীন প্রণীত বিধিমালার অধীন জারিকৃত নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা সম্পর্কে কোন প্রশ্ন উত্থাপন করা যাইবে না।"
+"নোটিশটি আমার হাতে পৌঁছায়নি, শুধু অফিসের নোটিশ বোর্ডে লাগানো হয়েছে। এটা কি বৈধভাবে জারি হয়েছে?",bn,file,law,tax,মূল্য-সংযোজন-কর-ও-সম্পূরক-শুল্ক-আইন-২০১২-2012-s১০৯,"হ্যাঁ। মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২-এর ধারা ১০৯(১) অনুযায়ী ব্যক্তিগতভাবে, সর্বশেষ জ্ঞাত ঠিকানায়, রেজিস্ট্রি ডাকে বা ইলেকট্রনিক পদ্ধতিতে জারি করা না গেলে সংশ্লিষ্ট মূসক কার্যালয়ের নোটিশ বোর্ডে আঁটিয়ে দিলেই তা যথাযথভাবে জারি হয়েছে বলে গণ্য হয়; নোটিশে লেখা আছে এর আগের পদ্ধতিগুলো সম্ভব হয়নি।",claude,,d12-vat-notice-photo.jpg,d12-vat-notice,photo,,,"কাস্টমস, এক্সাইজ ও ভ্যাট বিভাগীয় দপ্তর, ধানমন্ডি
+
+নথি নং: ৫/মূসক/দাবিনামা/২০২৬/২১৪                    তারিখ: ১৫ মার্চ ২০২৬
+
+প্রতি: মেসার্স রহমান ট্রেডার্স, বিআইএন: ০০০৪৫৬৭৮৯-০২০১
+
+বিষয়: অপরিশোধিত মূল্য সংযোজন কর পরিশোধের দাবিনামা
+
+আপনার প্রতিষ্ঠানের ২০২৫ সালের দাখিলপত্র পর্যালোচনায় ৩,৪০,০০০ টাকা মূসক অপরিশোধিত পাওয়া গিয়াছে। আগামী ৩০ দিনের মধ্যে উক্ত অর্থ পরিশোধ করিবার জন্য নির্দেশ দেওয়া হইল।
+
+জারিকারকের মন্তব্য: প্রতিষ্ঠানটি সর্বশেষ জ্ঞাত ঠিকানায় পাওয়া যায় নাই এবং রেজিস্ট্রি ডাকযোগে প্রেরিত নোটিশ ফেরত আসিয়াছে; ইলেকট্রনিক পদ্ধতিতেও প্রেরণ সম্ভব হয় নাই। তাই নোটিশটি অত্র দপ্তরের নোটিশ বোর্ডে আঁটিয়া দেওয়া হইল।
+
+সহকারী কমিশনার","মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২ (Act No. ৪৭ of 2012)
+Section ১০৯
+১০৯। (১) এই আইনের উদ্দেশ্য পূরণকল্পে, কোন সমন বা নোটিশ বা সিদ্ধান্ত বা আদেশ বা নির্দেশ কোন ব্যক্তির উপর জারি করা প্রয়োজন হইলে, উহা উক্ত ব্যক্তির উপরে যথাযথভাবে জারি করা হইয়াছে বলিয়া গণ্য হইবে, যদি উহা―(ক) উক্ত ব্যক্তি বা তাহার প্রতিনিধি কর্তৃক ব্যক্তিগতভাবে গ্রহণ করা হয়;(খ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত বাংলাদেশের বাসস্থানে বা ব্যবসায়ের স্থানে প্রেরণ করা হয়;(গ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত ঠিকানায় রেজিস্ট্রিকৃত ডাকযোগে প্রেরণ করা হয়;(ঘ) ইলেকট্রনিক পদ্ধতিতে প্রেরণ করা হয়; বা(ঙ) দফা (ক) হইতে দফা (ঘ) এ উল্লিখিত পদ্ধতিতে জারি করা না যায়;তাহা হইলে সংশ্লিষ্ট মূল্য সংযোজন কর কার্যালয়ের নোটিশ বোর্ডে আঁটিয়া দেওয়া হয়।(২) এই আইন বা তদধীন প্রণীত বিধিমালার অধীন জারিকৃত নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা সম্পর্কে কোন প্রশ্ন উত্থাপন করা যাইবে না।"
+আমি নোটিশের দাবির কিছু অংশ পরিশোধ করেছি। এখন কি নোটিশটি বৈধভাবে জারি হয়নি বলে আপত্তি তুলতে পারব?,bn,file,law,tax,মূল্য-সংযোজন-কর-ও-সম্পূরক-শুল্ক-আইন-২০১২-2012-s১০৯,"না। মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২-এর ধারা ১০৯(২) অনুযায়ী নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা নিয়ে কোনো প্রশ্ন তোলা যাবে না।",claude,,d12-vat-notice-photo.jpg,d12-vat-notice,photo,,,"কাস্টমস, এক্সাইজ ও ভ্যাট বিভাগীয় দপ্তর, ধানমন্ডি
+
+নথি নং: ৫/মূসক/দাবিনামা/২০২৬/২১৪                    তারিখ: ১৫ মার্চ ২০২৬
+
+প্রতি: মেসার্স রহমান ট্রেডার্স, বিআইএন: ০০০৪৫৬৭৮৯-০২০১
+
+বিষয়: অপরিশোধিত মূল্য সংযোজন কর পরিশোধের দাবিনামা
+
+আপনার প্রতিষ্ঠানের ২০২৫ সালের দাখিলপত্র পর্যালোচনায় ৩,৪০,০০০ টাকা মূসক অপরিশোধিত পাওয়া গিয়াছে। আগামী ৩০ দিনের মধ্যে উক্ত অর্থ পরিশোধ করিবার জন্য নির্দেশ দেওয়া হইল।
+
+জারিকারকের মন্তব্য: প্রতিষ্ঠানটি সর্বশেষ জ্ঞাত ঠিকানায় পাওয়া যায় নাই এবং রেজিস্ট্রি ডাকযোগে প্রেরিত নোটিশ ফেরত আসিয়াছে; ইলেকট্রনিক পদ্ধতিতেও প্রেরণ সম্ভব হয় নাই। তাই নোটিশটি অত্র দপ্তরের নোটিশ বোর্ডে আঁটিয়া দেওয়া হইল।
+
+সহকারী কমিশনার","মূল্য সংযোজন কর ও সম্পূরক শুল্ক আইন, ২০১২ (Act No. ৪৭ of 2012)
+Section ১০৯
+১০৯। (১) এই আইনের উদ্দেশ্য পূরণকল্পে, কোন সমন বা নোটিশ বা সিদ্ধান্ত বা আদেশ বা নির্দেশ কোন ব্যক্তির উপর জারি করা প্রয়োজন হইলে, উহা উক্ত ব্যক্তির উপরে যথাযথভাবে জারি করা হইয়াছে বলিয়া গণ্য হইবে, যদি উহা―(ক) উক্ত ব্যক্তি বা তাহার প্রতিনিধি কর্তৃক ব্যক্তিগতভাবে গ্রহণ করা হয়;(খ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত বাংলাদেশের বাসস্থানে বা ব্যবসায়ের স্থানে প্রেরণ করা হয়;(গ) উক্ত ব্যক্তির সর্বশেষ জ্ঞাত ঠিকানায় রেজিস্ট্রিকৃত ডাকযোগে প্রেরণ করা হয়;(ঘ) ইলেকট্রনিক পদ্ধতিতে প্রেরণ করা হয়; বা(ঙ) দফা (ক) হইতে দফা (ঘ) এ উল্লিখিত পদ্ধতিতে জারি করা না যায়;তাহা হইলে সংশ্লিষ্ট মূল্য সংযোজন কর কার্যালয়ের নোটিশ বোর্ডে আঁটিয়া দেওয়া হয়।(২) এই আইন বা তদধীন প্রণীত বিধিমালার অধীন জারিকৃত নোটিশ সম্পূর্ণ বা আংশিকভাবে পরিপালিত হওয়ার পর নোটিশ জারির বৈধতা সম্পর্কে কোন প্রশ্ন উত্থাপন করা যাইবে না।"
+Summarise this recipe in three short steps.,en,file_general,general,,,"General (non-law) question about the attached file: a good answer summarises the recipe: fry onions and spices, cook the chicken with tomatoes, then simmer with water and salt for about 25 minutes.",claude,,g01-recipe.pdf,g01-recipe,text,yes,,"Simple Chicken Curry
+
+Serves 4. Time: 45 minutes.
+Ingredients: 1 kg chicken, 2 onions (sliced), 1 tbsp ginger-garlic paste, 1 tsp turmeric, 2 tsp chilli powder,
+1 tsp cumin powder, 2 tomatoes, 4 tbsp oil, salt to taste, 2 cups water.
+1. Heat the oil and fry the onions until golden brown.
+2. Add ginger-garlic paste, turmeric, chilli and cumin; fry for 2 minutes with a little water.
+3. Add the chicken and tomatoes; cook on high heat for 10 minutes, stirring.
+4. Add water and salt, cover and simmer for 25 minutes until the chicken is tender.
+Serve hot with rice.",
+"পিকনিক কবে, কোথায় এবং চাঁদা কত?",bn,file_general,general,,,"General (non-law) question about the attached file: ২০ ফেব্রুয়ারি ২০২৬, ভাওয়াল জাতীয় উদ্যান (গাজীপুর); চাঁদা জনপ্রতি ৮০০ টাকা, ১০ ফেব্রুয়ারির মধ্যে জমা; বাস সকাল ৭টায় ছাড়বে।",claude,,g02-picnic-photo.jpg,g02-picnic,photo,,,"বার্ষিক বনভোজন ২০২৬ - বিজ্ঞপ্তি
+
+মিরপুর আদর্শ উচ্চ বিদ্যালয়
+এতদ্বারা সকল শিক্ষার্থীকে জানানো যাইতেছে যে, আগামী ২০ ফেব্রুয়ারি ২০২৬ তারিখে বিদ্যালয়ের বার্ষিক বনভোজন গাজীপুরের ভাওয়াল জাতীয় উদ্যানে অনুষ্ঠিত হইবে।
+চাঁদা: জনপ্রতি ৮০০ টাকা, ১০ ফেব্রুয়ারির মধ্যে শ্রেণিশিক্ষকের নিকট জমা দিতে হইবে।
+বাস ছাড়িবে সকাল ৭টায় বিদ্যালয় প্রাঙ্গণ হইতে।
+প্রধান শিক্ষক",
+Suggest two improvements to this CV.,en,file_general,general,,,"General (non-law) question about the attached file: e.g. replace the vague objective with a specific one, and describe the internship with concrete responsibilities or results (also add more specific skills).",claude,,g03-cv.docx,g03-cv,text,yes,,"CURRICULUM VITAE - Nabila Karim
+
+Email: nabila.karim@example.com | Phone: 01XXXXXXXXX | Dhaka
+Objective: To get a job.
+Education: BBA (Marketing), University of Dhaka, 2024, CGPA 3.41
+Experience: Intern, Sales, ABC Foods Ltd., 3 months (2024)
+Skills: MS Office, communication
+References: Available on request",
+এই লেখাটার মূল বক্তব্য কী?,bn,file_general,general,,,"General (non-law) question about the attached file: লেখক তার শান্ত, কৃষিনির্ভর গ্রাম শিমুলতলীর বর্ণনা দিয়েছেন (নদী, সরিষা খেত, স্কুল, মসজিদ, বাজার) এবং গ্রামটি তার প্রিয়।",claude,,g04-essay-scan.pdf,g04-essay,scan,,,"আমাদের গ্রাম
+
+আমাদের গ্রামের নাম শিমুলতলী। গ্রামের পাশ দিয়ে বয়ে গেছে ছোট্ট একটি নদী। বর্ষাকালে নদী ভরে যায়, আর শীতকালে চরে সরিষার হলুদ ফুল ফোটে। গ্রামের বেশিরভাগ মানুষ কৃষিকাজ করেন। এখানে একটি প্রাথমিক বিদ্যালয়, একটি মসজিদ আর একটি ছোট বাজার আছে। শহরের কোলাহল থেকে দূরে এই গ্রামের শান্ত পরিবেশ আমার খুব প্রিয়।",

@@ -134,6 +134,7 @@ function render(){
     body+=`<div class="meta">type <b>${esc(r.type)}</b> · expected route <b>${esc(r.expected_route)}</b></div>`;
     body+=`<h3>Question</h3>`+(t==="fix"?`<textarea data-f="question">${esc(r.question)}</textarea>`:`<div class="box">${esc(r.question)}</div>`);
     body+=`<h3>Reference answer</h3>`+(t==="fix"?`<textarea data-f="reference_answer">${esc(r.reference_answer)}</textarea>`:`<div class="box">${esc(r.reference_answer)}</div>`);
+    if(r.file_text)body+=`<h3>Attached file: ${esc(r.file)} (its true content)</h3><div class="box src">${esc(r.file_text)}</div>`;
     if(r.gold_text)body+=`<h3>Gold section text</h3><div class="box src">${esc(r.gold_text)}</div>`;
     body+=`<div class="hint">gold: ${esc(r.gold_chunk_ids)||"(none)"}</div>`;
   }

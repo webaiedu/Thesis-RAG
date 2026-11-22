@@ -27,6 +27,7 @@ Hand-check the generated test questions in a spreadsheet, then build the final t
 Save the sheets as CSV (UTF-8, comma separated) when you're done.
 """
 import argparse
+import os
 import csv
 import hashlib
 import json
@@ -187,8 +188,8 @@ def do_import(review_csv, handwritten, out, partial, candidates):
     problems, final, stats = [], [], Counter()
     agree = Counter()  # first reviewer vs team, on rows the team checked
 
-    with open(review_csv, encoding="utf-8-sig", newline="") as f:
-        for n, r in enumerate(csv.DictReader(f), 2):
+    with open(review_csv or os.devnull, encoding="utf-8-sig", newline="") as f:
+        for n, r in enumerate(csv.DictReader(f) if review_csv else [], 2):
             d = (r.get("decision") or "").strip().lower()
             t = (r.get("team_decision") or "").strip().lower()
             if t:
@@ -259,8 +260,13 @@ def do_import(review_csv, handwritten, out, partial, candidates):
                         problems.append(f"handwritten row {n}: unknown chunk id {g!r}")
                 if route == "law" and not gold:
                     problems.append(f"handwritten row {n}: law question needs gold_chunk_ids")
+                fname = (r.get("file") or "").strip()
+                if fname and not (HERE / "data" / "files" / fname).exists():
+                    problems.append(f"handwritten row {n}: file {fname!r} not found in data/files")
                 final.append({
-                    "id": "h-" + hashlib.sha1(q.encode("utf-8")).hexdigest()[:12], "split": "test",
+                    "id": ("f-" if fname else "h-") + hashlib.sha1((fname + "|" + q).encode("utf-8") if fname
+                                                                  else q.encode("utf-8")).hexdigest()[:12],
+                    "split": "test",
                     "question": q, "lang": (r.get("lang") or ("bn" if any("ঀ" <= c <= "৿" for c in q) else "en")).strip(),
                     "domain": (r.get("domain") or (known.get(gold[0]) if gold else "")).strip(),
                     "kind": "case" if gold and gold[0].startswith("scob-") else "act",
@@ -268,6 +274,8 @@ def do_import(review_csv, handwritten, out, partial, candidates):
                     "gold_chunk_ids": gold, "reference_answer": (r.get("reference_answer") or "").strip(),
                     "review": "handwritten", "reviewer": r.get("reviewer", ""), "notes": r.get("notes", ""),
                 })
+                if fname:
+                    final[-1].update({"file": fname, "doc": r.get("doc", ""), "format": r.get("format", "")})
                 if (r.get("prior_messages") or "").strip():  # follow-up: earlier turns + this question
                     try:
                         prior = json.loads(r["prior_messages"])
@@ -327,6 +335,9 @@ if __name__ == "__main__":
     m = sub.add_parser("mark-recheck"); m.add_argument("review_csv")
     m.add_argument("--keep-frac", type=float, default=0.2); m.add_argument("--seed", type=int, default=42)
     m.add_argument("--handwritten")
+    fi = sub.add_parser("import-files", help="file_questions.csv -> data/test_files.jsonl")
+    fi.add_argument("files_csv", nargs="?", default=str(HERE / "data" / "review" / "file_questions.csv"))
+    fi.add_argument("--out", default=str(HERE / "data" / "test_files.jsonl"))
     g = sub.add_parser("merge-team"); g.add_argument("master"); g.add_argument("exports", nargs="+")
     f = sub.add_parser("find"); f.add_argument("query"); f.add_argument("--domain"); f.add_argument("-k", type=int, default=5)
     f.add_argument("--url", default="http://localhost:8000")
@@ -335,6 +346,8 @@ if __name__ == "__main__":
         export(a.src, a.dst)
     elif a.cmd == "import":
         do_import(a.review_csv, a.handwritten, a.out, a.partial, a.candidates)
+    elif a.cmd == "import-files":
+        do_import(None, a.files_csv, a.out, False, os.devnull)
     elif a.cmd == "merge-team":
         merge_team(a.master, a.exports)
     elif a.cmd == "add-cols":

@@ -1,0 +1,20 @@
+test set: test_files.jsonl
+sha256: 1e608e56e8816d8038f6c4b8fbd3a392d7f20b5e770feb1efb50f90b8ee86f53
+questions: 76
+review: {'recheck pending': 26, 'handwritten': 76}
+team recheck: not done
+by domain/lang:
+  -               bn  2
+  -               en  2
+  children_women  bn  6
+  criminal        en  6
+  family          bn  6
+  family          en  6
+  labour          bn  6
+  labour          en  12
+  land            bn  6
+  tax             bn  6
+  tax             en  6
+  uncategorized   bn  6
+  uncategorized   en  6
+by type: {'file': 72, 'file_general': 4}
