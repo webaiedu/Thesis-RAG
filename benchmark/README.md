@@ -1,19 +1,60 @@
 # Benchmark plans
 
-One file = one day of benchmarking. Run them in this order:
+One file = one model's runbook. Run them in this order:
 
-| Day | File | What it measures | Approx. run time |
-|---|---|---|---|
-| 1 | [before-gemma.md](before-gemma.md) | Gemma 4 E4B, **before** fine-tuning (baseline) | ~5–7 h |
-| 2 | [before-qwen3-30b.md](before-qwen3-30b.md) | Qwen3 30B, **before** fine-tuning (baseline) | ~4–6 h |
-| (fine-tuning happens here, see `planning/` and the fine-tuning plan) | | | |
-| 3 | [after-gemma.md](after-gemma.md) | Gemma 4 E4B, **after** fine-tuning | ~10–15 h (overnight) |
-| 4 | [after-qwen3-30b.md](after-qwen3-30b.md) | Qwen3 30B, **after** fine-tuning | ~8–12 h (overnight) |
+| Part | File | What it measures |
+|---|---|---|
+| 1 | [before-gemma.md](before-gemma.md) | Gemma 4 E4B, **before** fine-tuning (baseline) |
+| 2 | [before-qwen3-30b.md](before-qwen3-30b.md) | Qwen3 30B, **before** fine-tuning (baseline) |
+| (fine-tuning happens here, see `planning/` and the fine-tuning plan) | | |
+| 3 | [after-gemma.md](after-gemma.md) | Gemma 4 E4B, **after** fine-tuning |
+| 4 | [after-qwen3-30b.md](after-qwen3-30b.md) | Qwen3 30B, **after** fine-tuning |
 
-Both "before" days must be finished **before any fine-tuning starts**. Otherwise the baseline is not trustworthy.
+## Time plan: one 6-hour session per day, nothing overnight
+The PC is available **09:15–16:30** each day and cannot run overnight, so every part is split into **sessions**. One session = one day.
+
+**Every session:**
+1. **09:15:** start the services (LM Studio model(s), retrieval server).
+2. **~09:30:** start the runner or judge.
+3. **16:15:** stop it with **Ctrl+C**. Answers and judgements are written one line at a time, so nothing is lost.
+4. **16:15–16:30:** commit `eval/runs/` (only finished files), and fill in the run log.
+
+The next session runs the **same command** again. It skips everything already done.
+
+**Rules for sessions:**
+- Never run two runners on the same `--out` folder.
+- Never run the judge while an answer run is going: latency is measured during answering.
+- **Model swaps cost ~5 min:** unload the answer model and load the 80B for judging (context 32768, Parallel 4).
+
+**Estimated sessions.** These are estimates until the pilot; the pilot (session P) replaces them with measured speeds.
+
+| Session | Work | Machine time |
+|---|---|---|
+| **P** | Pilot: 20 law + 10 file questions × all settings, Gemma + Qwen 30B; judge them with the 80B; extraction benchmark | ~5 h |
+| **Before fine-tuning** | | |
+| 1 | Gemma B0 law answers (9 settings × 365 = 3,285) | ~5–6 h |
+| 2 | Gemma B0 file answers (9 × 76 = 684) + search benchmark; then load the 80B, start judging | ~1.5 h + ~4 h |
+| 3 | finish judging Gemma B0 (~4,000 total); Qwen 30B B0 law answers start | ~1 h + ~5 h |
+| 4 | Qwen 30B B0: finish law + file answers | ~3 h |
+| 5 | judge Qwen 30B B0, reports, compare models; optional N0 if time is left | ~4–5 h |
+| **After fine-tuning** (E3 = full grid; E1 and E2 = 3 settings: effort low/mid/high, technicality auto) | | |
+| 6 | Gemma E3 law answers | ~5–6 h |
+| 7 | Gemma E3 files + E2 (1,095) + E1 search benchmark | ~5 h |
+| 8 | Gemma E1 (1,095); start judging | ~2 h + ~4 h |
+| 9 | finish judging Gemma (~6,200 total), reports, compare with B0 | ~3 h |
+| 10–13 | the same four sessions for Qwen3 30B | ~4 × 5 h |
+
+**Total: P + 5 sessions before fine-tuning + 8 after = about 14 working days of machine time.** Each session needs a person for only ~30 min (start, swap models, stop, commit).
+
+**Ways to shorten it:**
+- **A second PC with ≥ 48 GB GPU/unified memory** runs the 80B judge in parallel. The judge server URL is not part of the judge's identity, so the scores stay valid. That removes the judging sessions: about 10 instead of 14.
+- **A smaller grid for Qwen 30B:** effort low/mid/high × technicality auto (3 settings, not 9). This saves ~1.5 sessions per part. Decide before session 3 and use the same grid after fine-tuning.
+- **N0/N1 (no RAG) are optional:** only on spare time, at 3 settings.
+
+Both "before" parts must be finished **before any fine-tuning starts**. Otherwise the baseline is not trustworthy.
 
 ## Prerequisites (once, before Day 1)
-- [ ] The hand-checked test set exists: `eval/data/test.jsonl` (~400 questions with gold sections and reference answers).
+- [ ] The hand-checked test sets exist: `eval/data/test.jsonl` (365 questions) and `eval/data/test_files.jsonl` (76 questions with attached files in `eval/data/files/`), both after the team recheck.
 - [ ] The benchmark scripts exist and work on a 20-question pilot:
   - `backend/src/eval/run-eval.ts` (`npm run eval`): calls `ChatService.reply()` directly, without login.
   - `eval/eval_retrieval.py`: search metrics.
@@ -30,7 +71,7 @@ Each day covers one answer model with **all 9 answer settings**:
 | **effort mid** | ✓ | ✓ | ✓ |
 | **effort high** | ✓ | ✓ | ✓ |
 
-9 settings × ~400 questions = **3,600 answers per variant**. Across the 4 days this covers all models × efforts × technicalities, before and after.
+9 settings × 365 questions = **3,285 law answers + 684 file answers per variant** (E1/E2 after fine-tuning: 3 settings). Across the 4 days this covers all models × efforts × technicalities, before and after.
 
 ## Variants
 

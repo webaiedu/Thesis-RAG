@@ -3,7 +3,7 @@
 **Goal:** measure the current system with Gemma 4 E4B as the answer model (`model: low`) at all 9 effort × technicality settings. Measure the search model (bge-m3) on its own too.
 
 **Variants today:** B0 (required), N0 (optional, if time is left)
-**Expected time:** search eval ~10 min · B0 ~5 h · scoring ~1–2 h · N0 ~2 h
+**Time:** several daily sessions, see the session plan in [README.md](README.md#time-plan-one-6-hour-session-per-day-nothing-overnight). Stop with Ctrl+C at 16:15; rerun the same command next session.
 
 ## 0. Before you start
 - [ ] All prerequisites in [README.md](README.md) are done.
@@ -28,6 +28,12 @@ python eval_retrieval.py --url http://localhost:8000 --test data/test.jsonl \
 ```
 - [ ] Recall@1/5/10, MRR@10 and nDCG@10, for "oracle domain" and "all domains", are saved.
 
+**File extraction baseline (once, ~1 min):**
+```bash
+python eval_extraction.py --url http://localhost:8000 --out runs/B0/extraction.json
+```
+- [ ] CER/WER per format (text / scan / photo) and language are saved. Rerun after fine-tuning only if the OCR or extraction code changed.
+
 ## 3. Answer benchmark B0: 9 settings × ~400 questions
 ```bash
 cd backend && export PATH="$HOME/.local/node-v22.20.0-linux-arm64/bin:$PATH"
@@ -38,12 +44,22 @@ EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 npm run eval -- \
 ```
 - First the router runs once per question (~400 calls), cached in `eval/runs/route-cache.jsonl`. Every later run reuses it, so all days get the same routing.
 - If it stops (crash, reboot), run the **same command** again. Finished answers are skipped.
-- [ ] 3,600 lines in `eval/runs/B0/gemma/answers.jsonl` (`wc -l`), 0 errors in `errors.jsonl`.
+- [ ] 3,285 lines in `eval/runs/B0/gemma/answers.jsonl` (`wc -l`), 0 errors in `errors.jsonl`.
+
+**With attached files** (file test set, same settings; extraction is cached in `eval/runs/file-cache.jsonl`, made once):
+```bash
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 npm run eval -- \
+  --variant B0 --models low --efforts low,mid,high --tech low,auto,high \
+  --mode auto --test ../eval/data/test_files.jsonl \
+  --out ../eval/runs/B0/gemma-files --workers 4
+```
+- [ ] 684 lines in `eval/runs/B0/gemma-files/answers.jsonl`, 0 errors.
 
 ## 4. Score
 ```bash
 cd eval && source ../retrieval/.venv/bin/activate
-python score.py --run runs/B0/gemma --test data/test.jsonl --judge config.json
+# load the 80B judge first (unload the answer model): context 32768, Parallel 4
+for r in B0/gemma B0/gemma-files; do python score.py judge runs/$r && python score.py report runs/$r; done
 ```
 This writes `runs/B0/gemma/scores.csv` (one row per answer) and `runs/B0/gemma/summary.md`. The summary is one table per setting with:
 - router accuracy, refusal accuracy;
@@ -58,7 +74,7 @@ cd backend
 EVAL_TEMPERATURE=0 npm run eval -- --variant N0 --models low --efforts low,mid,high \
   --tech low,auto,high --mode general --test ../eval/data/test.jsonl \
   --out ../eval/runs/N0/gemma --workers 4
-cd ../eval && python score.py --run runs/N0/gemma --test data/test.jsonl --judge config.json
+cd ../eval && python score.py judge runs/N0/gemma && python score.py report runs/N0/gemma
 ```
 If you skip it today, run it on any free day **before fine-tuning**.
 

@@ -11,7 +11,7 @@
 | 3 | E1 | fine-tuned | original Gemma | ~5 h |
 | opt. | N1 | none (no RAG) | fine-tuned Gemma | ~2 h |
 
-That is too much for one working day, so start it in the morning and let E2/E1 run overnight. The runner resumes if stopped.
+Run it over several daily sessions (09:15–16:30, nothing overnight). See the session plan in [README.md](README.md#time-plan-one-6-hour-session-per-day-nothing-overnight). Stop with Ctrl+C at 16:15 and rerun the same command next session; finished answers are skipped.
 
 ## 0. Before you start
 - [ ] Both "before" days are finished and committed.
@@ -42,37 +42,41 @@ Chroma allows only one process per folder. That's fine here: the two servers use
 cd eval && source ../retrieval/.venv/bin/activate
 python eval_retrieval.py --url http://localhost:8001 --test data/test.jsonl \
   --k 3,5,8,10 --out runs/E1/retrieval.json
-python score.py --compare-retrieval runs/B0/retrieval.json runs/E1/retrieval.json \
-  --out runs/E1/retrieval-compare.md
+# TODO (build before Day 3): a retrieval compare, B0 vs E1 -> runs/E1/retrieval-compare.md
+# Until then, compare the two summary tables in runs/B0/retrieval.json and runs/E1/retrieval.json.
 ```
 - [ ] Recall@10 and MRR are higher than B0. If not, stop and check the embedder before spending hours on the answer runs.
 
-## 3. Answer benchmarks: 9 settings × ~400 questions each
+## 3. Answer benchmarks (E3: 9 settings; E1/E2: 3 settings)
 ```bash
 cd backend && export PATH="$HOME/.local/node-v22.20.0-linux-arm64/bin:$PATH"
 COMMON="--models low --efforts low,mid,high --tech low,auto,high --mode auto --test ../eval/data/test.jsonl --workers 4"
+SMALL="--models low --efforts low,mid,high --tech auto --mode auto --test ../eval/data/test.jsonl --workers 4"   # E1/E2: 3 settings
 
 # 1) E3: fine-tuned search + fine-tuned Gemma (main result)
 EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b \
   npm run eval -- --variant E3 $COMMON --out ../eval/runs/E3/gemma
+# 1b) E3 with attached files (file test set, same 9 settings)
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b \
+  npm run eval -- --variant E3 ${COMMON/test.jsonl/test_files.jsonl} --out ../eval/runs/E3/gemma-files
 
 # 2) E2: original search + fine-tuned Gemma
 EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b \
-  npm run eval -- --variant E2 $COMMON --out ../eval/runs/E2/gemma
+  npm run eval -- --variant E2 $SMALL --out ../eval/runs/E2/gemma
 
 # 3) E1: fine-tuned search + original Gemma
 EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=google/gemma-4-e4b \
-  npm run eval -- --variant E1 $COMMON --out ../eval/runs/E1/gemma
+  npm run eval -- --variant E1 $SMALL --out ../eval/runs/E1/gemma
 ```
 - All variants reuse the router decisions from Day 1 (`eval/runs/route-cache.jsonl`); only the search model and answer model change.
-- [ ] Each run has 3,600 answers and 0 errors. `meta.model` in `answers.jsonl` shows the expected model id.
+- [ ] E3: 3,285 law + 684 file answers; E2 and E1: 1,095 each; 0 errors. `meta.model` in `answers.jsonl` shows the expected model id.
 
 ## 4. Score and compare with the baseline
 ```bash
 cd eval && source ../retrieval/.venv/bin/activate
-for v in E3 E2 E1; do python score.py --run runs/$v/gemma --test data/test.jsonl --judge config.json; done
-python score.py --compare runs/B0/gemma runs/E1/gemma runs/E2/gemma runs/E3/gemma \
-  --out runs/compare-gemma.md
+for r in E3/gemma E3/gemma-files E2/gemma E1/gemma; do python score.py judge runs/$r && python score.py report runs/$r; done
+for v in E1 E2 E3; do python score.py compare runs/B0/gemma runs/$v/gemma; done
+python score.py compare runs/B0/gemma-files runs/E3/gemma-files
 ```
 `compare-gemma.md` is the thesis table for Gemma: each metric for B0/E1/E2/E3 at each of the 9 settings, with 95% CI and significance vs B0 (paired bootstrap, Wilcoxon/McNemar).
 
@@ -82,8 +86,8 @@ cd backend
 EVAL_TEMPERATURE=0 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b npm run eval -- --variant N1 \
   --models low --efforts low,mid,high --tech low,auto,high --mode general \
   --test ../eval/data/test.jsonl --out ../eval/runs/N1/gemma --workers 4
-cd ../eval && python score.py --run runs/N1/gemma --test data/test.jsonl --judge config.json
-python score.py --compare runs/N0/gemma runs/N1/gemma --out runs/compare-gemma-norag.md
+cd ../eval && python score.py judge runs/N1/gemma && python score.py report runs/N1/gemma
+python score.py compare runs/N0/gemma runs/N1/gemma
 ```
 This answers "does fine-tuning alone replace RAG?" Compare the hallucination rate with E3.
 

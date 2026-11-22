@@ -35,7 +35,7 @@ python3 make_questions.py --split val  --per-domain 34 --out data/val.jsonl
 python3 review.py export data/test_candidates.jsonl data/review/test_review.csv
 ```
 
-### 2. Test-set review: Claude's first pass DONE (22 Nov). Next: the team recheck
+### 2. Test-set review: Claude's first pass DONE (22 Nov). Next: the team recheck (also `file_questions.csv`, 26 rows)
 **Done by Claude (22 Nov):**
 - **Review tool:** `review.py` gained `recheck`/`team_decision` columns, an `add-cols` command, `mark-recheck --handwritten … --keep-frac 0.2 --seed 42`, and an `import` that prefers `team_decision` and prints the Claude–team agreement rate.
 - **First pass:** all 532 rows reviewed: 148 keep, 157 fix, 227 drop, which leaves 305 questions (151 bn / 154 en, 30–37 per domain). Every fix/drop has a reason in `notes`.
@@ -62,23 +62,40 @@ python3 review.py export data/test_candidates.jsonl data/review/test_review.csv
 
 **Note:** 32 of the 44 hand-written law questions have gold sections in the *train* split (common sections such as theft and maternity leave). Report the hand-written set separately when comparing before/after fine-tuning.
 
-### 3. Ask Claude to build the rest of the benchmark (~2–3 h)
-Say: *"continue the benchmark: build score.py, then run the pilot"*. That covers:
-1. **`eval/score.py`:** router accuracy, citation precision/recall, LLM-judge scores (correctness, faithfulness, technicality match), length/readability, latency, bootstrap CIs, compare tables.
-2. **Pilot:** a few questions × all 27 settings, to measure the real speed and check the scoring end to end.
+### 3. Benchmark tooling: DONE 22 Nov (Claude)
+- **Judge and scoring:** `eval/score.py` (`judge` / `report` / `compare`). The judge is the **local Qwen3-Next 80B**, fixed in `eval/config.json`. Tested end to end against a mock judge; not yet against the real 80B (LM Studio wasn't running).
+- **Recheck page:** `eval/recheck.html` (offline) plus `review.py merge-team`.
+- **File-upload benchmark:**
+  - 40 generated files in `eval/data/files/`: 12 documents × text/scan/photo, plus 4 non-law files.
+  - 76 questions in `data/review/file_questions.csv`, built into `data/test_files.jsonl`.
+  - `eval_extraction.py` measures OCR accuracy (CER). The runner's `--files` option caches the extraction.
+- **Prompt fix:** the bot no longer introduces itself unless asked (`bot.config.ts`).
+- **Runbooks:** `benchmark/*.md` were rewritten for **one 6-hour session per day (09:15–16:30), nothing overnight**. See the session plan in `benchmark/README.md`: about 14 working days, or ~10 with a second PC for the judge.
 
-**Decide first: which judge model?** It must stay the same for every before/after run.
-- **Gemini** (fast, independent of our models, costs API quota), or
-- **local Qwen3-Next 80B** (free, ~6 h per 10k answers, but it is a "Qwen", like one of the tuned models).
+### 4. Next session (session P, the pilot). What the person at the PC does
+1. **09:15:** start LM Studio. Load Gemma 4 E4B (Q4_K_M, context 49152, Parallel 4, Flash Attention ON).
+2. **Start the retrieval server:**
+   ```bash
+   cd retrieval && source .venv/bin/activate && python -m uvicorn server:app --port 8000
+   ```
+3. **Tell Claude "run the pilot".** Claude then:
+   - runs 20 law + 10 file questions × 9 settings with Gemma;
+   - asks you to swap to Qwen3 30B, and runs the same;
+   - asks you to load the 80B, then judges, reports, and measures the real speeds;
+   - updates the session plan with measured times.
 
-### 4. Before tagging the baseline: decide on one known issue
-In the smoke test, the 80B started a law answer with "I am Ainkhoj, an AI assistant…" without being asked. Either fix it now (prompt change in `bot.config.ts` / `chat.service.ts`), **before** `git tag baseline-v1`, or keep it and let the benchmark measure it. Don't change prompts after the tag.
+### 5. Decide before `git tag baseline-v1`
+- **Bangla PDFs with a text layer extract badly (new finding, 22 Nov).** The generated Bangla text-layer PDFs give CER ≈ 0.30 through `/extract`: conjunct glyphs have no Unicode mapping and vowel signs split off. OCR of the same page gives ≈ 0.05. Many real Bangla PDFs behave like this. The app trusts the text layer, so the model gets garbled text.
+  - **Fix option:** detect garbled Bangla in `retrieval/files.py` and OCR those pages instead (~1 h).
+  - **Or:** keep the current behaviour and let the benchmark measure it.
+  - Either way, decide **before** the baseline tag.
+- **The "I am Ainkhoj…" introduction:** fixed in the prompt. Check it in the pilot answers.
 
-### 5. Optional overnight job: training questions (~6 h, needed only before fine-tuning)
+### 6. Optional: training questions (~6 h, needed only before fine-tuning)
 ```bash
 cd eval && python3 make_questions.py --split train --per-domain 600 --out data/train.jsonl
 ```
-80B loaded at context 32768, Parallel 4. Resumable.
+80B loaded at context 32768, Parallel 4. It's resumable, so split it over sessions: stop with Ctrl+C at 16:15 and rerun next session.
 
 ## Things to remember
 - **LM Studio context × Parallel:** the context is split across the parallel slots.

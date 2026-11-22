@@ -11,7 +11,7 @@
 | 3 | E1 | fine-tuned | original Qwen3 30B | ~4 h |
 | opt. | N1 | none (no RAG) | fine-tuned Qwen3 30B | ~1.5 h |
 
-Start in the morning and let the rest run overnight. The runner resumes if stopped.
+Run it over several daily sessions (09:15–16:30, nothing overnight). See the session plan in [README.md](README.md#time-plan-one-6-hour-session-per-day-nothing-overnight). Stop with Ctrl+C at 16:15 and rerun the same command next session; finished answers are skipped.
 
 ## 0. Before you start
 - [ ] Day 3 ([after-gemma.md](after-gemma.md)) is finished. The fine-tuned search model is already checked.
@@ -34,35 +34,39 @@ EMBED_MODEL=../models/bge-m3-ainkhoj CHROMA_DIR=./chroma_db_ft \
 ```
 The router stays the original Gemma, as on Day 3.
 
-## 2. Answer benchmarks: 9 settings × ~400 questions each
+## 2. Answer benchmarks (E3: 9 settings; E1/E2: 3 settings)
 ```bash
 cd backend && export PATH="$HOME/.local/node-v22.20.0-linux-arm64/bin:$PATH"
 COMMON="--models mid --efforts low,mid,high --tech low,auto,high --mode auto --test ../eval/data/test.jsonl --workers 4"
+SMALL="--models mid --efforts low,mid,high --tech auto --mode auto --test ../eval/data/test.jsonl --workers 4"   # E1/E2: 3 settings
 
 # 1) E3: fine-tuned search + fine-tuned Qwen3 30B (main result)
 EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b \
   npm run eval -- --variant E3 $COMMON --out ../eval/runs/E3/qwen3-30b
+# 1b) E3 with attached files (file test set, same 9 settings)
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b \
+  npm run eval -- --variant E3 ${COMMON/test.jsonl/test_files.jsonl} --out ../eval/runs/E3/qwen3-30b-files
 
 # 2) E2: original search + fine-tuned Qwen3 30B
 EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b \
-  npm run eval -- --variant E2 $COMMON --out ../eval/runs/E2/qwen3-30b
+  npm run eval -- --variant E2 $SMALL --out ../eval/runs/E2/qwen3-30b
 
 # 3) E1: fine-tuned search + original Qwen3 30B (swap the loaded model first, see above)
 EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=qwen/qwen3-30b-a3b-2507 \
-  npm run eval -- --variant E1 $COMMON --out ../eval/runs/E1/qwen3-30b
+  npm run eval -- --variant E1 $SMALL --out ../eval/runs/E1/qwen3-30b
 ```
 The router decisions from Day 1 (`eval/runs/route-cache.jsonl`) are reused, so routing is identical across all variants.
-- [ ] Each run: 3,600 answers, 0 errors, correct `meta.model`.
+- [ ] E3: 3,285 law + 684 file answers; E2 and E1: 1,095 each; 0 errors; correct `meta.model`.
 
 ## 3. Score and compare
 ```bash
 cd eval && source ../retrieval/.venv/bin/activate
-for v in E3 E2 E1; do python score.py --run runs/$v/qwen3-30b --test data/test.jsonl --judge config.json; done
-python score.py --compare runs/B0/qwen3-30b runs/E1/qwen3-30b runs/E2/qwen3-30b runs/E3/qwen3-30b \
-  --out runs/compare-qwen3-30b.md
+for r in E3/qwen3-30b E3/qwen3-30b-files E2/qwen3-30b E1/qwen3-30b; do python score.py judge runs/$r && python score.py report runs/$r; done
+for v in E1 E2 E3; do python score.py compare runs/B0/qwen3-30b runs/$v/qwen3-30b; done
+python score.py compare runs/B0/qwen3-30b-files runs/E3/qwen3-30b-files
 
 # Final thesis tables: both models, before vs after
-python score.py --final runs --out runs/FINAL.md
+# TODO (build before Day 3): python score.py final runs  -> runs/FINAL.md
 ```
 `FINAL.md` puts everything side by side: the search-model gain, then B0/E1/E2/E3 for Gemma and Qwen3 30B at all 9 settings, the no-RAG results, and how big the fine-tuning gain is for the small vs the mid model.
 
@@ -72,8 +76,8 @@ cd backend
 EVAL_TEMPERATURE=0 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b npm run eval -- --variant N1 \
   --models mid --efforts low,mid,high --tech low,auto,high --mode general \
   --test ../eval/data/test.jsonl --out ../eval/runs/N1/qwen3-30b --workers 4
-cd ../eval && python score.py --run runs/N1/qwen3-30b --test data/test.jsonl --judge config.json
-python score.py --compare runs/N0/qwen3-30b runs/N1/qwen3-30b --out runs/compare-qwen3-30b-norag.md
+cd ../eval && python score.py judge runs/N1/qwen3-30b && python score.py report runs/N1/qwen3-30b
+python score.py compare runs/N0/qwen3-30b runs/N1/qwen3-30b
 ```
 
 ## 5. Sanity checks and wrap-up
