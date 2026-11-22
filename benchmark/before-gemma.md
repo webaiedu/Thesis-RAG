@@ -87,6 +87,7 @@ If you skip it today, run it on any free day **before fine-tuning**.
 ## Run log
 | Date | Git sha | Test set sha256 (first 12) | Variant | Answers | Errors | Wall time | Notes |
 |---|---|---|---|---|---|---|---|
-| | | | retrieval | – | | | |
-| | | | B0 | /3600 | | | |
-| | | | N0 | /3600 | | | |
+| 22 Nov 2026 | 98d370a (= baseline-v1 code) | e085d165b541 | retrieval | – | 0 | ~5 min | all-domains hit@5 0.714, hit@10 0.802; extraction CER: text bn 0.04 / en 0.01, scan ~0.06, photo ~0.15 |
+| 22 Nov 2026 | 98d370a | e085d165b541 | B0 law | 3285/3285 | 0 | 2 h 0 min | Gemma only loaded (context 50176, Parallel 4). Judging: next session |
+| 22 Nov 2026 | 98d370a | 1e608e56e881 (files) | B0 files | 684/684 | 0 | ~27 min | file extraction cached in eval/runs/file-cache.jsonl |
+| | | | N0 | /3285 | | | |
