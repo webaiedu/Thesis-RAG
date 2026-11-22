@@ -42,9 +42,9 @@ The Gemma baseline is therefore **~6.3 h: one full session**.
 | Step | Speed | Full size |
 |---|---|---|
 | law answers | ~7.3/min (180 in 24.5 min) | 3,285 in **~7.5 h** |
-| file answers | ~10/min (90 in ~9 min) | 684 in **~1.1 h** |
+| file answers | ~6.3/min (90 in 14.2 min) | 684 in **~1.8 h** |
 
-Its answers are longer and slower than Gemma's (~2.6×). The Qwen baseline is therefore **~8.6 h of answers + ~2.7 h of judging ≈ 2 sessions**.
+Its answers are longer and slower than Gemma's (~2.6×). The Qwen baseline is therefore **~9.3 h of answers + ~2.7 h of judging ≈ 2 sessions**.
 
 **Revised sessions (before fine-tuning):**
 1. Gemma B0 answers.
