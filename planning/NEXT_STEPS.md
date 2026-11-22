@@ -44,7 +44,13 @@ At 16:15, commit and push `eval/runs/B0/gemma*`, `eval/runs/pilot/qwen3-30b*`, `
 > This is PC A (`~/Desktop/Thesis-RAG`). Read `planning/NEXT_STEPS.md` and `benchmark/SECOND_PC.md`, then `git pull`. The PC is free 09:15–16:30, nothing overnight. Only the Qwen3-Next 80B is loaded in LM Studio. Do the PC A plan for today: judge the Qwen pilot and the Gemma B0 answers with `eval/score.py`, make the reports and the pilot comparison, then start `make_questions.py --split train` with the same 80B. Stop and commit only PC A's folders at 16:15. Before long steps, give me a short time estimate.
 
 **PC B:**
-> This is PC B (folder `Thesis-RAG PC-B`), a second DGX Spark. Read `planning/NEXT_STEPS.md` and `benchmark/SECOND_PC.md`. Help me set up this PC exactly as described: copy the files from PC A, check the model hashes, install Python/Node, start the retrieval server, and verify that search gives hit@5 0.714 like PC A. Then, with only Qwen3 30B loaded (context 49152, Parallel 4), run the Qwen B0 answers from `benchmark/before-qwen3-30b.md`. The PC is free 09:15–16:30, nothing overnight. At 16:15 stop and commit/push only `eval/runs/B0/qwen3-30b*`. Never edit code, prompts, test sets or the shared caches. Before long steps, give me a short time estimate.
+> This is PC B, a second DGX Spark. The project is cloned in the folder `Thesis-RAG PC-B` (branch `benchmark-setup`); the path has a space, so quote it. Read `CLAUDE.md`, `planning/NEXT_STEPS.md` and `benchmark/SECOND_PC.md`. Guide me through the PC B setup exactly as written there:
+> 1. Copy `retrieval/chroma_db` and the two `.env` files from PC A, by USB or by `rsync`/`scp` from 172.16.60.57.
+> 2. Check the model hashes. Gemma and the 80B are already in LM Studio here; the Qwen3 30B download may still be needed.
+> 3. Install the Python 3.12 venv with CUDA torch (use `python -m pip`) and Node 22, then `npm install`.
+> 4. Start the retrieval server and verify that search gives hit@5 0.714 and hit@10 0.802 like PC A.
+>
+> Then, with only Qwen3 30B loaded (context 49152, Parallel 4), run the Qwen B0 answers from `benchmark/before-qwen3-30b.md`. The PC is free 09:15–16:30, nothing overnight. At 16:15 stop with Ctrl+C and commit/push only `eval/runs/B0/qwen3-30b*`. Never edit code, prompts, test sets or the shared caches. Before long steps, give me a short time estimate.
 
 **25 Nov (planned):** judge Qwen B0 (on PC B with its own 80B, or on PC A), reports, the Gemma-vs-Qwen comparison. Then the team recheck, the B0 clean-up for changed questions, and **then** fine-tuning.
 

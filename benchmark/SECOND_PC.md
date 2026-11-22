@@ -20,16 +20,36 @@ Both PCs are DGX Spark (same hardware), each used 09:15–16:30 with nothing ove
    cd "Thesis-RAG PC-B" && git checkout benchmark-setup
    ```
    **About the space in the path:** scripts inside a Python venv have a path-based first line (`#!`), and that line breaks when the path contains a space. So always call Python tools as `python -m pip ...` and `python -m uvicorn ...`, never as bare `pip` or `uvicorn`. If anything still fails because of the space, use the folder `Thesis-RAG-PC-B` instead; only the folder name differs, nothing else.
-2. **Copy from PC A** (USB drive or `scp`; these aren't in git):
-   - `retrieval/chroma_db/` (904 MB): the **same** search index; don't re-ingest;
-   - `retrieval/.env` and `backend/.env`;
-   - `~/.cache/huggingface/hub/models--BAAI--bge-m3/` (the embedding model, so the versions match);
-   - `~/.EasyOCR/model/` (`bengali.pth`, `craft_mlt_25k.pth`);
-   - the LM Studio model files from `~/.lmstudio/models/lmstudio-community/`:
-     - `Qwen3-30B-A3B-Instruct-2507-GGUF/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf` (18.6 GB). **Copying is safer than downloading again**: the hash must match;
-     - Gemma 4 E4B (both files) and the 80B: already on PC B (downloaded 22 Nov). Check Gemma's hashes below. The router and file extraction are cached, so Qwen runs don't call Gemma; it is only a fallback.
+2. **Copy the files that aren't in Git from PC A.** `git clone` brings the code, test sets, law data (`backend/data`) and all results. It does **not** bring these:
+
+   | Missing after clone | Size | What to do |
+   |---|---|---|
+   | `retrieval/chroma_db/` (search index) | 904 MB | **Copy from PC A.** Don't rebuild with `ingest.py` |
+   | `retrieval/.env`, `backend/.env` | tiny | **Copy from PC A.** Never commit them |
+   | Qwen3 30B GGUF | 18.6 GB | Download in LM Studio. If its sha256 (step 3) differs, copy PC A's file |
+   | bge-m3 and EasyOCR models | ~2.5 GB | Nothing to do: they download on first use. Step 5 proves they match |
 
    Not needed: `backend/firebase-service-account.json` (the runner doesn't use Firebase).
+
+   **Option A, USB drive (simplest).**
+   1. On PC A, copy to the drive `~/Desktop/Thesis-RAG/retrieval/chroma_db` (the whole folder), `retrieval/.env` and `backend/.env`. Press Ctrl+H in the file manager to see hidden `.env` files.
+   2. On PC B, put them in the same places inside `Thesis-RAG PC-B/`.
+
+   **Option B, network.** PC A is `spark-8ab1`, IP `172.16.60.57`, user `aiub`. SSH is off by default.
+   ```bash
+   # once, on PC A (asks for the password):
+   sudo apt install -y openssh-server && sudo systemctl enable --now ssh
+   # on PC B, inside the cloned folder:
+   cd ~/Desktop/"Thesis-RAG PC-B"
+   rsync -a aiub@172.16.60.57:Desktop/Thesis-RAG/retrieval/chroma_db retrieval/
+   scp aiub@172.16.60.57:Desktop/Thesis-RAG/retrieval/.env retrieval/
+   scp aiub@172.16.60.57:Desktop/Thesis-RAG/backend/.env backend/
+   # only if the Qwen hash doesn't match (step 3):
+   scp aiub@172.16.60.57:.lmstudio/models/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF/Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf \
+       ~/.lmstudio/models/lmstudio-community/Qwen3-30B-A3B-Instruct-2507-GGUF/
+   ```
+   If PC B's folder isn't in `~/Desktop`, adjust the path. The IP can change; check it on PC A with `hostname -I`.
+
 3. **Check the model files are identical.** Run `sha256sum` on PC B. It must print:
 
    | file | sha256 |
