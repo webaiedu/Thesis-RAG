@@ -1,8 +1,55 @@
-# Where to start next (handoff, 19 Nov 2026)
+# Where to start next (handoff, 22 Nov 2026 → 23 Nov; TWO PCs from now on)
 
-Goal right now: **benchmark the system before fine-tuning** (thesis baseline), then fine-tune and benchmark again.
-- Full plan: the 4 daily runbooks in `benchmark/` (start with `benchmark/README.md`).
-- Background: `planning/ROADMAP.md`.
+Goal: **benchmark the system before fine-tuning** (thesis baseline), then fine-tune and benchmark again.
+- **Two DGX Sparks from 23 Nov:**
+  - **PC A** (`~/Desktop/Thesis-RAG`): Gemma 4 E4B answers, the 80B judge, training questions, fine-tuning.
+  - **PC B** (folder `Thesis-RAG PC-B`): **Qwen3 30B** answers (before and after fine-tuning); it can also judge Qwen with its own 80B.
+  - Setup and daily rules: **`benchmark/SECOND_PC.md`**.
+- Session plan and measured speeds: `benchmark/README.md`. Runbooks: `benchmark/before-*.md`, `after-*.md`.
+- **PC window:** 09:15–16:30, nothing overnight. Every run resumes: stop with Ctrl+C at 16:15, rerun the same command next day.
+
+## State on 22 Nov evening
+| Item | Status |
+|---|---|
+| Test sets **v1** (`eval/data/test.jsonl` 365 q, `test_files.jsonl` 76 q + 40 files); hashes in `eval/data/README.md` | **Frozen for the baseline** (tag `baseline-v1`) |
+| Team recheck (474 + 26 rows, `eval/recheck.html`) | **Postponed. Must be done before fine-tuning** |
+| Bangla PDF fix (broken text layer → OCR), prompt fix (no self-introduction) | Done, part of `baseline-v1` |
+| Judge: local Qwen3-Next 80B, `eval/config.json` (prompt j1, hash `aebea71088b8`) | Calibrated (`eval/runs/judge-calibration/`) |
+| Pilots: Gemma (judged) and Qwen 30B (answers only) | Done, `eval/runs/pilot/` |
+| **Gemma B0:** search, extraction, 3,285 law + 684 file answers (0 errors) | **Answers done**; **judging not yet** (~2.9 h incl. the Qwen pilot) |
+| Qwen 30B B0 | Not started (PC B) |
+
+## Tomorrow, 23 Nov
+**PC A** (this PC). Load **only the 80B** (context ≥ 32768, Parallel 4).
+```bash
+cd ~/Desktop/Thesis-RAG && git pull
+cd eval
+python3 score.py judge runs/pilot/qwen3-30b --test data/pilot.jsonl
+python3 score.py judge runs/pilot/qwen3-30b-files --test data/pilot_files.jsonl
+python3 score.py judge runs/B0/gemma && python3 score.py judge runs/B0/gemma-files --test data/test_files.jsonl
+python3 score.py report runs/B0/gemma && python3 score.py report runs/B0/gemma-files --test data/test_files.jsonl
+python3 score.py report runs/pilot/qwen3-30b --test data/pilot.jsonl
+python3 score.py compare runs/pilot/gemma runs/pilot/qwen3-30b --test data/pilot.jsonl
+```
+Then, with the same 80B, start the training questions (resumable):
+```bash
+python3 make_questions.py --split train --per-domain 600 --out data/train.jsonl
+```
+At 16:15, commit and push `eval/runs/B0/gemma*`, `eval/runs/pilot/qwen3-30b*`, `eval/data/train.jsonl`.
+
+**PC B.** Follow `benchmark/SECOND_PC.md`: setup → verify the search (hit@5 0.714) → **Qwen B0 answers** (`benchmark/before-qwen3-30b.md`, ~9.3 h, so 2 days). At 16:15, commit and push `eval/runs/B0/qwen3-30b*` only.
+
+## Start prompts (paste into Claude Code on each PC, 23 Nov morning)
+**PC A:**
+> This is PC A (`~/Desktop/Thesis-RAG`). Read `planning/NEXT_STEPS.md` and `benchmark/SECOND_PC.md`, then `git pull`. The PC is free 09:15–16:30, nothing overnight. Only the Qwen3-Next 80B is loaded in LM Studio. Do the PC A plan for today: judge the Qwen pilot and the Gemma B0 answers with `eval/score.py`, make the reports and the pilot comparison, then start `make_questions.py --split train` with the same 80B. Stop and commit only PC A's folders at 16:15. Before long steps, give me a short time estimate.
+
+**PC B:**
+> This is PC B (folder `Thesis-RAG PC-B`), a second DGX Spark. Read `planning/NEXT_STEPS.md` and `benchmark/SECOND_PC.md`. Help me set up this PC exactly as described: copy the files from PC A, check the model hashes, install Python/Node, start the retrieval server, and verify that search gives hit@5 0.714 like PC A. Then, with only Qwen3 30B loaded (context 49152, Parallel 4), run the Qwen B0 answers from `benchmark/before-qwen3-30b.md`. The PC is free 09:15–16:30, nothing overnight. At 16:15 stop and commit/push only `eval/runs/B0/qwen3-30b*`. Never edit code, prompts, test sets or the shared caches. Before long steps, give me a short time estimate.
+
+**25 Nov (planned):** judge Qwen B0 (on PC B with its own 80B, or on PC A), reports, the Gemma-vs-Qwen comparison. Then the team recheck, the B0 clean-up for changed questions, and **then** fine-tuning.
+
+---
+# History (19 Nov handoff, kept for reference)
 
 ## What was done today
 | Item | Status |
@@ -112,7 +159,7 @@ cd eval && python3 make_questions.py --split train --per-domain 600 --out data/t
   - context-less questions get routed to "general" and answered from outside knowledge (a hallucination);
   - the 80B router takes 7–15 s per question, Gemma ~1 s.
 
-## Commit (nothing from today is committed yet)
+## Commit (19 Nov note, done since then)
 New or changed files:
 - **Data:** `backend/data/{children_women,uncategorized}.jsonl`, `backend/data/domains.json`
 - **Benchmark plans:** `benchmark/`

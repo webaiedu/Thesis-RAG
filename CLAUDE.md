@@ -16,6 +16,9 @@ LLMs run locally in LM Studio (`http://localhost:1234/v1`); Gemini is optional p
 
 There are no tests, linters or formatters. Type-checking is the only automated check. The README covers Firebase and LM Studio setup (it is written for Windows and predates the features below).
 
+## Current work (thesis benchmark)
+Read **`planning/NEXT_STEPS.md`** first: it holds the current state, today's plan and the start prompts. The project runs on **two DGX Sparks** (PC A: Gemma + judge; PC B, folder `Thesis-RAG PC-B`: Qwen3 30B). See `benchmark/SECOND_PC.md`. The baseline is tagged `baseline-v1`: don't change code, prompts or test sets until the "before" runs are judged.
+
 ## Commands
 
 The dev machine is Linux aarch64 (NVIDIA DGX Spark). Node is installed at `~/.local/node-v22.20.0-linux-arm64/bin` and may not be on `PATH`; prefix commands with `PATH="$HOME/.local/node-v22.20.0-linux-arm64/bin:$PATH"` if `npm` is missing.
