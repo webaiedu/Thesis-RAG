@@ -74,3 +74,16 @@ Two passes: an LLM first pass over every row, then the authors recheck a subset 
 - 365 questions (305 reviewed + 60 hand-written).
 - **Provisional:** the team recheck isn't done yet, so the current `test.stats.txt` (sha256 `e085d165…`, with follow-up conversation history added) will change. Re-run `review.py import` after the recheck, then record the final sha256 here.
 - Final sha256: _(fill in after recheck)_
+
+**Test sets used for the baseline (v1, provisional; decided 22 Nov 2026):** the team recheck is postponed, and the baseline runs use these files:
+
+| file | questions | sha256 |
+|---|---|---|
+| `test.jsonl` | 365 | `e085d165b541068da649ad882324027141794fcf404636646c81d08db73c0f7d` |
+| `test_files.jsonl` (+ `files/`) | 76 (40 files) | `1e608e56e8816d8038f6c4b8fbd3a392d7f20b5e770feb1efb50f90b8ee86f53` |
+
+**The recheck must be done before fine-tuning starts.**
+- Questions the team then drops are filtered out of the B0 results.
+- Questions the team changes get their B0 answers removed and re-run.
+
+Both "before" and "after" must use the same final question set.

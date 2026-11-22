@@ -35,7 +35,7 @@ python3 make_questions.py --split val  --per-domain 34 --out data/val.jsonl
 python3 review.py export data/test_candidates.jsonl data/review/test_review.csv
 ```
 
-### 2. Test-set review: Claude's first pass DONE (22 Nov). Next: the team recheck (also `file_questions.csv`, 26 rows)
+### 2. Test-set review: Claude's first pass DONE (22 Nov). Team recheck POSTPONED (must be done before fine-tuning; also `file_questions.csv`, 26 rows)
 **Done by Claude (22 Nov):**
 - **Review tool:** `review.py` gained `recheck`/`team_decision` columns, an `add-cols` command, `mark-recheck --handwritten … --keep-frac 0.2 --seed 42`, and an `import` that prefers `team_decision` and prints the Claude–team agreement rate.
 - **First pass:** all 532 rows reviewed: 148 keep, 157 fix, 227 drop, which leaves 305 questions (151 bn / 154 en, 30–37 per domain). Every fix/drop has a reason in `notes`.
@@ -72,24 +72,27 @@ python3 review.py export data/test_candidates.jsonl data/review/test_review.csv
 - **Prompt fix:** the bot no longer introduces itself unless asked (`bot.config.ts`).
 - **Runbooks:** `benchmark/*.md` were rewritten for **one 6-hour session per day (09:15–16:30), nothing overnight**. See the session plan in `benchmark/README.md`: about 14 working days, or ~10 with a second PC for the judge.
 
-### 4. Next session (session P, the pilot). What the person at the PC does
-1. **09:15:** start LM Studio. Load Gemma 4 E4B (Q4_K_M, context 49152, Parallel 4, Flash Attention ON).
-2. **Start the retrieval server:**
-   ```bash
-   cd retrieval && source .venv/bin/activate && python -m uvicorn server:app --port 8000
-   ```
-3. **Tell Claude "run the pilot".** Claude then:
-   - runs 20 law + 10 file questions × 9 settings with Gemma;
-   - asks you to swap to Qwen3 30B, and runs the same;
-   - asks you to load the 80B, then judges, reports, and measures the real speeds;
-   - updates the session plan with measured times.
+### 4. Pilot and baseline prep: DONE 22 Nov
+- **Gemma pilot** (20 law + 10 file questions × 9 settings, judged by the 80B), in `eval/runs/pilot/`.
+  - **Measured speeds:** Gemma ~19 answers/min; the 80B judge ~25/min. The Gemma baseline is about one session.
+  - **Weak spots:** follow-ups, colloquial questions, Bangla photos, and Bangla questions about English Acts. The last one is a cross-language search gap: the gift-deed question never found Registration Act s.23.
+- **Prompt fix:** no unprompted self-introduction (0 of 270 answers).
+- **Bangla PDF fix** in `retrieval/files.py`:
+  - Pages with broken glyphs, split vowel signs or old Bijoy/SutonnyMJ fonts are now read by OCR.
+  - Bangla text-PDF CER fell from 0.23 to 0.04. English is unchanged. On 479 real Supreme Court Bulletin pages, 8 pages were flagged and all were really unreadable; clean LibreOffice Bangla PDFs are not flagged.
+- **The team recheck is postponed** (decided 22 Nov). The baseline uses the v1 test sets; hashes are in `eval/data/README.md`.
+  - **The recheck must be done before fine-tuning starts.**
+  - After it, dropped questions are filtered out of B0, and changed questions are re-run in B0.
 
-### 5. Decide before `git tag baseline-v1`
-- **Bangla PDFs with a text layer extract badly (new finding, 22 Nov).** The generated Bangla text-layer PDFs give CER ≈ 0.30 through `/extract`: conjunct glyphs have no Unicode mapping and vowel signs split off. OCR of the same page gives ≈ 0.05. Many real Bangla PDFs behave like this. The app trusts the text layer, so the model gets garbled text.
-  - **Fix option:** detect garbled Bangla in `retrieval/files.py` and OCR those pages instead (~1 h).
-  - **Or:** keep the current behaviour and let the benchmark measure it.
-  - Either way, decide **before** the baseline tag.
-- **The "I am Ainkhoj…" introduction:** fixed in the prompt. Check it in the pilot answers.
+### 5. Next steps
+1. **Qwen3 30B pilot** (load Qwen: context 49152, Parallel 4). Then fill in its speeds in `benchmark/README.md`.
+2. **`git tag baseline-v1`** (done on 22 Nov if the tag exists: `git tag -l`).
+3. **Session 1, Gemma B0:**
+   - Load Gemma only: unload the 80B and Qwen, so the speed numbers stay clean.
+   - Follow `benchmark/before-gemma.md`: search benchmark, extraction benchmark, law answers (~2.9 h), file answers (~40 min).
+   - Then load the 80B and judge (~2.7 h).
+4. **Session 2: Qwen 30B B0** (`benchmark/before-qwen3-30b.md`).
+5. **Team recheck**, then the B0 clean-up, then fine-tuning, then the "after" sessions.
 
 ### 6. Optional: training questions (~6 h, needed only before fine-tuning)
 ```bash
