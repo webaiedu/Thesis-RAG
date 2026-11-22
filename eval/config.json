@@ -1,0 +1,14 @@
+{
+  "_comment": "Fixed for the whole thesis. Never change between the before and after runs, or the scores cannot be compared.",
+  "judge": {
+    "provider": "lmstudio",
+    "url": "http://localhost:1234/v1",
+    "model": "qwen3-next-80b-a3b-instruct",
+    "temperature": 0,
+    "max_tokens": 500,
+    "reasoning_effort": "none",
+    "prompt_version": "j1",
+    "excerpt_chars": 6000
+  },
+  "bootstrap": { "resamples": 1000, "seed": 7 }
+}

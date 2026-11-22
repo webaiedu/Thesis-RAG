@@ -46,7 +46,7 @@ REVIEW_COLS = ["id", "domain", "kind", "lang", "law_or_case", "section", "questi
                "recheck", "team_decision", "source_text", "gold_chunk_ids"]
 
 HAND_COLS = ["question", "lang", "type", "expected_route", "domain", "gold_chunk_ids", "reference_answer",
-             "reviewer", "notes", "recheck", "team_decision"]
+             "reviewer", "notes", "prior_messages", "recheck", "team_decision"]
 HAND_TYPES = "typo | colloquial | multi_section | follow_up | case_law | general (non-law) | out_of_scope (law, not in our data)"
 
 
@@ -268,6 +268,12 @@ def do_import(review_csv, handwritten, out, partial, candidates):
                     "gold_chunk_ids": gold, "reference_answer": (r.get("reference_answer") or "").strip(),
                     "review": "handwritten", "reviewer": r.get("reviewer", ""), "notes": r.get("notes", ""),
                 })
+                if (r.get("prior_messages") or "").strip():  # follow-up: earlier turns + this question
+                    try:
+                        prior = json.loads(r["prior_messages"])
+                        final[-1]["messages"] = prior + [{"role": "user", "content": q}]
+                    except json.JSONDecodeError:
+                        problems.append(f"handwritten row {n}: prior_messages is not valid JSON")
                 stats["handwritten"] += 1
 
     if agree["checked"]:

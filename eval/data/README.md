@@ -72,5 +72,5 @@ Two passes: an LLM first pass over every row, then the authors recheck a subset 
 
 **Final `test.jsonl`:**
 - 365 questions (305 reviewed + 60 hand-written).
-- **Provisional:** the team recheck isn't done yet, so the current `test.stats.txt` (sha256 `fafacf71…`) will change. Re-run `review.py import` after the recheck, then record the final sha256 here.
+- **Provisional:** the team recheck isn't done yet, so the current `test.stats.txt` (sha256 `e085d165…`, with follow-up conversation history added) will change. Re-run `review.py import` after the recheck, then record the final sha256 here.
 - Final sha256: _(fill in after recheck)_
