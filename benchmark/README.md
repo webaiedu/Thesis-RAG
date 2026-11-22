@@ -46,7 +46,9 @@ The Gemma baseline is therefore **~6.3 h: one full session**.
 
 Its answers are longer and slower than Gemma's (~2.6×). The Qwen baseline is therefore **~9.3 h of answers + ~2.7 h of judging ≈ 2 sessions**.
 
-**Revised sessions (before fine-tuning):**
+**With a second DGX Spark (from 23 Nov): see [SECOND_PC.md](SECOND_PC.md).** PC A runs Gemma and the judge, PC B runs Qwen 30B. The before-fine-tuning part ends on 25 Nov.
+
+**Revised sessions on one PC only (before fine-tuning):**
 1. Gemma B0 answers.
 2. Load the 80B: judge the Qwen pilot + Gemma B0. Then load Qwen and start the Qwen B0 answers.
 3. Finish the Qwen B0 answers.
