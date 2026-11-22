@@ -35,7 +35,24 @@ The next session runs the **same command** again. It skips everything already do
 | File extraction (once) | ~1 s per page; photos + vision ~4–8 s | – |
 | 80B judge | ~25/min | ~4,000 in **~2.7 h** |
 
-The Gemma baseline is therefore **~6.3 h: one full session**. Qwen 30B speeds will be added after its pilot. Until then the rows below are still estimates, and the Gemma rows are pessimistic.
+The Gemma baseline is therefore **~6.3 h: one full session**.
+
+**Measured in the Qwen3 30B pilot (22 Nov):**
+
+| Step | Speed | Full size |
+|---|---|---|
+| law answers | ~7.3/min (180 in 24.5 min) | 3,285 in **~7.5 h** |
+| file answers | ~10/min (90 in ~9 min) | 684 in **~1.1 h** |
+
+Its answers are longer and slower than Gemma's (~2.6×). The Qwen baseline is therefore **~8.6 h of answers + ~2.7 h of judging ≈ 2 sessions**.
+
+**Revised sessions (before fine-tuning):**
+1. Gemma B0 answers.
+2. Load the 80B: judge the Qwen pilot + Gemma B0. Then load Qwen and start the Qwen B0 answers.
+3. Finish the Qwen B0 answers.
+4. Load the 80B and judge Qwen B0; reports, model comparison.
+
+The rows below are the original estimates; the four sessions above replace sessions 1–5.
 
 | Session | Work | Machine time |
 |---|---|---|
