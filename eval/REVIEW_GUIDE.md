@@ -50,6 +50,20 @@ For `law` rows, `gold_chunk_ids` and `reference_answer` are required. For `gener
 
 ## Rechecking the first pass (`recheck` / `team_decision`)
 Claude did the first pass on every row (`reviewer = claude`). The team now checks the rows with `recheck = yes`. That means every fix, every drop, a random 20% of keeps and every hand-written row, in both CSVs.
+**Easiest way: `eval/recheck.html`.** Open it in Chrome or Firefox. It works offline and uploads nothing.
+- **Using the page:**
+  - Type your name, then open `test_review.csv` (or `handwritten.csv`). Choose your domain.
+  - Each row shows the question, Claude's fix, the source text and Claude's reason.
+  - Decide with the buttons or the keys <kbd>a</kbd>/<kbd>k</kbd>/<kbd>f</kbd>/<kbd>d</kbd>. Your work is kept in the browser until you click **Export CSV**.
+- **Combining everyone's exports:**
+  ```bash
+  cd eval
+  python3 review.py merge-team data/review/test_review.csv test_review.ali.csv test_review.mim.csv ...
+  python3 review.py merge-team data/review/handwritten.csv handwritten.ali.csv ...
+  ```
+  It reports a CONFLICT if two people decided the same row differently. Settle it and merge again.
+
+**In a spreadsheet instead:**
 1. Filter the sheet on `recheck = yes`.
 2. For each row, read `question`/`reference_answer` (and `question_fixed`/`answer_fixed` for fixes), `notes` and `source_text`, then fill in `team_decision`:
    - `agree`: Claude's decision is right; nothing else to change.

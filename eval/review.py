@@ -143,6 +143,40 @@ def mark_recheck(review_csv, keep_frac, seed, handwritten=None):
         print(f"recheck = yes on all {sum(r.get('recheck') == 'yes' for r in hrows)} hand-written rows")
 
 
+def merge_team(master, exports):
+    """Copy the team's decisions from exported recheck sheets (recheck.html) into the master CSV."""
+    cols, rows = read_csv(master)
+    hand = "source_text" not in cols
+    fields = ["team_decision", "notes"] + (["question", "reference_answer"] if hand else ["question_fixed", "answer_fixed"])
+    cols += [c for c in ("recheck", "team_decision") if c not in cols]
+    key = (lambda i, r: i) if hand else (lambda i, r: r["id"])
+    by = {key(i, r): r for i, r in enumerate(rows)}
+    taken, conflicts, n = {}, [], 0
+    for ex in exports:
+        _, erows = read_csv(ex)
+        if hand and len(erows) != len(rows):
+            sys.exit(f"{ex}: {len(erows)} rows, master has {len(rows)} (hand-written sheets are matched by row order)")
+        for i, e in enumerate(erows):
+            if not (e.get("team_decision") or "").strip():
+                continue
+            k = key(i, e)
+            if k not in by:
+                conflicts.append(f"{ex}: unknown row {k}")
+                continue
+            if k in taken and taken[k][1] != e["team_decision"]:
+                conflicts.append(f"row {k}: {taken[k][0]} says {taken[k][1]}, {ex} says {e['team_decision']}")
+                continue
+            taken[k] = (ex, e["team_decision"])
+            for f in fields:
+                if f in e:
+                    by[k][f] = e[f]
+            n += 1
+    write_csv(master, cols, rows)
+    print(f"merged {n} team decisions into {master}")
+    for c in conflicts:
+        print("  CONFLICT:", c)
+
+
 def split_ids(s):
     return [x.strip() for x in (s or "").replace(",", ";").split(";") if x.strip()]
 
@@ -287,6 +321,7 @@ if __name__ == "__main__":
     m = sub.add_parser("mark-recheck"); m.add_argument("review_csv")
     m.add_argument("--keep-frac", type=float, default=0.2); m.add_argument("--seed", type=int, default=42)
     m.add_argument("--handwritten")
+    g = sub.add_parser("merge-team"); g.add_argument("master"); g.add_argument("exports", nargs="+")
     f = sub.add_parser("find"); f.add_argument("query"); f.add_argument("--domain"); f.add_argument("-k", type=int, default=5)
     f.add_argument("--url", default="http://localhost:8000")
     a = ap.parse_args()
@@ -294,6 +329,8 @@ if __name__ == "__main__":
         export(a.src, a.dst)
     elif a.cmd == "import":
         do_import(a.review_csv, a.handwritten, a.out, a.partial, a.candidates)
+    elif a.cmd == "merge-team":
+        merge_team(a.master, a.exports)
     elif a.cmd == "add-cols":
         add_cols(a.review_csv)
     elif a.cmd == "mark-recheck":

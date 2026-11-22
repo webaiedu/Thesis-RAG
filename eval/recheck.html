@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Test-Set Recheck</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--ink:#1d1d1b;--mute:#6b6b66;--line:#ddd9d0;--acc:#2f5d8a;
+--agree:#2e7d4f;--keep:#3b6ea5;--fix:#b7791f;--drop:#b33a3a;--src:#fbfaf6}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#20201e;--ink:#ecebe6;--mute:#9b9a93;--line:#3a3935;--acc:#7fa9d6;--src:#1b1b19}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,"Noto Sans Bengali","Noto Sans",sans-serif}
+header{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+header h1{font-size:16px;margin:0 12px 0 0}
+select,input,button,textarea{font:inherit;color:inherit}
+select,input[type=text]{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+button{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--acc)}
+button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+main{max-width:980px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 14px;color:var(--mute);font-size:13px;margin-bottom:10px}
+.tag{display:inline-block;padding:1px 8px;border-radius:999px;font-weight:600;font-size:12px;color:#fff}
+.t-keep{background:var(--keep)}.t-fix{background:var(--fix)}.t-drop{background:var(--drop)}.t-agree{background:var(--agree)}.t-none{background:var(--mute)}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin:14px 0 4px}
+.box{border:1px solid var(--line);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-wrap:break-word}
+.old{text-decoration:line-through;opacity:.6}
+.src{background:var(--src);max-height:340px;overflow:auto;font-size:14px}
+.notes{color:var(--fix)}
+textarea{width:100%;min-height:70px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px}
+.decide{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;align-items:center}
+.decide button{min-width:90px;font-weight:600}
+.decide button.on{color:#fff}
+.b-agree.on{background:var(--agree);border-color:var(--agree)}.b-keep.on{background:var(--keep);border-color:var(--keep)}
+.b-fix.on{background:var(--fix);border-color:var(--fix)}.b-drop.on{background:var(--drop);border-color:var(--drop)}
+.nav{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;flex:1;min-width:120px}
+.prog i{display:block;height:100%;background:var(--agree)}
+.hint{color:var(--mute);font-size:13px}
+.empty{text-align:center;color:var(--mute);padding:60px 0}
+kbd{border:1px solid var(--line);border-radius:4px;padding:0 4px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Test-set recheck</h1>
+  <input type="file" id="file" accept=".csv">
+  <label>Show <select id="fRecheck"><option value="yes">recheck = yes</option><option value="all">all rows</option></select></label>
+  <label>Domain <select id="fDomain"><option value="">all</option></select></label>
+  <label>Claude <select id="fDec"><option value="">any</option><option>keep</option><option>fix</option><option>drop</option></select></label>
+  <label><input type="checkbox" id="fTodo" checked> only undecided</label>
+  <label>Reviewer <input type="text" id="who" size="10" placeholder="your name"></label>
+  <button class="primary" id="export">Export CSV</button>
+</header>
+<main>
+  <div id="view"><div class="empty">Open <b>eval/data/review/test_review.csv</b> or <b>handwritten.csv</b> to start.<br>
+  Nothing is uploaded; your decisions are kept in this browser until you export.</div></div>
+  <p class="hint">Keys: <kbd>a</kbd> agree · <kbd>k</kbd> keep · <kbd>f</kbd> fix · <kbd>d</kbd> drop · <kbd>←</kbd>/<kbd>→</kbd> previous/next (not while typing).
+  Rules: <i>eval/REVIEW_GUIDE.md</i> → "Rechecking the first pass".</p>
+</main>
+<script>
+"use strict";
+let cols=[], rows=[], fname="", kind="", list=[], pos=0;
+const $=id=>document.getElementById(id);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+
+function parseCSV(t){
+  if(t.charCodeAt(0)===0xFEFF)t=t.slice(1);
+  const out=[];let row=[],f="",q=false;
+  for(let i=0;i<t.length;i++){const c=t[i];
+    if(q){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else q=false}else f+=c}
+    else if(c==='"')q=true; else if(c===','){row.push(f);f=""}
+    else if(c==='\n'){row.push(f);out.push(row);row=[];f=""}
+    else if(c!=='\r')f+=c;}
+  if(f!==""||row.length){row.push(f);out.push(row)}
+  return out;
+}
+function toCSV(cols,rows){
+  const esc=v=>{v=v==null?"":String(v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+  return "﻿"+[cols.map(esc).join(",")].concat(rows.map(r=>cols.map(c=>esc(r[c])).join(","))).join("\r\n")+"\r\n";
+}
+function key(r,i){return fname+"|"+(r.id||("row"+i))}
+function edits(r,i){return store.get(key(r,i))||{}}
+
+$("file").onchange=async e=>{
+  const f=e.target.files[0]; if(!f)return; fname=f.name;
+  const grid=parseCSV(await f.text()); cols=grid[0];
+  rows=grid.slice(1).filter(r=>r.length>1).map(r=>Object.fromEntries(cols.map((c,i)=>[c,r[i]??""])));
+  kind=cols.includes("source_text")?"review":"hand";
+  for(const c of ["recheck","team_decision"]) if(!cols.includes(c)) cols.push(c);
+  rows.forEach((r,i)=>Object.assign(r,edits(r,i)));
+  const doms=[...new Set(rows.map(r=>r.domain||"(none)"))].sort();
+  $("fDomain").innerHTML='<option value="">all</option>'+doms.map(d=>`<option>${d}</option>`).join("");
+  $("fDec").disabled=kind!=="review";
+  $("who").value=store.get("who")||"";
+  refilter();
+};
+["fRecheck","fDomain","fDec","fTodo"].forEach(id=>$(id).onchange=refilter);
+$("who").oninput=e=>store.set("who",e.target.value);
+
+function refilter(){
+  list=rows.map((r,i)=>i).filter(i=>{const r=rows[i];
+    if($("fRecheck").value==="yes"&&(r.recheck||"").toLowerCase()!=="yes")return false;
+    if($("fDomain").value&&(r.domain||"(none)")!==$("fDomain").value)return false;
+    if(kind==="review"&&$("fDec").value&&r.decision!==$("fDec").value)return false;
+    if($("fTodo").checked&&r.team_decision)return false;
+    return true;});
+  pos=Math.min(pos,Math.max(0,list.length-1)); render();
+}
+function save(i,patch){const r=rows[i];Object.assign(r,patch);const e=edits(r,i);Object.assign(e,patch);store.set(key(r,i),e)}
+function esc(s){return (s||"").replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
+
+function render(){
+  const v=$("view");
+  const scope=rows.filter(r=>$("fRecheck").value!=="yes"||(r.recheck||"").toLowerCase()==="yes");
+  const done=scope.filter(r=>r.team_decision).length;
+  if(!list.length){v.innerHTML=`<div class="empty">Nothing left with these filters. Done: ${done}/${scope.length}. Click <b>Export CSV</b> when finished.</div>`;return}
+  const i=list[pos], r=rows[i], t=(r.team_decision||"").toLowerCase();
+  const dec=kind==="review"?r.decision:"keep";
+  let body="";
+  if(kind==="review"){
+    const qf=r.question_fixed, af=r.answer_fixed;
+    body+=`<h3>Question</h3><div class="box ${qf?"old":""}">${esc(r.question)}</div>`;
+    if(qf)body+=`<h3>Question fixed by Claude</h3><div class="box">${esc(qf)}</div>`;
+    body+=`<h3>Reference answer</h3><div class="box ${af?"old":""}">${esc(r.reference_answer)}</div>`;
+    if(af)body+=`<h3>Answer fixed by Claude</h3><div class="box">${esc(af)}</div>`;
+    body+=`<h3>Source text (${esc(r.law_or_case)} ${r.section?"s."+esc(r.section):""})</h3><div class="box src">${esc(r.source_text)}</div>`;
+    body+=`<div class="hint">gold: ${esc(r.gold_chunk_ids)}${r.extra_gold_chunk_ids?" · extra: "+esc(r.extra_gold_chunk_ids):""}</div>`;
+    if(t==="fix"){
+      body+=`<h3>Your question_fixed</h3><textarea data-f="question_fixed">${esc(r.question_fixed||r.question)}</textarea>
+             <h3>Your answer_fixed</h3><textarea data-f="answer_fixed">${esc(r.answer_fixed||r.reference_answer)}</textarea>`;
+    }
+  }else{
+    body+=`<div class="meta">type <b>${esc(r.type)}</b> · expected route <b>${esc(r.expected_route)}</b></div>`;
+    body+=`<h3>Question</h3>`+(t==="fix"?`<textarea data-f="question">${esc(r.question)}</textarea>`:`<div class="box">${esc(r.question)}</div>`);
+    body+=`<h3>Reference answer</h3>`+(t==="fix"?`<textarea data-f="reference_answer">${esc(r.reference_answer)}</textarea>`:`<div class="box">${esc(r.reference_answer)}</div>`);
+    if(r.gold_text)body+=`<h3>Gold section text</h3><div class="box src">${esc(r.gold_text)}</div>`;
+    body+=`<div class="hint">gold: ${esc(r.gold_chunk_ids)||"(none)"}</div>`;
+  }
+  body+=`<h3>Notes (Claude's reason; add yours after it)</h3><textarea data-f="notes" style="min-height:44px">${esc(r.notes)}</textarea>`;
+  v.innerHTML=`<div class="nav"><button id="prev">← Prev</button><span>${pos+1} / ${list.length} shown · done ${done}/${scope.length}</span>
+    <div class="prog"><i style="width:${scope.length?100*done/scope.length:0}%"></i></div><button id="next">Next →</button></div>
+    <div class="card"><div class="meta"><span>${esc(r.id||"hand-written row "+(i+2))}</span><span>${esc(r.domain)}</span><span>${esc(r.lang)}</span>
+    <span>Claude: <span class="tag t-${dec||"none"}">${dec||"—"}</span></span>
+    <span>Team: <span class="tag t-${t||"none"}">${t||"—"}</span></span></div>${body}
+    <div class="decide">${["agree","keep","fix","drop"].map(d=>`<button class="b-${d} ${t===d?"on":""}" data-d="${d}">${d}</button>`).join("")}
+    <span class="hint">agree = Claude was right · keep/fix/drop = your different decision</span></div></div>`;
+  $("prev").onclick=()=>{if(pos>0){pos--;render()}};
+  $("next").onclick=()=>{if(pos<list.length-1){pos++;render()}};
+  v.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>decide(b.dataset.d));
+  v.querySelectorAll("textarea[data-f]").forEach(ta=>ta.oninput=()=>save(i,{[ta.dataset.f]:ta.value}));
+}
+function decide(d){
+  const i=list[pos], r=rows[i], who=$("who").value.trim();
+  const patch={team_decision:d};
+  if(who)patch.notes=((r.notes||"").replace(/\s*\[team: [^\]]*\]$/,"")+` [team: ${who}]`).trim();
+  if(d==="fix"&&kind==="review"){patch.question_fixed=r.question_fixed||r.question;patch.answer_fixed=r.answer_fixed||r.reference_answer}
+  save(i,patch);
+  if(d!=="fix"&&$("fTodo").checked){refilter();return}
+  if(d!=="fix"&&pos<list.length-1)pos++;
+  render();
+}
+document.addEventListener("keydown",e=>{
+  if(!rows.length||/TEXTAREA|INPUT|SELECT/.test(document.activeElement.tagName))return;
+  const m={a:"agree",k:"keep",f:"fix",d:"drop"}[e.key];
+  if(m){decide(m);return}
+  if(e.key==="ArrowRight"&&pos<list.length-1){pos++;render()}
+  if(e.key==="ArrowLeft"&&pos>0){pos--;render()}
+});
+$("export").onclick=()=>{
+  if(!rows.length)return;
+  const who=($("who").value.trim()||"team").replace(/\W+/g,"_");
+  const blob=new Blob([toCSV(cols,rows)],{type:"text/csv;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=fname.replace(/\.csv$/,"")+"."+who+".csv";a.click();
+};
+</script>
+</body>
+</html>
