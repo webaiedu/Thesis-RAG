@@ -62,16 +62,52 @@ def _clean(text: str) -> str:
     return "\n".join(out).strip()
 
 
+import re  # noqa: E402
+
+# A Bangla text layer is often unusable even though it exists (same checks as prepareDataset/prepare_cases.py):
+# - Unicode Bangla fonts with a bad ToUnicode map: conjuncts come out as Latin-Extended / private-use
+#   characters ("ƶ সাƸস", "Ĺশা") and vowel signs are split from their consonant ("ত\nি");
+# - old non-Unicode fonts (SutonnyMJ, Bijoy, ...): Bangla typed as ASCII gibberish ("Avwg").
+# Such pages are OCR'd instead, like scanned pages.
+LEGACY_FONT = re.compile(r"SutonnyMJ|SutonnyOMJ|AdarshaLipi|MJ$|MJ[-,]|Bijoy|Sulekha|Boishakhi", re.I)
+BROKEN_GLYPH = re.compile(r"[Ā-ɏ-�]")
+ORPHAN_SIGN = re.compile(r"(?:^|\s)[ঁ-ঃা-ৌ্ৗ]", re.M)  # vowel sign without consonant
+BANGLA = re.compile(r"[ঀ-৿]")
+
+
+def text_layer_broken(page, text: str) -> str | None:
+    """Why this page's text layer can't be used (None if it is fine)."""
+    chars = len("".join(text.split()))
+    if not chars:
+        return None
+    broken = len(BROKEN_GLYPH.findall(text))
+    if broken > 5 and broken / chars > 0.01:
+        return "broken Bangla glyphs"
+    bangla = len(BANGLA.findall(text))
+    if bangla >= 20 and len(ORPHAN_SIGN.findall(text)) / bangla > 0.03:
+        return "split Bangla vowel signs"
+    legacy = 0
+    for b in page.get_text("dict")["blocks"]:
+        for l in b.get("lines", []):
+            legacy += sum(len(s["text"].strip()) for s in l["spans"] if LEGACY_FONT.search(s["font"]))
+    if legacy > 40 and legacy / chars > 0.3:
+        return "old non-Unicode Bangla font"
+    return None
+
+
 def extract_pdf(data: bytes) -> dict:
     import pymupdf
 
     doc = pymupdf.open(stream=data, filetype="pdf")
     total = doc.page_count
-    parts, ocr_pages, skipped = [], 0, 0
+    parts, ocr_pages, skipped, broken_pages = [], 0, 0, 0
     for i, page in enumerate(doc):
         if i >= MAX_PAGES:
             break
         text = page.get_text("text").strip()
+        if len(text) >= MIN_PAGE_TEXT and text_layer_broken(page, text):
+            broken_pages += 1
+            text = ""  # unusable text layer: read the page by OCR below
         if len(text) < MIN_PAGE_TEXT:
             if ocr_pages >= MAX_OCR_PAGES:
                 skipped += 1
@@ -90,6 +126,8 @@ def extract_pdf(data: bytes) -> dict:
         notes.append(f"Only the first {MAX_PAGES} of {total} pages were read.")
     if skipped:
         notes.append(f"{skipped} scanned page(s) were skipped (OCR limit {MAX_OCR_PAGES}).")
+    if broken_pages:
+        notes.append(f"{broken_pages} page(s) had an unreadable Bangla text layer and were read by OCR.")
     return {"text": "\n\n".join(parts), "pages": total, "method": method, "notes": notes}
 
 

@@ -26,7 +26,16 @@ The next session runs the **same command** again. It skips everything already do
 - Never run the judge while an answer run is going: latency is measured during answering.
 - **Model swaps cost ~5 min:** unload the answer model and load the 80B for judging (context 32768, Parallel 4).
 
-**Estimated sessions.** These are estimates until the pilot; the pilot (session P) replaces them with measured speeds.
+**Measured in the Gemma pilot (22 Nov):**
+
+| Step | Speed | Full size |
+|---|---|---|
+| Gemma answers (law) | ~19/min | 3,285 in **~2.9 h** |
+| Gemma answers (files) | ~17/min | 684 in **~40 min** |
+| File extraction (once) | ~1 s per page; photos + vision ~4–8 s | – |
+| 80B judge | ~25/min | ~4,000 in **~2.7 h** |
+
+The Gemma baseline is therefore **~6.3 h: one full session**. Qwen 30B speeds will be added after its pilot. Until then the rows below are still estimates, and the Gemma rows are pessimistic.
 
 | Session | Work | Machine time |
 |---|---|---|

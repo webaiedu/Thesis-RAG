@@ -14,10 +14,10 @@
     "auto",
     "high"
   ],
-  "startedAt": "2026-11-22T04:59:06.638Z",
+  "startedAt": "2026-11-22T05:33:31.695Z",
   "git": {
-    "sha": "0da8df29d9ec10450510a9b06fe4c10ab42fc9be",
-    "dirty": false
+    "sha": "9d82732a18b9daccf763ddee989be332e0fe1eae",
+    "dirty": true
   },
   "test": {
     "file": "/home/aiub/Desktop/Thesis-RAG/eval/data/pilot_files.jsonl",

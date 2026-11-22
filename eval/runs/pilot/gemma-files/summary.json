@@ -14,34 +14,34 @@
    "ctx_hit_chunk": 0.6666666666666666,
    "ctx_hit_group": 0.6666666666666666,
    "ctx_hit_group_ci": [
-    0.16666666666666666,
+    0.3333333333333333,
     1.0
    ],
    "cite_recall": 0.6296296296296297,
    "cite_recall_ci": [
-    0.16666666666666666,
+    0.2962962962962963,
     0.9629629629629629
    ],
-   "cite_precision": 0.8962264150943396,
+   "cite_precision": 0.8484276729559749,
    "judge_correctness": 3.9555555555555557,
    "judge_correctness_ci": [
-    3.0,
-    4.733333333333333
+    3.0444444444444443,
+    4.7555555555555555
    ],
-   "judge_faithfulness": 4.1,
+   "judge_faithfulness": 4.333333333333333,
    "judge_faithfulness_ci": [
-    3.2222222222222223,
-    4.8
+    3.6444444444444444,
+    4.866666666666666
    ],
-   "judge_technicality_fit": 4.929577464788732,
+   "judge_technicality_fit": 4.888888888888889,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 174.24444444444444,
-   "words_per_sentence": 21.322222222222223,
+   "words": 180.84444444444443,
+   "words_per_sentence": 20.705555555555556,
    "flesch": 59.016666666666666,
-   "seconds": 13.385666666666667,
-   "first_token_s": 1.083,
-   "tokens": 2322.511111111111
+   "seconds": 13.549222222222223,
+   "first_token_s": 1.1533333333333333,
+   "tokens": 2369.1666666666665
   }
  ],
  "model/effort/tech": [
@@ -61,40 +61,220 @@
    "ctx_hit_chunk": 0.6666666666666666,
    "ctx_hit_group": 0.6666666666666666,
    "ctx_hit_group_ci": [
-    0.16666666666666666,
+    0.3333333333333333,
     1.0
    ],
    "cite_recall": 0.6666666666666666,
    "cite_recall_ci": [
-    0.16666666666666666,
+    0.3333333333333333,
     1.0
    ],
-   "cite_precision": 0.8472222222222222,
+   "cite_precision": 0.7916666666666666,
    "judge_correctness": 4.2,
    "judge_correctness_ci": [
     3.4,
     5.0
    ],
-   "judge_faithfulness": 4.4,
+   "judge_faithfulness": 4.8,
    "judge_faithfulness_ci": [
-    3.4,
+    4.4,
     5.0
    ],
    "judge_technicality_fit": 5.0,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 245.1,
-   "words_per_sentence": 21.14,
+   "words": 257.2,
+   "words_per_sentence": 20.119999999999997,
    "flesch": 61.45,
-   "seconds": 18.750999999999998,
-   "first_token_s": 1.207,
-   "tokens": 3041.9
+   "seconds": 19.19,
+   "first_token_s": 1.181,
+   "tokens": 3053.4
   },
   {
    "group": {
     "model": "low",
     "effort": "high",
     "tech": "high"
+   },
+   "n": 10,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.6666666666666666,
+   "ctx_hit_group": 0.6666666666666666,
+   "ctx_hit_group_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_recall": 0.6666666666666666,
+   "cite_recall_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_precision": 0.8333333333333334,
+   "judge_correctness": 3.8,
+   "judge_correctness_ci": [
+    2.8,
+    4.8
+   ],
+   "judge_faithfulness": 4.4,
+   "judge_faithfulness_ci": [
+    3.5,
+    5.0
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 295.0,
+   "words_per_sentence": 19.18,
+   "flesch": 55.2,
+   "seconds": 20.003999999999998,
+   "first_token_s": 1.292,
+   "tokens": 3151.7
+  },
+  {
+   "group": {
+    "model": "low",
+    "effort": "high",
+    "tech": "low"
+   },
+   "n": 10,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.6666666666666666,
+   "ctx_hit_group": 0.6666666666666666,
+   "ctx_hit_group_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_recall": 0.5,
+   "cite_recall_ci": [
+    0.16666666666666666,
+    0.8333333333333334
+   ],
+   "cite_precision": 0.8666666666666666,
+   "judge_correctness": 4.0,
+   "judge_correctness_ci": [
+    3.2,
+    4.8
+   ],
+   "judge_faithfulness": 4.4,
+   "judge_faithfulness_ci": [
+    3.7,
+    5.0
+   ],
+   "judge_technicality_fit": 4.9,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 240.4,
+   "words_per_sentence": 17.990000000000002,
+   "flesch": 65.4,
+   "seconds": 18.366,
+   "first_token_s": 1.1549999999999998,
+   "tokens": 3065.1
+  },
+  {
+   "group": {
+    "model": "low",
+    "effort": "low",
+    "tech": "auto"
+   },
+   "n": 10,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.6666666666666666,
+   "ctx_hit_group": 0.6666666666666666,
+   "ctx_hit_group_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_recall": 0.6666666666666666,
+   "cite_recall_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_precision": 0.9166666666666666,
+   "judge_correctness": 4.0,
+   "judge_correctness_ci": [
+    3.0,
+    5.0
+   ],
+   "judge_faithfulness": 4.0,
+   "judge_faithfulness_ci": [
+    3.1,
+    4.8
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 88.9,
+   "words_per_sentence": 22.82,
+   "flesch": 60.75,
+   "seconds": 7.236,
+   "first_token_s": 1.0779999999999998,
+   "tokens": 1662.6
+  },
+  {
+   "group": {
+    "model": "low",
+    "effort": "low",
+    "tech": "high"
+   },
+   "n": 10,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.6666666666666666,
+   "ctx_hit_group": 0.6666666666666666,
+   "ctx_hit_group_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_recall": 0.6666666666666666,
+   "cite_recall_ci": [
+    0.3333333333333333,
+    1.0
+   ],
+   "cite_precision": 1.0,
+   "judge_correctness": 3.8,
+   "judge_correctness_ci": [
+    2.6,
+    4.8
+   ],
+   "judge_faithfulness": 4.0,
+   "judge_faithfulness_ci": [
+    3.0,
+    4.8
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 94.9,
+   "words_per_sentence": 23.21,
+   "flesch": 39.05,
+   "seconds": 7.937,
+   "first_token_s": 1.0310000000000001,
+   "tokens": 1708.9
+  },
+  {
+   "group": {
+    "model": "low",
+    "effort": "low",
+    "tech": "low"
    },
    "n": 10,
    "route_ok": 1.0,
@@ -115,205 +295,25 @@
     1.0
    ],
    "cite_precision": 0.8611111111111112,
-   "judge_correctness": 3.8,
-   "judge_correctness_ci": [
-    2.8,
-    4.8
-   ],
-   "judge_faithfulness": 4.1,
-   "judge_faithfulness_ci": [
-    3.2,
-    5.0
-   ],
-   "judge_technicality_fit": 5.0,
-   "judge_language_ok": 1.0,
-   "judge_refused": 0.0,
-   "words": 296.2,
-   "words_per_sentence": 20.66,
-   "flesch": 55.2,
-   "seconds": 20.791,
-   "first_token_s": 1.319,
-   "tokens": 3161.5
-  },
-  {
-   "group": {
-    "model": "low",
-    "effort": "high",
-    "tech": "low"
-   },
-   "n": 10,
-   "route_ok": 1.0,
-   "route_ok_ci": [
-    1.0,
-    1.0
-   ],
-   "domain_ok": 1.0,
-   "ctx_hit_chunk": 0.6666666666666666,
-   "ctx_hit_group": 0.6666666666666666,
-   "ctx_hit_group_ci": [
-    0.3333333333333333,
-    1.0
-   ],
-   "cite_recall": 0.5,
-   "cite_recall_ci": [
-    0.16666666666666666,
-    0.8333333333333334
-   ],
-   "cite_precision": 0.8333333333333334,
-   "judge_correctness": 4.0,
-   "judge_correctness_ci": [
-    3.0,
-    4.8
-   ],
-   "judge_faithfulness": 4.0,
-   "judge_faithfulness_ci": [
-    3.1,
-    4.8
-   ],
-   "judge_technicality_fit": 4.8,
-   "judge_language_ok": 1.0,
-   "judge_refused": 0.0,
-   "words": 235.3,
-   "words_per_sentence": 17.580000000000002,
-   "flesch": 65.4,
-   "seconds": 18.604,
-   "first_token_s": 1.17,
-   "tokens": 3066.3
-  },
-  {
-   "group": {
-    "model": "low",
-    "effort": "low",
-    "tech": "auto"
-   },
-   "n": 10,
-   "route_ok": 1.0,
-   "route_ok_ci": [
-    1.0,
-    1.0
-   ],
-   "domain_ok": 1.0,
-   "ctx_hit_chunk": 0.6666666666666666,
-   "ctx_hit_group": 0.6666666666666666,
-   "ctx_hit_group_ci": [
-    0.16666666666666666,
-    1.0
-   ],
-   "cite_recall": 0.6666666666666666,
-   "cite_recall_ci": [
-    0.16666666666666666,
-    1.0
-   ],
-   "cite_precision": 0.9166666666666666,
-   "judge_correctness": 4.0,
-   "judge_correctness_ci": [
-    3.0,
-    5.0
-   ],
-   "judge_faithfulness": 3.9,
-   "judge_faithfulness_ci": [
-    2.8,
-    4.8
-   ],
-   "judge_technicality_fit": 5.0,
-   "judge_language_ok": 1.0,
-   "judge_refused": 0.0,
-   "words": 88.0,
-   "words_per_sentence": 23.39,
-   "flesch": 60.75,
-   "seconds": 7.245,
-   "first_token_s": 0.861,
-   "tokens": 1588.5
-  },
-  {
-   "group": {
-    "model": "low",
-    "effort": "low",
-    "tech": "high"
-   },
-   "n": 10,
-   "route_ok": 1.0,
-   "route_ok_ci": [
-    1.0,
-    1.0
-   ],
-   "domain_ok": 1.0,
-   "ctx_hit_chunk": 0.6666666666666666,
-   "ctx_hit_group": 0.6666666666666666,
-   "ctx_hit_group_ci": [
-    0.16666666666666666,
-    1.0
-   ],
-   "cite_recall": 0.6666666666666666,
-   "cite_recall_ci": [
-    0.16666666666666666,
-    1.0
-   ],
-   "cite_precision": 1.0,
-   "judge_correctness": 3.8,
-   "judge_correctness_ci": [
-    2.8,
-    4.6
-   ],
-   "judge_faithfulness": 3.9,
-   "judge_faithfulness_ci": [
-    2.9,
-    4.8
-   ],
-   "judge_technicality_fit": 5.0,
-   "judge_language_ok": 1.0,
-   "judge_refused": 0.0,
-   "words": 98.6,
-   "words_per_sentence": 24.45,
-   "flesch": 39.05,
-   "seconds": 8.204,
-   "first_token_s": 0.875,
-   "tokens": 1643.5
-  },
-  {
-   "group": {
-    "model": "low",
-    "effort": "low",
-    "tech": "low"
-   },
-   "n": 10,
-   "route_ok": 1.0,
-   "route_ok_ci": [
-    1.0,
-    1.0
-   ],
-   "domain_ok": 1.0,
-   "ctx_hit_chunk": 0.6666666666666666,
-   "ctx_hit_group": 0.6666666666666666,
-   "ctx_hit_group_ci": [
-    0.16666666666666666,
-    1.0
-   ],
-   "cite_recall": 0.6666666666666666,
-   "cite_recall_ci": [
-    0.16666666666666666,
-    1.0
-   ],
-   "cite_precision": 0.9166666666666666,
    "judge_correctness": 3.4,
    "judge_correctness_ci": [
-    2.4,
-    4.4
+    2.6,
+    4.2
    ],
    "judge_faithfulness": 3.7,
    "judge_faithfulness_ci": [
     2.7,
     4.6
    ],
-   "judge_technicality_fit": 4.7,
+   "judge_technicality_fit": 4.5,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 99.3,
-   "words_per_sentence": 20.55,
+   "words": 105.3,
+   "words_per_sentence": 22.55,
    "flesch": 63.55,
-   "seconds": 7.573,
-   "first_token_s": 1.2029999999999998,
-   "tokens": 1645.6
+   "seconds": 8.029,
+   "first_token_s": 1.291,
+   "tokens": 1729.3
   },
   {
    "group": {
@@ -339,26 +339,26 @@
     0.3333333333333333,
     1.0
    ],
-   "cite_precision": 0.8472222222222222,
+   "cite_precision": 0.7472222222222222,
    "judge_correctness": 4.0,
    "judge_correctness_ci": [
     3.0,
     5.0
    ],
-   "judge_faithfulness": 4.1,
+   "judge_faithfulness": 4.5,
    "judge_faithfulness_ci": [
-    3.0,
+    3.6,
     5.0
    ],
    "judge_technicality_fit": 5.0,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 153.4,
-   "words_per_sentence": 20.740000000000002,
+   "words": 172.3,
+   "words_per_sentence": 19.85,
    "flesch": 65.1,
-   "seconds": 12.168,
-   "first_token_s": 1.0050000000000001,
-   "tokens": 2201.3
+   "seconds": 13.047999999999998,
+   "first_token_s": 1.076,
+   "tokens": 2275.4
   },
   {
    "group": {
@@ -376,7 +376,7 @@
    "ctx_hit_chunk": 0.6666666666666666,
    "ctx_hit_group": 0.6666666666666666,
    "ctx_hit_group_ci": [
-    0.16666666666666666,
+    0.3333333333333333,
     1.0
    ],
    "cite_recall": 0.5,
@@ -384,7 +384,7 @@
     0.16666666666666666,
     0.8333333333333334
    ],
-   "cite_precision": 0.8333333333333334,
+   "cite_precision": 0.7333333333333334,
    "judge_correctness": 4.0,
    "judge_correctness_ci": [
     3.0,
@@ -392,18 +392,18 @@
    ],
    "judge_faithfulness": 4.4,
    "judge_faithfulness_ci": [
-    3.4,
+    3.6,
     5.0
    ],
    "judge_technicality_fit": 5.0,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 191.3,
-   "words_per_sentence": 21.509999999999998,
+   "words": 201.0,
+   "words_per_sentence": 20.19,
    "flesch": 56.0,
-   "seconds": 14.653,
-   "first_token_s": 1.0070000000000001,
-   "tokens": 2300.2
+   "seconds": 14.963,
+   "first_token_s": 1.008,
+   "tokens": 2360.7
   },
   {
    "group": {
@@ -429,26 +429,26 @@
     0.3333333333333333,
     1.0
    ],
-   "cite_precision": 1.0,
+   "cite_precision": 0.8888888888888888,
    "judge_correctness": 4.4,
    "judge_correctness_ci": [
     3.6,
     5.0
    ],
-   "judge_faithfulness": 4.4,
+   "judge_faithfulness": 4.8,
    "judge_faithfulness_ci": [
-    3.6,
+    4.4,
     5.0
    ],
-   "judge_technicality_fit": 5.0,
+   "judge_technicality_fit": 4.8,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 161.0,
-   "words_per_sentence": 21.880000000000003,
+   "words": 172.6,
+   "words_per_sentence": 20.44,
    "flesch": 64.65,
-   "seconds": 12.482000000000001,
-   "first_token_s": 1.1,
-   "tokens": 2253.8
+   "seconds": 13.169999999999998,
+   "first_token_s": 1.268,
+   "tokens": 2315.4
   }
  ],
  "domain": [
@@ -560,26 +560,26 @@
     0.0,
     0.0
    ],
-   "cite_precision": 0.7450980392156863,
+   "cite_precision": 0.596078431372549,
    "judge_correctness": 2.4444444444444446,
    "judge_correctness_ci": [
     1.0,
     3.888888888888889
    ],
-   "judge_faithfulness": 2.2777777777777777,
+   "judge_faithfulness": 3.4444444444444446,
    "judge_faithfulness_ci": [
-    1.5555555555555556,
-    3.0
+    3.0,
+    3.888888888888889
    ],
-   "judge_technicality_fit": 4.583333333333333,
+   "judge_technicality_fit": 4.384615384615385,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 145.5,
-   "words_per_sentence": 30.488888888888887,
+   "words": 178.5,
+   "words_per_sentence": 27.405555555555555,
    "flesch": null,
-   "seconds": 12.54888888888889,
-   "first_token_s": 1.491111111111111,
-   "tokens": 3219.0
+   "seconds": 13.366666666666667,
+   "first_token_s": 1.8427777777777778,
+   "tokens": 3452.277777777778
   }
  ],
  "lang": [
@@ -605,26 +605,26 @@
     0.0,
     1.0
    ],
-   "cite_precision": 0.8333333333333334,
+   "cite_precision": 0.7358974358974358,
    "judge_correctness": 3.0,
    "judge_correctness_ci": [
-    1.711111111111111,
+    1.7555555555555555,
     4.2444444444444445
    ],
-   "judge_faithfulness": 3.2222222222222223,
+   "judge_faithfulness": 3.688888888888889,
    "judge_faithfulness_ci": [
-    2.066666666666667,
-    4.266666666666667
+    2.8222222222222224,
+    4.555555555555555
    ],
-   "judge_technicality_fit": 4.84375,
+   "judge_technicality_fit": 4.757575757575758,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 154.17777777777778,
-   "words_per_sentence": 22.788888888888888,
+   "words": 167.37777777777777,
+   "words_per_sentence": 21.555555555555557,
    "flesch": null,
-   "seconds": 12.946666666666667,
-   "first_token_s": 1.0915555555555554,
-   "tokens": 2333.7555555555555
+   "seconds": 13.273777777777777,
+   "first_token_s": 1.2322222222222223,
+   "tokens": 2427.0666666666666
   },
   {
    "group": {
@@ -685,34 +685,34 @@
    "ctx_hit_chunk": 0.6666666666666666,
    "ctx_hit_group": 0.6666666666666666,
    "ctx_hit_group_ci": [
-    0.16666666666666666,
+    0.3333333333333333,
     1.0
    ],
    "cite_recall": 0.6296296296296297,
    "cite_recall_ci": [
-    0.16666666666666666,
+    0.2962962962962963,
     0.9629629629629629
    ],
-   "cite_precision": 0.8962264150943396,
+   "cite_precision": 0.8484276729559749,
    "judge_correctness": 3.814814814814815,
    "judge_correctness_ci": [
-    2.5555555555555554,
+    2.5185185185185186,
     4.703703703703703
    ],
-   "judge_faithfulness": 3.9814814814814814,
+   "judge_faithfulness": 4.37037037037037,
    "judge_faithfulness_ci": [
-    2.759259259259259,
+    3.7777777777777777,
     4.888888888888889
    ],
-   "judge_technicality_fit": 4.8936170212765955,
+   "judge_technicality_fit": 4.833333333333333,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 213.59259259259258,
-   "words_per_sentence": 26.32037037037037,
+   "words": 224.59259259259258,
+   "words_per_sentence": 25.29259259259259,
    "flesch": null,
-   "seconds": 16.950370370370372,
-   "first_token_s": 1.4372222222222222,
-   "tokens": 3415.537037037037
+   "seconds": 17.222962962962963,
+   "first_token_s": 1.5544444444444443,
+   "tokens": 3493.296296296296
   },
   {
    "group": {
@@ -958,26 +958,26 @@
     null,
     null
    ],
-   "cite_precision": 0.8888888888888888,
+   "cite_precision": 0.6074074074074074,
    "judge_correctness": 1.0,
    "judge_correctness_ci": [
     null,
     null
    ],
-   "judge_faithfulness": 1.5555555555555556,
+   "judge_faithfulness": 3.888888888888889,
    "judge_faithfulness_ci": [
     null,
     null
    ],
-   "judge_technicality_fit": 4.6,
+   "judge_technicality_fit": 4.166666666666667,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 99.11111111111111,
-   "words_per_sentence": 32.05555555555556,
+   "words": 165.11111111111111,
+   "words_per_sentence": 25.88888888888889,
    "flesch": null,
-   "seconds": 8.703333333333333,
-   "first_token_s": 1.4266666666666667,
-   "tokens": 2954.3333333333335
+   "seconds": 10.338888888888889,
+   "first_token_s": 2.1300000000000003,
+   "tokens": 3420.8888888888887
   },
   {
    "group": {
@@ -1084,34 +1084,34 @@
    "ctx_hit_chunk": 0.6666666666666666,
    "ctx_hit_group": 0.6666666666666666,
    "ctx_hit_group_ci": [
-    0.16666666666666666,
+    0.3333333333333333,
     1.0
    ],
    "cite_recall": 0.6296296296296297,
    "cite_recall_ci": [
-    0.16666666666666666,
+    0.2962962962962963,
     0.9629629629629629
    ],
-   "cite_precision": 0.8962264150943396,
+   "cite_precision": 0.8484276729559749,
    "judge_correctness": 3.814814814814815,
    "judge_correctness_ci": [
-    2.5555555555555554,
+    2.5185185185185186,
     4.703703703703703
    ],
-   "judge_faithfulness": 3.9814814814814814,
+   "judge_faithfulness": 4.37037037037037,
    "judge_faithfulness_ci": [
-    2.759259259259259,
+    3.7777777777777777,
     4.888888888888889
    ],
-   "judge_technicality_fit": 4.8936170212765955,
+   "judge_technicality_fit": 4.833333333333333,
    "judge_language_ok": 1.0,
    "judge_refused": 0.0,
-   "words": 213.59259259259258,
-   "words_per_sentence": 26.32037037037037,
+   "words": 224.59259259259258,
+   "words_per_sentence": 25.29259259259259,
    "flesch": null,
-   "seconds": 16.950370370370372,
-   "first_token_s": 1.4372222222222222,
-   "tokens": 3415.537037037037
+   "seconds": 17.222962962962963,
+   "first_token_s": 1.5544444444444443,
+   "tokens": 3493.296296296296
   }
  ]
 }
