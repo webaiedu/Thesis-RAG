@@ -10,6 +10,12 @@ Hand-check the generated test questions in a spreadsheet, then build the final t
    - question_fixed / answer_fixed:   only when decision = fix
    - extra_gold_chunk_ids:            other chunks that also answer it, separated by ";"
    - reviewer, notes
+   - recheck = yes: rows a second reviewer must check; they fill team_decision
+     (agree = keep the first decision | keep | fix | drop). import prefers team_decision.
+
+   Older sheets without recheck/team_decision:   python review.py add-cols data/review/test_review.csv
+   Mark rows for the recheck (all fix/drop + a reproducible random share of keeps):
+       python review.py mark-recheck data/review/test_review.csv --handwritten data/review/handwritten.csv --keep-frac 0.2 --seed 42
 
 3. Find chunk ids for extra gold sections or hand-written questions (retrieval server running):
        python review.py find "punishment for theft" --domain criminal
@@ -37,10 +43,10 @@ DATA_DIR = HERE.parent / "backend" / "data"
 
 REVIEW_COLS = ["id", "domain", "kind", "lang", "law_or_case", "section", "question", "reference_answer",
                "decision", "question_fixed", "answer_fixed", "extra_gold_chunk_ids", "reviewer", "notes",
-               "source_text", "gold_chunk_ids"]
+               "recheck", "team_decision", "source_text", "gold_chunk_ids"]
 
 HAND_COLS = ["question", "lang", "type", "expected_route", "domain", "gold_chunk_ids", "reference_answer",
-             "reviewer", "notes"]
+             "reviewer", "notes", "recheck", "team_decision"]
 HAND_TYPES = "typo | colloquial | multi_section | follow_up | case_law | general (non-law) | out_of_scope (law, not in our data)"
 
 
@@ -89,6 +95,54 @@ def all_chunk_ids():
     return ids
 
 
+def read_csv(p):
+    with open(p, encoding="utf-8-sig", newline="") as f:
+        r = csv.DictReader(f)
+        return r.fieldnames, list(r)
+
+
+def write_csv(p, cols, rows):
+    tmp = Path(str(p) + ".tmp")
+    with open(tmp, "w", encoding="utf-8-sig", newline="") as f:
+        w = csv.DictWriter(f, fieldnames=cols)
+        w.writeheader()
+        for r in rows:
+            w.writerow({c: r.get(c, "") for c in cols})
+    tmp.replace(p)
+
+
+def add_cols(review_csv):
+    cols, rows = read_csv(review_csv)
+    missing = [c for c in REVIEW_COLS if c not in cols]
+    if not missing:
+        print("nothing to add")
+        return
+    new = [c for c in REVIEW_COLS if c in cols or c in missing] + [c for c in cols if c not in REVIEW_COLS]
+    write_csv(review_csv, new, rows)
+    print(f"added {missing} to {review_csv} ({len(rows)} rows kept)")
+
+
+def mark_recheck(review_csv, keep_frac, seed, handwritten=None):
+    import random
+    cols, rows = read_csv(review_csv)
+    keeps = [i for i, r in enumerate(rows) if (r.get("decision") or "").strip().lower() == "keep"]
+    picked = set(random.Random(seed).sample(keeps, round(len(keeps) * keep_frac)))
+    for i, r in enumerate(rows):
+        d = (r.get("decision") or "").strip().lower()
+        r["recheck"] = "yes" if d in ("fix", "drop") or i in picked else ""
+    write_csv(review_csv, cols, rows)
+    n = sum(r["recheck"] == "yes" for r in rows)
+    print(f"recheck = yes on {n} rows ({len(picked)} of {len(keeps)} keeps, seed {seed})")
+    if handwritten and Path(handwritten).exists():  # every hand-written row gets a second look
+        hcols, hrows = read_csv(handwritten)
+        hcols += [c for c in ("recheck", "team_decision") if c not in hcols]
+        for r in hrows:
+            if (r.get("question") or "").strip() and "EXAMPLE ROW" not in (r.get("notes") or ""):
+                r["recheck"] = "yes"
+        write_csv(handwritten, hcols, hrows)
+        print(f"recheck = yes on all {sum(r.get('recheck') == 'yes' for r in hrows)} hand-written rows")
+
+
 def split_ids(s):
     return [x.strip() for x in (s or "").replace(",", ";").split(";") if x.strip()]
 
@@ -97,10 +151,25 @@ def do_import(review_csv, handwritten, out, partial, candidates):
     known = all_chunk_ids()
     cands = {q["id"]: q for q in read_jsonl(candidates)} if Path(candidates).exists() else {}
     problems, final, stats = [], [], Counter()
+    agree = Counter()  # first reviewer vs team, on rows the team checked
 
     with open(review_csv, encoding="utf-8-sig", newline="") as f:
         for n, r in enumerate(csv.DictReader(f), 2):
             d = (r.get("decision") or "").strip().lower()
+            t = (r.get("team_decision") or "").strip().lower()
+            if t:
+                if t not in ("agree", "keep", "fix", "drop"):
+                    problems.append(f"row {n}: team_decision must be agree/keep/fix/drop, got {t!r}")
+                    continue
+                agree["checked"] += 1
+                if t in ("agree", d):
+                    agree["agree"] += 1
+                else:
+                    agree[f"{d or '-'} -> {t}"] += 1
+                if t != "agree":
+                    d = t
+            elif (r.get("recheck") or "").strip().lower() == "yes":
+                stats["recheck pending"] += 1
             if not d:
                 stats["not reviewed"] += 1
                 if not partial:
@@ -132,6 +201,21 @@ def do_import(review_csv, handwritten, out, partial, candidates):
                 q = (r.get("question") or "").strip()
                 if not q or "EXAMPLE ROW" in (r.get("notes") or ""):
                     continue
+                t = (r.get("team_decision") or "").strip().lower()
+                if t:  # the first reviewer wrote the row, so their implicit decision is keep
+                    if t not in ("agree", "keep", "fix", "drop"):
+                        problems.append(f"handwritten row {n}: team_decision must be agree/keep/fix/drop, got {t!r}")
+                        continue
+                    agree["checked"] += 1
+                    if t in ("agree", "keep"):
+                        agree["agree"] += 1
+                    else:
+                        agree[f"handwritten keep -> {t}"] += 1
+                    if t == "drop":
+                        stats["handwritten dropped"] += 1
+                        continue
+                elif (r.get("recheck") or "").strip().lower() == "yes":
+                    stats["recheck pending"] += 1
                 route = (r.get("expected_route") or "law").strip().lower()
                 if route not in ("law", "general", "unsupported"):
                     problems.append(f"handwritten row {n}: expected_route must be law/general/unsupported")
@@ -152,6 +236,10 @@ def do_import(review_csv, handwritten, out, partial, candidates):
                 })
                 stats["handwritten"] += 1
 
+    if agree["checked"]:
+        rate = agree["agree"] / agree["checked"]
+        changes = {k: v for k, v in agree.items() if k not in ("checked", "agree")}
+        print(f"first reviewer vs team: {agree['agree']}/{agree['checked']} agree ({rate:.1%}); changes: {changes or 'none'}")
     if problems:
         print("Fix these first:")
         for p in problems[:50]:
@@ -167,6 +255,8 @@ def do_import(review_csv, handwritten, out, partial, candidates):
     sha = hashlib.sha256(out.read_bytes()).hexdigest()
     by = Counter((q["domain"] or "-", q["lang"]) for q in final)
     lines = [f"test set: {out.name}", f"sha256: {sha}", f"questions: {len(final)}", f"review: {dict(stats)}",
+             "team recheck: " + (f"{agree['agree']}/{agree['checked']} agree ({agree['agree'] / agree['checked']:.1%})"
+                                 if agree["checked"] else "not done"),
              "by domain/lang:"] + [f"  {k[0]:15s} {k[1]}  {v}" for k, v in sorted(by.items())]
     lines.append("by type: " + str(dict(Counter(q.get("type", "generated") for q in final))))
     (out.with_suffix(".stats.txt")).write_text("\n".join(lines) + "\n", encoding="utf-8")
@@ -193,6 +283,10 @@ if __name__ == "__main__":
     i = sub.add_parser("import"); i.add_argument("review_csv"); i.add_argument("--handwritten")
     i.add_argument("--out", default=str(HERE / "data" / "test.jsonl")); i.add_argument("--partial", action="store_true")
     i.add_argument("--candidates", default=str(HERE / "data" / "test_candidates.jsonl"))
+    c = sub.add_parser("add-cols"); c.add_argument("review_csv")
+    m = sub.add_parser("mark-recheck"); m.add_argument("review_csv")
+    m.add_argument("--keep-frac", type=float, default=0.2); m.add_argument("--seed", type=int, default=42)
+    m.add_argument("--handwritten")
     f = sub.add_parser("find"); f.add_argument("query"); f.add_argument("--domain"); f.add_argument("-k", type=int, default=5)
     f.add_argument("--url", default="http://localhost:8000")
     a = ap.parse_args()
@@ -200,5 +294,9 @@ if __name__ == "__main__":
         export(a.src, a.dst)
     elif a.cmd == "import":
         do_import(a.review_csv, a.handwritten, a.out, a.partial, a.candidates)
+    elif a.cmd == "add-cols":
+        add_cols(a.review_csv)
+    elif a.cmd == "mark-recheck":
+        mark_recheck(a.review_csv, a.keep_frac, a.seed, a.handwritten)
     else:
         find(a.query, a.domain, a.k, a.url)

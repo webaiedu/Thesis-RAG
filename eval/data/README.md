@@ -23,9 +23,54 @@ Keep this file up to date. It's the record the thesis cites for how the test set
 | `val.jsonl` | val | 19 Nov 2026 | 544 (272 bn / 272 en; 27 chunks skipped) | no |
 | `train.jsonl` | train | (not yet) | | no (spot-check ~100) |
 
-## Hand-check (fill in when done)
-- Reviewers:
-- Dates:
-- Candidates reviewed / kept / fixed / dropped:
-- Hand-written questions added:
-- Final `test.jsonl` sha256 (from `test.stats.txt`):
+## Hand-check
+Two passes: an LLM first pass over every row, then the authors recheck a subset (rows with `recheck = yes`).
+
+**First pass:** Claude (Anthropic, model `claude-opus-5-5`), 22 Nov 2026, `reviewer = claude`. It followed `eval/REVIEW_GUIDE.md` row by row, with the retrieval server running for `review.py find`.
+- **Reviewed:** all 532 candidates. 148 kept, 157 fixed, 227 dropped, which leaves 305 questions (151 bn / 154 en, 30–37 per domain).
+- **Notes:** every fix and drop has a one-line reason in `notes`.
+
+| domain | keep bn | fix bn | drop bn | keep en | fix en | drop en | kept+fixed |
+|---|---|---|---|---|---|---|---|
+| cases | 1 | 13 | 11 | 12 | 4 | 9 | 30 |
+| children_women | 6 | 12 | 12 | 10 | 8 | 12 | 36 |
+| criminal | 4 | 14 | 16 | 15 | 4 | 15 | 37 |
+| education | 6 | 8 | 14 | 11 | 6 | 11 | 31 |
+| family | 3 | 14 | 10 | 10 | 7 | 10 | 34 |
+| labour | 13 | 6 | 14 | 13 | 4 | 16 | 36 |
+| land | 4 | 13 | 12 | 11 | 5 | 13 | 33 |
+| tax | 5 | 13 | 14 | 14 | 3 | 15 | 35 |
+| uncategorized | 3 | 13 | 12 | 7 | 10 | 11 | 33 |
+| **total** | 45 | 106 | 115 | 103 | 51 | 112 | 305 |
+
+**Most common problems:**
+- **Wrong or incomplete answers (~64 fixes):**
+  - wrong section letters, e.g. "9K" for ৯খ;
+  - "maximum" read as "less than";
+  - a key proviso left out.
+- **Poor Bangla (~44 fixes, ~38 drops):** wrong legal terms (দণ্ডবিধি for ফৌজদারি কার্যবিধি, আত্মসমর্থন for স্বীকারোক্তি), mixed script, garbled sentences. Only 45 of 151 kept Bangla rows needed no change.
+- **Questions that need the source text (~35 fixes):**
+  - city-specific police laws asked without naming the city;
+  - "this law" or "the Board" left unnamed;
+  - Parsi, Hindu or Christian personal law asked without naming the community.
+- **Case law: the passage was a party's argument, not the holding (~13 drops).** This is why only 30 of the 50 case rows survived.
+- **Over target or not worth asking (~132 drops):** definitions, board procedure, transitional clauses, obsolete provisions. These were dropped to keep each domain at about 30–35 rows.
+
+**Extra gold:** 4 rows got `extra_gold_chunk_ids`. Sections 9খ and 24ক of the Nari O Shishu Act appear both in the consolidated 2000 Act and in the 2025 amendment ordinance.
+
+**Hand-written questions:** 60 in `review/handwritten.csv`:
+- 10 typo, 10 colloquial (some in Banglish), 8 multi-section, 6 case-law, 8 general, 8 out-of-scope, 10 follow-up;
+- 29 bn / 31 en (Banglish counted as en);
+- gold ids found with `review.py find`, reference answers taken only from those chunks.
+
+`notes` records each gold chunk's split. Many common sections (theft, murder, maternity leave) are in the **train** split, so a fine-tuned model may have seen training questions on them. Report the hand-written set separately, or with and without the train-split rows.
+
+**Recheck by the authors:** `recheck = yes` marks every fix (157), every drop (227), a random 20% of keeps (30; `review.py mark-recheck --keep-frac 0.2 --seed 42`) and all 60 hand-written rows, 474 rows in total.
+- Reviewers: _(fill in)_
+- Dates: _(fill in)_
+- Agreement Claude vs team (printed by `review.py import` and in `test.stats.txt`): _(fill in)_
+
+**Final `test.jsonl`:**
+- 365 questions (305 reviewed + 60 hand-written).
+- **Provisional:** the team recheck isn't done yet, so the current `test.stats.txt` (sha256 `fafacf71…`) will change. Re-run `review.py import` after the recheck, then record the final sha256 here.
+- Final sha256: _(fill in after recheck)_

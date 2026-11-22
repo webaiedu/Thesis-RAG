@@ -48,6 +48,16 @@ You can reuse the 70 questions in `retrieval/calibration/questions.jsonl` as ide
 
 For `law` rows, `gold_chunk_ids` and `reference_answer` are required. For `general` / `out_of_scope` rows, leave `gold_chunk_ids` empty; the reference answer can be a short note like "should refuse: not Bangladesh law".
 
+## Rechecking the first pass (`recheck` / `team_decision`)
+Claude did the first pass on every row (`reviewer = claude`). The team now checks the rows with `recheck = yes`. That means every fix, every drop, a random 20% of keeps and every hand-written row, in both CSVs.
+1. Filter the sheet on `recheck = yes`.
+2. For each row, read `question`/`reference_answer` (and `question_fixed`/`answer_fixed` for fixes), `notes` and `source_text`, then fill in `team_decision`:
+   - `agree`: Claude's decision is right; nothing else to change.
+   - `keep` / `fix` / `drop`: you disagree. For `fix`, write your version in `question_fixed`/`answer_fixed`. In `handwritten.csv`, edit `question`/`reference_answer` directly. Add a reason to `notes`.
+3. Leave rows without `recheck = yes` alone.
+
+`review.py import` uses `team_decision` when it is filled and prints the Claude–team agreement rate. The rate goes into the thesis.
+
 ## When you're done
 ```bash
 cd eval

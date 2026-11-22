@@ -1,0 +1,27 @@
+test set: test.jsonl
+sha256: fafacf71e47b8cdd8b8fba1c43ef39cdea895534c24e43f24289d175fe5967f2
+questions: 365
+review: {'recheck pending': 474, 'fix': 157, 'drop': 227, 'keep': 148, 'handwritten': 60}
+team recheck: not done
+by domain/lang:
+  -               bn  7
+  -               en  9
+  cases           bn  17
+  cases           en  19
+  children_women  bn  21
+  children_women  en  19
+  criminal        bn  22
+  criminal        en  29
+  education       bn  14
+  education       en  17
+  family          bn  19
+  family          en  19
+  labour          bn  23
+  labour          en  21
+  land            bn  19
+  land            en  16
+  tax             bn  18
+  tax             en  19
+  uncategorized   bn  20
+  uncategorized   en  17
+by type: {'generated': 305, 'typo': 10, 'colloquial': 10, 'multi_section': 8, 'case_law': 6, 'general': 8, 'out_of_scope': 8, 'follow_up': 10}
