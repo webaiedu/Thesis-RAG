@@ -8,5 +8,7 @@ easyocr>=1.7
 python-multipart>=0.0.9
 markitdown[docx,pptx,xlsx,xls,outlook]>=0.1
 pillow-heif>=0.18
-# GPU: install the CUDA build of torch first, e.g.
-#   pip install torch --index-url https://download.pytorch.org/whl/cu128
+# GPU (DGX Spark, aarch64): after installing this file, pin the CUDA builds used on PC A:
+#   python -m pip install "torch==2.14.1" --index-url https://download.pytorch.org/whl/cu130
+#   python -m pip install "torchvision==0.29.2" --no-deps   # normal PyPI; not on the cu130 index
+# (the cu128 index gives a CPU-only torch on this hardware)

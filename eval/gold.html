@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gold Rating</title>
+<style>
+:root{--bg:#f6f6f3;--card:#fff;--ink:#1d1d1b;--mute:#6b6b66;--line:#ddd9d0;--acc:#2f5d8a;--ok:#2e7d4f;--src:#fbfaf6;--warn:#b7791f}
+@media (prefers-color-scheme:dark){:root{--bg:#161615;--card:#20201e;--ink:#ecebe6;--mute:#9b9a93;--line:#3a3935;--acc:#7fa9d6;--src:#1b1b19}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,"Noto Sans Bengali","Noto Sans",sans-serif}
+header{position:sticky;top:0;z-index:2;background:var(--card);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+header h1{font-size:16px;margin:0 12px 0 0}
+select,input,button,textarea{font:inherit;color:inherit}
+select{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:4px 6px}
+button{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:5px 10px;cursor:pointer}
+button:hover{border-color:var(--acc)}
+button.primary{background:var(--acc);color:#fff;border-color:var(--acc)}
+main{max-width:1000px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:16px}
+h3{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--mute);margin:14px 0 4px}
+.box{border:1px solid var(--line);border-radius:8px;padding:8px 10px;white-space:pre-wrap;word-wrap:break-word}
+.src{background:var(--src);max-height:300px;overflow:auto;font-size:14px}
+.meta{color:var(--mute);font-size:13px;margin-bottom:6px}
+.ans{border-left:4px solid var(--acc)}
+.row{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:center;margin-top:10px}
+.scale button{min-width:36px;font-weight:600}
+.scale button.on{background:var(--acc);color:#fff;border-color:var(--acc)}
+.done{color:var(--ok);font-weight:600}
+textarea{width:100%;min-height:40px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px}
+.nav{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap}
+.prog{height:6px;background:var(--line);border-radius:3px;overflow:hidden;flex:1;min-width:120px}
+.prog i{display:block;height:100%;background:var(--ok)}
+.empty{text-align:center;color:var(--mute);padding:60px 0}
+details{margin-top:8px} summary{cursor:pointer;color:var(--mute)}
+.warn{color:var(--warn)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Gold rating</h1>
+  <input type="file" id="file" accept=".jsonl">
+  <label>I am <select id="rater"><option value="">choose…</option><option>R1</option><option>R2</option><option>R3</option></select></label>
+  <label><input type="checkbox" id="todo"> only unfinished</label>
+  <button class="primary" id="export">Export CSV</button>
+</header>
+<main>
+  <div class="card">
+    <details open><summary><b>Rubric</b> (same as the 80B judge; full guide: eval/GOLD_GUIDE.md)</summary>
+    <p><b>Correctness 1–5:</b> same legal result as the reference (punishments, periods, amounts, conditions, who/where)?
+    5 = all key points right and nothing wrong · 3 = main point right but a key detail missing or wrong · 1 = wrong or no answer.
+    Extra correct detail is fine. Expected handling <i>general</i>: judge plain helpfulness and accuracy.
+    <i>unsupported</i>: 5 = it clearly declines / says it's outside the Bangladesh law it covers, 1 = it answers from outside knowledge as if certain.</p>
+    <p><b>Faithfulness 1–5:</b> are its legal claims supported by the SOURCE EXCERPTS (not outside knowledge)? 5 = everything supported · 1 = mostly unsupported or invented sections. <b>n/a</b> if no excerpts were given.</p>
+    <p><b>Language OK:</b> answers in the language of the question. <b>Refused:</b> it declined to answer.</p>
+    <p class="warn">Rate each answer on its own. Don't guess which model wrote it, don't discuss ratings with the other raters until everyone has exported.</p>
+    </details>
+  </div>
+  <div id="view"><div class="empty">Open <b>eval/data/gold/sample.jsonl</b> and choose your rater id (R1/R2/R3).<br>
+  Nothing is uploaded: ratings stay in this browser until you click <b>Export CSV</b>. Export often.</div></div>
+</main>
+<script>
+"use strict";
+let items=[], mine=[], pos=0;
+const $=id=>document.getElementById(id);
+const store={get(k){try{return JSON.parse(localStorage.getItem(k)||"null")}catch(e){return null}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const esc=s=>(s==null?"":String(s)).replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]));
+const rk=aid=>"gold|"+$("rater").value+"|"+aid;
+const get=aid=>store.get(rk(aid))||{language_ok:true,refused:false};
+const complete=aid=>{const r=store.get(rk(aid));return !!(r&&r.correctness&&(r.faithfulness||r.faithfulness===0))};
+const qdone=it=>it.answers.every(a=>complete(a.aid));
+
+$("file").onchange=async e=>{const f=e.target.files[0];if(!f)return;
+  items=(await f.text()).split("\n").filter(l=>l.trim()).map(l=>JSON.parse(l));
+  $("rater").value=store.get("gold|who")||""; refilter();};
+$("rater").onchange=()=>{store.set("gold|who",$("rater").value);pos=0;refilter()};
+$("todo").onchange=refilter;
+function refilter(){const r=$("rater").value;
+  mine=items.filter(it=>r&&it.raters.includes(r)&&(!$("todo").checked||!qdone(it)));
+  pos=Math.min(pos,Math.max(0,mine.length-1));render();}
+function setv(aid,k,v){const r=get(aid);r[k]=v;store.set(rk(aid),r);render();}
+function scale(aid,k,cur,na){let h=[1,2,3,4,5].map(n=>`<button class="${cur===n?"on":""}" onclick="setv('${aid}','${k}',${n})">${n}</button>`).join("");
+  if(na)h+=`<button class="${cur===0?"on":""}" onclick="setv('${aid}','${k}',0)">n/a</button>`;return `<span class="scale">${h}</span>`;}
+function render(){const v=$("view");
+  if(!items.length)return; if(!$("rater").value){v.innerHTML='<div class="empty">Choose your rater id (R1/R2/R3) in the header.</div>';return}
+  const all=items.filter(it=>it.raters.includes($("rater").value)), done=all.filter(qdone).length;
+  if(!mine.length){v.innerHTML=`<div class="empty">Nothing left. Done ${done}/${all.length} questions. Click <b>Export CSV</b>.</div>`;return}
+  const it=mine[pos];
+  let h=`<div class="nav"><button onclick="go(-1)">← Prev</button><span>${pos+1}/${mine.length} · done ${done}/${all.length}</span>
+    <div class="prog"><i style="width:${100*done/Math.max(1,all.length)}%"></i></div><button onclick="go(1)">Next →</button></div>
+  <div class="card"><div class="meta">${it.gid} · expected handling: <b>${esc(it.expected_route)}</b>${it.file?" · the user attached a file":""} · language ${esc(it.lang)}</div>
+  <h3>Question</h3><div class="box">${esc(it.question)}</div>
+  <h3>Reference answer</h3><div class="box">${esc(it.reference)}</div>
+  <h3>Source excerpts given to the chatbot</h3><div class="box src">${esc(it.excerpts)}</div></div>`;
+  for(const a of it.answers){const r=get(a.aid), ok=complete(a.aid);
+    h+=`<div class="card ans"><div class="meta">Answer ${a.label} ${ok?'<span class="done">✓ rated</span>':""}</div>
+    ${a.excerpts?`<details><summary>this answer was given different excerpts</summary><div class="box src">${esc(a.excerpts)}</div></details>`:""}
+    <div class="box">${esc(a.answer)}</div>
+    <div class="row"><b>Correctness</b> ${scale(a.aid,"correctness",r.correctness,false)}</div>
+    <div class="row"><b>Faithfulness</b> ${scale(a.aid,"faithfulness",r.faithfulness,true)}</div>
+    <div class="row"><label><input type="checkbox" ${r.language_ok?"checked":""} onchange="setv('${a.aid}','language_ok',this.checked)"> Language OK</label>
+      <label><input type="checkbox" ${r.refused?"checked":""} onchange="setv('${a.aid}','refused',this.checked)"> Refused</label></div>
+    <div class="row" style="width:100%"><textarea placeholder="notes (optional)" onchange="setv('${a.aid}','notes',this.value)">${esc(r.notes||"")}</textarea></div></div>`;}
+  v.innerHTML=h;}
+function go(d){pos=Math.max(0,Math.min(mine.length-1,pos+d));render();window.scrollTo(0,0);}
+document.addEventListener("keydown",e=>{if(/TEXTAREA|INPUT|SELECT/.test(e.target.tagName))return;
+  if(e.key==="ArrowRight")go(1); if(e.key==="ArrowLeft")go(-1);});
+$("export").onclick=()=>{const r=$("rater").value;if(!r||!items.length)return alert("Open sample.jsonl and choose your rater id first.");
+  const cols=["aid","rater","correctness","faithfulness","language_ok","refused","notes"];
+  const q=v=>{v=v==null?"":String(v);return /[",\n\r]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
+  const lines=[cols.join(",")];
+  for(const it of items.filter(x=>x.raters.includes(r)))for(const a of it.answers){const x=store.get(rk(a.aid));if(!x||!x.correctness)continue;
+    lines.push([a.aid,r,x.correctness,x.faithfulness===0?"":(x.faithfulness||""),x.language_ok?"yes":"no",x.refused?"yes":"no",x.notes||""].map(q).join(","));}
+  const blob=new Blob(["﻿"+lines.join("\r\n")+"\r\n"],{type:"text/csv"});
+  const u=URL.createObjectURL(blob),el=document.createElement("a");el.href=u;el.download=`ratings_${r}.csv`;el.click();URL.revokeObjectURL(u);};
+</script>
+</body>
+</html>

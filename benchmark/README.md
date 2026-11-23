@@ -6,9 +6,13 @@ One file = one model's runbook. Run them in this order:
 |---|---|---|
 | 1 | [before-gemma.md](before-gemma.md) | Gemma 4 E4B, **before** fine-tuning (baseline) |
 | 2 | [before-qwen3-30b.md](before-qwen3-30b.md) | Qwen3 30B, **before** fine-tuning (baseline) |
-| (fine-tuning happens here, see `planning/` and the fine-tuning plan) | | |
-| 3 | [after-gemma.md](after-gemma.md) | Gemma 4 E4B, **after** fine-tuning |
-| 4 | [after-qwen3-30b.md](after-qwen3-30b.md) | Qwen3 30B, **after** fine-tuning |
+| 3 | [before-qwen3-next-80b.md](before-qwen3-next-80b.md) | Qwen3-Next 80B, **before** fine-tuning (baseline; added 23 Nov at the supervisor's request) |
+| Gold standard | [../eval/GOLD_GUIDE.md](../eval/GOLD_GUIDE.md) | humans + Claude rate a blind sample of all 3 models; checks the 80B judge (incl. self-preference) |
+| (fine-tuning happens here: **only the best of the 3 models**, chosen after the gold check) | | |
+| 4 | [after-gemma.md](after-gemma.md) / [after-qwen3-30b.md](after-qwen3-30b.md) | the chosen model, **after** fine-tuning (an 80B "after" runbook is written only if the 80B is chosen) |
+
+**Three models from 23 Nov:** Gemma 4 E4B (`low`), Qwen3 30B (`mid`), Qwen3-Next 80B (`high`). Same test sets, settings, caches and judge for all three. The 80B also judges, so it rates its own answers; the gold standard measures that bias.
+**Judge speed on real answers (23 Nov):** ~15–19 judgements/min (the 25/min below was measured on short calibration answers), so ~4,000 answers take **~3.5–4.5 h**.
 
 ## Time plan: one 6-hour session per day, nothing overnight
 The PC is available **09:15–16:30** each day and cannot run overnight, so every part is split into **sessions**. One session = one day.

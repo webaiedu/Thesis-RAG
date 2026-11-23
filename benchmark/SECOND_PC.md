@@ -5,8 +5,10 @@ Both PCs are DGX Spark (same hardware), each used 09:15–16:30 with nothing ove
 ## Who does what
 | PC | Answer runs (before **and** after fine-tuning) | Other work |
 |---|---|---|
-| **PC A** (current DGX) | **Gemma 4 E4B**: B0 (done 22 Nov), E1/E2/E3 later | the 80B judge for everything; training-question generation; fine-tuning |
-| **PC B** (new DGX, folder `Thesis-RAG PC-B`) | **Qwen3 30B**: B0, then E1/E2/E3 later | judging Qwen's answers with its own 80B (installed on PC B) |
+| **PC A** (current DGX) | **Gemma 4 E4B**: B0 (done 22 Nov). **Qwen3-Next 80B**: B0 (from 24 Nov, [before-qwen3-next-80b.md](before-qwen3-next-80b.md)) | the 80B judge; gold standard (Claude's ratings); training questions; fine-tuning |
+| **PC B** (new DGX, folder `Thesis-RAG PC-B`) | **Qwen3 30B**: B0 | judging Qwen 30B's answers with its own 80B (**same file hash as PC A**, see step 3) |
+
+**From 23 Nov: three models, and only the best one is fine-tuned** (chosen after the gold-standard check, `eval/GOLD_GUIDE.md`). The "after fine-tuning" runs are then done only for that model, on the PC that ran its B0.
 
 **Why split by model:**
 - Speed is compared before vs after fine-tuning. Each answer model must therefore run on the **same machine** both times. The two PCs are the same hardware, but not mixing them removes any doubt.
@@ -57,6 +59,9 @@ Both PCs are DGX Spark (same hardware), each used 09:15–16:30 with nothing ove
    | `Qwen3-30B-A3B-Instruct-2507-Q4_K_M.gguf` | `88168cc35481e44b7d3d03ce79f59a90d15197e4d633006555a0bc44c57886d8` |
    | `gemma-4-E4B-it-Q4_K_M.gguf` | `0ffb122c8b6921f13cbc34186e052524d0b5803b17f4867b7197a561400b3770` |
    | `mmproj-gemma-4-E4B-it-BF16.gguf` | `bdfc4935857658dfdc8d1adebfa3897c2fec8b3323410f4f73ade36d6efa02be` |
+   | `Qwen3-Next-80B-A3B-Instruct-Q4_K_M.gguf` (lmstudio-community, 48.5 GB; the judge) | `eeece92fb61a7810d58a76bf211cb38331b74945e277921cd3fa7b8b575a4472` |
+
+   **The 80B must match before PC B judges anything:** the judge must be the identical file on both PCs, or PC B's scores can't be compared with PC A's.
 
 4. **Software** (as on PC A):
    - **LM Studio:** the same version if possible.
@@ -64,10 +69,14 @@ Both PCs are DGX Spark (same hardware), each used 09:15–16:30 with nothing ove
    - **Python 3.12 venv:**
      ```bash
      cd "Thesis-RAG PC-B/retrieval" && python3.12 -m venv .venv && source .venv/bin/activate
-     python -m pip install torch --index-url https://download.pytorch.org/whl/cu128
      python -m pip install -r requirements.txt
-     python -c "import torch; print(torch.cuda.is_available())"   # must print True
+     # then pin PC A's exact torch/torchvision (requirements.txt pulls a non-matching torchvision):
+     python -m pip install "torch==2.14.1" --index-url https://download.pytorch.org/whl/cu130
+     python -m pip install "torchvision==0.29.2" --no-deps      # from normal PyPI: not on the cu130 index
+     python -c "import torch, torchvision; print(torch.__version__, torchvision.__version__, torch.cuda.is_available())"
+     # must print: 2.14.1+cu130 0.29.2+cu132 True   (the same as PC A)
      ```
+     **Not the cu128 index:** on this hardware it gave a CPU-only torch (corrected 23 Nov). If it still prints `False` with the right versions, the cause is the NVIDIA driver: `nvidia-smi` must work and show driver 580 or newer (PC A: 580.178.04, kernel 7.0.0-1025-nvidia). Update the system and reboot.
 5. **Verify the search is identical to PC A.** Start the retrieval server (`cd retrieval && source .venv/bin/activate && python -m uvicorn server:app --port 8000`), then in a second terminal:
    ```bash
    cd eval && python eval_retrieval.py --url http://localhost:8000 --test data/test.jsonl --k 3,5,8,10 --out /tmp/retrieval-pcB.json

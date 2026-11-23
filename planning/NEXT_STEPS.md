@@ -1,14 +1,80 @@
-# Where to start next (handoff, 22 Nov 2026 → 23 Nov; TWO PCs from now on)
+# Where to start next (handoff, 23 Nov 2026 → 24 Nov; TWO PCs)
 
-Goal: **benchmark the system before fine-tuning** (thesis baseline), then fine-tune and benchmark again.
-- **Two DGX Sparks from 23 Nov:**
-  - **PC A** (`~/Desktop/Thesis-RAG`): Gemma 4 E4B answers, the 80B judge, training questions, fine-tuning.
-  - **PC B** (folder `Thesis-RAG PC-B`): **Qwen3 30B** answers (before and after fine-tuning); it can also judge Qwen with its own 80B.
-  - Setup and daily rules: **`benchmark/SECOND_PC.md`**.
-- Session plan and measured speeds: `benchmark/README.md`. Runbooks: `benchmark/before-*.md`, `after-*.md`.
-- **PC window:** 09:15–16:30, nothing overnight. Every run resumes: stop with Ctrl+C at 16:15, rerun the same command next day.
+**Thesis scope (decided 23 Nov): fine-tuning AND privacy.** Official title: *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering*. The B0 runs are also the "no-filter" utility baseline. Privacy plan: **`planning/PRIVACY_PLAN.md`**.
 
-## State on 22 Nov evening
+**Three answer models from 23 Nov (supervisor's request):**
+- Gemma 4 E4B (`low`), Qwen3 30B (`mid`) and **Qwen3-Next 80B (`high`)**. The 80B runbook is `benchmark/before-qwen3-next-80b.md`.
+- **Only the best one is fine-tuned.** It's chosen after the gold-standard check; **the team decides, so Claude must ask before choosing.**
+- **Judge:** the 80B for everything (`eval/config.json`, `j1`, unchanged), so it also rates its own answers.
+- **Gold standard:** humans (each answer rated by 2 of 3 team members) and Claude (in Claude Code on PC A) rate a blind sample: 150 questions × 3 models. It measures the 80B judge's accuracy and any self-preference bias (`eval/GOLD_GUIDE.md`, `eval/gold.py`).
+
+**PCs:**
+- **PC A** (`~/Desktop/Thesis-RAG`): Gemma (done), **80B answers**, the judge, Claude's gold ratings, training questions, fine-tuning.
+- **PC B** (`~/Desktop/Thesis-RAG PC-B`): **Qwen3 30B** answers, then judging them with its own 80B (sha256 must match, `benchmark/SECOND_PC.md`).
+
+**Sessions:** 09:30–16:30, nothing overnight. Every run resumes: stop at 16:15 (Ctrl+C or `timeout --signal=INT`) and rerun the same command next session.
+
+## State on 23 Nov evening
+| Item | Status |
+|---|---|
+| Qwen 30B pilot judged (180 + 90) | **Done** |
+| Gemma B0 judging (3,285 law + 684 files) + reports | **Done 23 Nov, 0 errors.** Overall correctness 3.94 [3.79, 4.08], faithfulness 4.52, route_ok 0.96, ctx_hit 0.70 (`eval/runs/B0/gemma*/summary.md`) |
+| Pilot comparison Gemma vs Qwen 30B | **Not made:** `score.py compare` pairs answers by model tier too, so two *different* models never match ("no common pairs"). Needs a small fix to `compare` (pair by question + effort + technicality). This is analysis code only, with no effect on answers or judge scores. **Ask the user before changing it** |
+| Qwen 30B B0 answers (PC B) | **Started 23 Nov afternoon**, after PC B setup (torch cu130, system upgrade and reboot); ~9 h in total |
+| 80B B0 answers | Not started (PC A from 24 Nov) |
+| Training questions (`train.jsonl`) | Not started; moved after the 80B answers (needed only for the chosen model) |
+| Docs | torch/torchvision fix in `SECOND_PC.md` + `requirements.txt`; 80B hash in `SECOND_PC.md`; 80B runbook; `PRIVACY_PLAN.md` |
+| Gold-standard tooling (`eval/gold.py`, `gold.html`, `GOLD_GUIDE.md`) | **Done**, tested on mock data (Gemma's answers as all 3 models, the judge's scores as "human" ratings → κ 1.00, self-bias 0.00; random ratings → ρ ≈ 0; no model names in the blind sample). `gold.py sample` runs once all three B0 runs exist |
+
+## Plan
+| Day | PC A | PC B |
+|---|---|---|
+| 24 Nov | **80B pilot** (~30 min) → **80B B0 law answers** (Gemma judging is already done) | Qwen 30B B0 law continues |
+| 25 Nov | 80B law + files finish → judge 80B B0 | Qwen 30B law + files finish → **check the 80B hash** → judge Qwen 30B B0 |
+| 26 Nov | judging finishes; `gold.py sample`; Claude rates the gold set (ask first: ~1M tokens) | judging finishes; push |
+| 26–27 Nov | team: gold ratings (~4–5 h each) + test-set recheck (~1.5–2 h each) | free: training questions or privacy data prep |
+| 27 Nov | `gold.py analyze` → 3-model report → **ask the team which model to fine-tune** | |
+
+**PC A, 24 Nov morning:** Gemma judging is done. Reload the 80B as the **answer model** (context 49152, Parallel 4), start the retrieval server, then follow `benchmark/before-qwen3-next-80b.md`: the pilot first, then B0 law.
+
+## Start prompts (paste into Claude Code on each PC)
+**PC A:**
+> This is PC A (`~/Desktop/Thesis-RAG`). Read `CLAUDE.md`, `planning/NEXT_STEPS.md`, `benchmark/SECOND_PC.md` and `benchmark/before-qwen3-next-80b.md`, then `git pull`. The PC is free 09:30–16:30, nothing overnight. Only the Qwen3-Next 80B is loaded in LM Studio; check with `lms ps`.
+>
+> **Today:**
+> 1. Gemma B0 judging is done (23 Nov). The Gemma-vs-Qwen pilot comparison failed because `score.py compare` pairs by model tier; propose the fix and ask me before changing it.
+> 2. Benchmark the **80B as an answer model** (supervisor's request): the pilot first, then B0 law, from `before-qwen3-next-80b.md`. Load the 80B with context 49152, Parallel 4; never judge and answer at the same time.
+>
+> Run everything in the background with a log, so I can ask "how much is done?". Give me a time estimate before each long step. Make runs stop by themselves at 16:15.
+>
+> **Thesis:** *"Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering"*. We do fine-tuning **and** privacy (`planning/PRIVACY_PLAN.md`). We benchmark three models (Gemma, Qwen 30B, Qwen 80B) and fine-tune **only the best**. Don't choose it yourself; ask us after the gold-standard check. The 80B judges everything; the gold standard (humans + Claude on a blind sample, `eval/gold.py`, `eval/GOLD_GUIDE.md`) checks it and measures self-preference bias. It's ready; `gold.py sample` runs once all three B0 runs exist (~26 Nov). Before Claude rates the gold set, ask me (~1M tokens).
+>
+> Don't change code, prompts, test sets or the judge config (`baseline-v1`). At 16:15: `git pull --rebase`, then commit/push only PC A's files (`eval/runs/pilot/qwen3-next-80b*`, `eval/runs/B0/qwen3-next-80b*`, docs). PC B pushes `eval/runs/B0/qwen3-30b*`.
+
+**PC B:**
+> This is PC B, a second DGX Spark. The project is in `~/Desktop/Thesis-RAG PC-B` (branch `benchmark-setup`); the path has a space, so quote it and use `python -m pip` / `python -m uvicorn`. Read `CLAUDE.md`, `planning/NEXT_STEPS.md`, `benchmark/SECOND_PC.md` and `benchmark/before-qwen3-30b.md`, then `git pull`. The PC is free 09:30–16:30, nothing overnight.
+>
+> **Setup is finished** (torch 2.14.1+cu130 with CUDA True, chroma_db and .env copied, Node + npm done). The **Qwen3 30B B0** answers started on 23 Nov.
+>
+> **Today:**
+> 1. Load **only Qwen3 30B** (context 49152, Parallel 4, Flash Attention ON, GPU offload MAX); check with `lms ps`.
+> 2. Start the retrieval server (`python -m uvicorn server:app --port 8000` in `retrieval`, background, log).
+> 3. **Resume** the Qwen B0 law run with the same command (`before-qwen3-30b.md` section 2, `--out ../eval/runs/B0/qwen3-30b`). It skips finished answers. Then run the files.
+>
+> **Deviations from the runbook:** don't load Gemma (`route-cache.jsonl` and `file-cache.jsonl` cover everything; stop if the runner reports a cache miss or router call), and stay on `benchmark-setup`.
+>
+> Run it in the background with a log, so I can ask "how much is done?". Give me a time estimate. Make it stop by itself at 16:15.
+>
+> **When Qwen B0 answers are complete** (3,285 + 684, 0 errors): unload Qwen and load the **Qwen3-Next 80B**. **Check its sha256 against `SECOND_PC.md` first; if it differs, stop and tell me.** Then judge with context 32768, Parallel 4: `score.py judge` + `report` for `runs/B0/qwen3-30b` and `-files`, as in `before-qwen3-30b.md` section 3.
+>
+> **Thesis:** privacy-preserving RAG with multi-layer filtering, plus fine-tuning; three models are compared and only the best is fine-tuned. This Qwen B0 run is the "no-filter, before fine-tuning" baseline.
+>
+> Never edit code, prompts, test sets, docs or the shared caches. At 16:15: `git pull --rebase`, then commit/push **only** `eval/runs/B0/qwen3-30b*`.
+
+---
+# History (22 Nov handoff → 23 Nov, kept for reference)
+
+### State on 22 Nov evening
 | Item | Status |
 |---|---|
 | Test sets **v1** (`eval/data/test.jsonl` 365 q, `test_files.jsonl` 76 q + 40 files); hashes in `eval/data/README.md` | **Frozen for the baseline** (tag `baseline-v1`) |
@@ -19,7 +85,7 @@ Goal: **benchmark the system before fine-tuning** (thesis baseline), then fine-t
 | **Gemma B0:** search, extraction, 3,285 law + 684 file answers (0 errors) | **Answers done**; **judging not yet** (~2.9 h incl. the Qwen pilot) |
 | Qwen 30B B0 | Not started (PC B) |
 
-## Tomorrow, 23 Nov
+### Tomorrow, 23 Nov
 **PC A** (this PC). Load **only the 80B** (context ≥ 32768, Parallel 4).
 ```bash
 cd ~/Desktop/Thesis-RAG && git pull
@@ -39,7 +105,7 @@ At 16:15, commit and push `eval/runs/B0/gemma*`, `eval/runs/pilot/qwen3-30b*`, `
 
 **PC B.** Follow `benchmark/SECOND_PC.md`: setup → verify the search (hit@5 0.714) → **Qwen B0 answers** (`benchmark/before-qwen3-30b.md`, ~9.3 h, so 2 days). At 16:15, commit and push `eval/runs/B0/qwen3-30b*` only.
 
-## Start prompts (paste into Claude Code on each PC, 23 Nov morning)
+### Start prompts (paste into Claude Code on each PC, 23 Nov morning)
 **PC A:**
 > This is PC A (`~/Desktop/Thesis-RAG`). Read `planning/NEXT_STEPS.md` and `benchmark/SECOND_PC.md`, then `git pull`. The PC is free 09:15–16:30, nothing overnight. Only the Qwen3-Next 80B is loaded in LM Studio. Do the PC A plan for today: judge the Qwen pilot and the Gemma B0 answers with `eval/score.py`, make the reports and the pilot comparison, then start `make_questions.py --split train` with the same 80B. Stop and commit only PC A's folders at 16:15. Before long steps, give me a short time estimate.
 
