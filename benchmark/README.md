@@ -140,7 +140,12 @@ Two things cut answers mid-sentence without any error:
    - New caps: **low 1,500 / mid 3,000 / high 6,000**. The effort instructions in the prompt still set the intended length.
    - Only answers that hit the old cap can change (temperature 0), so only those were re-run: their keys were removed from answers.jsonl (backup kept as `answers.before-cap-fix.jsonl`) and the same command was run again.
 
-Every answer now stores `finishReason` (`stop` = finished; `length` = cut) and `cut`. Cut answers are listed in `cut.jsonl` and counted in the runner's last line: `Finished: N answers written, E errors, C cut`. **C must be 0**; anything else is investigated, never ignored.
+Every answer now stores `finishReason` (`stop` = finished; `length` = cut), `maxTokens` and `redoneLonger`. **A cut answer is never saved:**
+- the runner answers that question again at once with 2×, then 4× the length limit (at most 16,000 tokens), and saves the first complete answer (`redoneLonger: true`);
+- if it is still cut, it is not saved: it goes to `errors.jsonl`, the run reports an error, and the chain stops for a human/Claude to look at it (usually a model repeating itself);
+- every redo is logged in `cut.jsonl`. The runner's last line is `Finished: N answers written, E errors, 0 cut saved (R cut answers redone longer)`.
+
+Tested 24 Nov with a forced 40-token limit (`EVAL_BASE_CAP=40`, tests only): one answer was redone at 80 tokens and saved complete; the other was still cut at 160 and went to errors.jsonl, not answers.jsonl.
 2. `EVAL_TEMPERATURE=0` for every run.
 3. **Load only the models the day needs.** Gemma is always needed, because it is the router and the vision model. Close the browser and stop other GPU work (OCR, ingest), so the speed numbers are comparable.
 4. **The router runs once per question.** Its decision is cached in `eval/runs/route-cache.jsonl` (made on Day 1) and reused by every setting, model and variant. So routing is identical everywhere, and only the answers differ. Never delete this file.

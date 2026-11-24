@@ -37,6 +37,8 @@ export interface ReplyOptions {
   routeDecision?: Decision;
   /** Called with the router decision (Auto mode), e.g. so the benchmark can cache it. */
   onRoute?: (d: Decision) => void;
+  /** Benchmark only: answer length limit instead of the effort's (used to redo an answer that was cut). */
+  maxTokens?: number;
 }
 
 /** Everything one request needs, worked out once. */
@@ -248,7 +250,7 @@ export class ChatService {
     const reply = await this.llm.complete(provider, system, this.recent(ctx.messages, effort.history), {
       model,
       temperature: effort.temperature + 0.3,
-      maxTokens: effort.maxTokens,
+      maxTokens: ctx.opts.maxTokens ?? effort.maxTokens,
       ...this.callOpts(ctx),
     });
     return { reply, ...start };
@@ -282,7 +284,7 @@ export class ChatService {
     const reply = await this.llm.complete(provider, this.lawPrompt(hits, ctx), this.recent(ctx.messages, effort.history), {
       model,
       temperature: effort.temperature,
-      maxTokens: effort.maxTokens,
+      maxTokens: ctx.opts.maxTokens ?? effort.maxTokens,
       ...this.callOpts(ctx),
     });
     return { reply, ...start };

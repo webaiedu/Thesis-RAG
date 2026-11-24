@@ -27,7 +27,9 @@
  * Cut-off protection (24 Nov): before answering, the runner checks that every answer model is loaded in
  * LM Studio with at least EVAL_MIN_CONTEXT tokens (default 131072; 4 parallel long answers must fit).
  * Every answer stores finishReason ('stop' = finished; 'length' = cut by max_tokens or the context);
- * cut answers are flagged ("cut": true), listed in cut.jsonl and counted in the "Finished:" line.
+ * a cut answer is never saved: it is answered again at once with 2x, then 4x the length limit (at most
+ * 16000 tokens); the retries are logged in cut.jsonl. If it is still cut, it goes to errors.jsonl (the run
+ * reports an error and the chain stops) and is never written to answers.jsonl.
  * A mid-answer LM Studio error (e.g. "Context size has been exceeded") is an error, so it is retried.
  */
 import { NestFactory } from '@nestjs/core';
@@ -271,27 +273,39 @@ async function main() {
   const t0 = Date.now();
   let n = 0, errors = 0, cut = 0;
   await pool(tasks, o.workers, async ({ q, s, key: k }) => {
-    const meter = new Meter();
+    let meter = new Meter();
     const start = Date.now();
     let firstToken = 0;
     try {
-      const ans = await chat.reply(msgsOf(q), {
-        mode: o.mode, settings: s, meter, file: fileOf(q),
-        routeDecision: o.mode === 'auto' ? decisionFor(q) : undefined,
-        onDelta: () => { if (!firstToken) firstToken = Date.now() - start; },
-      });
+      const base = Number(process.env.EVAL_BASE_CAP) || EFFORT[s.effort].maxTokens;   // EVAL_BASE_CAP: tests only
+      let ans: Awaited<ReturnType<ChatService['reply']>> | undefined;
+      let limit = base;
+      // a cut answer is redone with a bigger length limit; it is never saved cut
+      for (const factor of [1, 2, 4]) {
+        limit = Math.min(base * factor, 16000);
+        meter = new Meter();
+        firstToken = 0;
+        ans = await chat.reply(msgsOf(q), {
+          mode: o.mode, settings: s, meter, file: fileOf(q), maxTokens: limit,
+          routeDecision: o.mode === 'auto' ? decisionFor(q) : undefined,
+          onDelta: () => { if (!firstToken) firstToken = Date.now() - start; },
+        });
+        if (!meter.cut) break;
+        cut++;
+        fs.appendFileSync(cutFile, JSON.stringify({ key: k, maxTokens: limit, stops: meter.stops, at: new Date().toISOString() }) + '\n');
+        if (factor === 4 || limit === 16000) {
+          throw new Error(`answer still cut at max_tokens ${limit} (finish_reason ${meter.stops.join(',')}); not saved`);
+        }
+      }
+      if (!ans) throw new Error('no answer');
       const r = cache.get(key(q));
       const finishReason = meter.stops[meter.stops.length - 1] ?? 'unknown';
-      if (meter.cut) {
-        cut++;
-        fs.appendFileSync(cutFile, JSON.stringify({ key: k, finishReason, stops: meter.stops, at: new Date().toISOString() }) + '\n');
-      }
       fs.appendFileSync(answersFile, JSON.stringify({
         key: k, variant: o.variant, id: q.id, mode: o.mode, settings: s,
         question: q.question, file: q.file ?? null, reply: ans.reply, route: ans.route, meta: ans.meta,
         corrected: r?.question ?? null,
         sources: ans.sources.map(({ excerpt, ...src }) => src),
-        finishReason, cut: meter.cut,
+        finishReason, cut: meter.cut, maxTokens: limit, redoneLonger: limit !== base,
         tokens: meter.tokens, routerTokens: r?.tokens ?? 0,
         ms: Date.now() - start, firstTokenMs: firstToken || null, routerMs: r?.ms ?? 0,
         at: new Date().toISOString(),
@@ -302,8 +316,8 @@ async function main() {
     }
     progress('answered', ++n, tasks.length, t0);
   });
-  console.log(`Finished: ${n - errors} answers written, ${errors} errors, ${cut} cut` +
-    `${errors ? ` (see ${errorsFile}; run again to retry)` : ''}${cut ? ` (cut answers: ${cutFile})` : ''}`);
+  console.log(`Finished: ${n - errors} answers written, ${errors} errors, 0 cut saved (${cut} cut answers redone longer)` +
+    `${errors ? ` (see ${errorsFile}; run again to retry)` : ''}${cut ? ` (log: ${cutFile})` : ''}`);
   await app.close();
 }
 
