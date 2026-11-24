@@ -1,0 +1,78 @@
+{
+  "variant": "B0",
+  "mode": "auto",
+  "models": [
+    "high"
+  ],
+  "efforts": [
+    "low",
+    "mid",
+    "high"
+  ],
+  "tech": [
+    "low",
+    "auto",
+    "high"
+  ],
+  "startedAt": "2026-11-24T09:56:23.694Z",
+  "git": {
+    "sha": "7a3ac94ffe3ee2b94743a7cfb1164ef52a142562",
+    "dirty": true
+  },
+  "test": {
+    "file": "/home/aiub/Desktop/Thesis-RAG/eval/data/test.jsonl",
+    "sha256": "e085d165b541068da649ad882324027141794fcf404636646c81d08db73c0f7d",
+    "questions": 365
+  },
+  "modelIds": {
+    "high": "qwen3-next-80b-a3b-instruct"
+  },
+  "loadedContext": {
+    "qwen3-next-80b-a3b-instruct": 131072
+  },
+  "minContext": 131072,
+  "env": {
+    "RETRIEVAL_URL": "http://localhost:8000",
+    "LMSTUDIO_URL": "http://localhost:1234/v1",
+    "LMSTUDIO_CHAT_MODEL": "google/gemma-4-e4b",
+    "ROUTER_PROVIDER": "lmstudio",
+    "ROUTER_LMSTUDIO_MODEL": "",
+    "LLM_PROVIDER": "lmstudio",
+    "GENERAL_PROVIDER": "lmstudio",
+    "LMSTUDIO_REASONING": "none",
+    "EVAL_TEMPERATURE": "0",
+    "FALLBACK_DOMAIN": "uncategorized",
+    "FALLBACK_MIN_SCORE": "0.56",
+    "CASES_DOMAIN": null,
+    "CASES_MIN_SCORE": null
+  },
+  "effortTable": {
+    "low": {
+      "cases": 1,
+      "topK": 3,
+      "filePassages": 3,
+      "history": 4,
+      "maxTokens": 1500,
+      "temperature": 0.3,
+      "depth": "Effort: LOW. Give a short, direct answer (about 2-5 sentences or a few bullets). Cover only the main point."
+    },
+    "mid": {
+      "cases": 2,
+      "topK": 5,
+      "filePassages": 5,
+      "history": 6,
+      "maxTokens": 3000,
+      "temperature": 0.2,
+      "depth": "Effort: MEDIUM. Give a clear, complete answer with the key conditions and penalties, organised in short paragraphs or bullets."
+    },
+    "high": {
+      "cases": 3,
+      "topK": 8,
+      "filePassages": 8,
+      "history": 10,
+      "maxTokens": 6000,
+      "temperature": 0.1,
+      "depth": "Effort: HIGH. Before answering, silently work through every excerpt and decide which ones apply and how they interact. Then give a thorough, well-structured answer: the governing provisions, conditions and elements, exceptions, penalties or consequences, related sections, and anything the excerpts leave unclear. Use headings where helpful."
+    }
+  }
+}

@@ -1,5 +1,57 @@
-# Where to start next (handoff, 23 Nov 2026 → 24 Nov; TWO PCs)
+# Where to start next (handoff, 24 Nov 2026 → 25 Nov; TWO PCs)
 
+**Thesis:** *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering*. We do fine-tuning **and** privacy (`planning/PRIVACY_PLAN.md`). Three base models (Gemma 4 E4B, Qwen3 30B, Qwen3-Next 80B); **only the best is fine-tuned, and the team chooses**.
+
+**Research logs:** each PC writes only its own log, append only, with an entry for every change or action:
+- PC A: `planning/THESIS_LOG_PC_A.md`
+- PC B: `planning/THESIS_LOG_PC_B.md`
+
+**What changed on 24 Nov (read `benchmark/README.md`, "Cut-off answers"):**
+- **baseline-v1.1:** effort caps 1,500 / 3,000 / 6,000.
+- **Every model is loaded with context 131,072, Parallel 4.**
+- The runner never saves a cut answer: it redoes it longer, or puts it in errors.jsonl.
+- `eval/cut_check.py` removes old cut answers (with backups).
+- **Human scoring:** the team scores in **AinSutro**, the Google-login web page. It covers Gemma now; the 30B and 80B are added when their runs are complete (`eval/HUMAN_GUIDE.md`, `eval/human.py`). The link and secrets are on PC A only, not in git.
+- `score.py compare --across-models` compares two different models.
+
+## State on 24 Nov evening
+| Item | Status |
+|---|---|
+| Gemma B0 | Answers + judging done. **Verified 0 cut answers** (exact token count). |
+| 80B pilot | 270/270, 0 errors, ~6.7/min law, ~5.9/min files |
+| **80B B0 (PC A)** | **Paused at 1,875 / 3,285 law** (low done, mid 780 / 1,095). 0 errors, 0 cut. Left: mid 315 + high 1,095 + files 684 ≈ **7.5 h**, then judging ≈ **4 h**. 30 old cut answers were removed and redone. |
+| **Qwen 30B B0 (PC B)** | 1,568 / 3,285 law pushed (23 Nov). PC B must apply the fix first: stop, pull, reload with 131,072, run `cut_check.py --remove`, continue. |
+| AinSutro | Live with Gemma's 3,969 answers (law 3,285 + files 684). The team rates. |
+
+## Plan
+| Day | PC A | PC B |
+|---|---|---|
+| 25 Nov | Resume the 80B B0 (law mid/high, then files) | Apply the cut-off fix, then continue Qwen 30B law + files |
+| 25–26 Nov | Judge the 80B B0 (context 131,072) → add the 80B to AinSutro → `compare --across-models` | Judge Qwen 30B B0 with its own 80B → push → PC A adds the 30B to AinSutro |
+| ~26–27 Nov | `human.py pull/analyze`, Claude scoring (ask first) → three-model report → **ask the team which model to fine-tune** | |
+
+## Start prompts (paste into Claude Code on each PC)
+**PC A:** the same text as `~/Desktop/"Tomorrows promt.txt"` (kept on the desktop of PC A).
+
+**PC B:**
+> This is PC B (`~/Desktop/Thesis-RAG PC-B`, branch `benchmark-setup`; quote the path, use `python -m pip` / `python -m uvicorn`). Read `CLAUDE.md`, `planning/NEXT_STEPS.md`, `planning/THESIS_LOG_PC_B.md`, `benchmark/README.md` (section "Cut-off answers"), `benchmark/SECOND_PC.md` and `benchmark/before-qwen3-30b.md`, then `git pull --rebase`. The PC is free 09:30–16:30. Free, local tools only (no paid APIs).
+>
+> **First, the cut-off fix**, if it isn't done yet; check `planning/THESIS_LOG_PC_B.md`:
+> 1. `git log --oneline -5` must show `fdaa982` and `7a3ac94`.
+> 2. Load only Qwen3 30B: `lms unload --all && lms load <qwen3-30b id> -c 131072 --parallel 4 --gpu max`. `lms ps` must show context 131072 and Parallel 4.
+> 3. Report the "Context size has been exceeded" counts per day from `~/.lmstudio/server-logs/2026-11/*.log`.
+> 4. `cd eval && python3 cut_check.py runs/B0/qwen3-30b --remove` (also add `-files` if it exists), and report the numbers.
+>
+> **Then** start the retrieval server (background, log) and resume the Qwen B0 law run with the same command as before (it redoes the removed answers), then the files. Each run must end with "0 errors"; otherwise run it once more and tell me.
+>
+> **When law + files are complete:**
+> - tell me, then `git pull --rebase` and push `eval/runs/B0/qwen3-30b*` right away, so PC A can add the 30B to AinSutro;
+> - then load the 80B (`-c 131072 --parallel 4`; check its sha256 against `SECOND_PC.md`) and judge both runs (`score.py judge` + `report`; the files run with `--test data/test_files.jsonl`), then `score.py compare runs/B0/gemma runs/B0/qwen3-30b --across-models`.
+>
+> Run everything in the background with a log, give me time estimates, and don't stop at 16:15 by yourself; I'll tell you. Log every change or action in `planning/THESIS_LOG_PC_B.md`, and never edit PC A's log. Don't run `human.py` or touch AinSutro, `eval/data/human/` or the Drive folder (PC A does that). When I say "commit": `git pull --rebase`, then commit/push only `eval/runs/B0/qwen3-30b*` and `planning/THESIS_LOG_PC_B.md`.
+
+---
+# History (23 Nov handoff → 24 Nov, kept for reference)
 **Thesis scope (decided 23 Nov): fine-tuning AND privacy.** Official title: *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering*. The B0 runs are also the "no-filter" utility baseline. Privacy plan: **`planning/PRIVACY_PLAN.md`**.
 
 **Three answer models from 23 Nov (supervisor's request):**
