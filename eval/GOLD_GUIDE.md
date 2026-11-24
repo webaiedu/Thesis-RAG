@@ -1,5 +1,7 @@
 # Gold standard: rating guide for the team
 
+> **Update 24 Nov:** the team now scores answers continuously, for **every model and setting**, in a shared Google Sheet web page. See **`HUMAN_GUIDE.md`** (`human.py`). That replaces the human part of this guide (`gold.html`, R1–R3). Claude scores the same answers as the humans. The rubric below is unchanged.
+
 ## Why
 Our judge, the local Qwen3-Next 80B, also answers in the benchmark, so it grades its own answers. The gold standard checks the judge against people. It's a blind sample rated by the three of us and by Claude. It answers three questions:
 1. Does the 80B judge agree with humans (Spearman ρ, weighted κ)?

@@ -17,3 +17,7 @@ prepareDataset/raw_cases/*
 # Benchmark scratch files (the real data and runs in eval/ are committed)
 eval/data/trial*.jsonl
 eval/data/gen_*.log
+eval/data/human/upload/
+eval/human_app/**/Secret.gs
+eval/human_app/**/.clasp.json
+eval/data/human/api.json

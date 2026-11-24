@@ -28,7 +28,7 @@ The next session runs the **same command** again. It skips everything already do
 **Rules for sessions:**
 - Never run two runners on the same `--out` folder.
 - Never run the judge while an answer run is going: latency is measured during answering.
-- **Model swaps cost ~5 min:** unload the answer model and load the 80B for judging (context 32768, Parallel 4).
+- **Model swaps cost ~5 min:** unload the answer model and load the 80B for judging (context 131072, Parallel 4).
 
 **Measured in the Gemma pilot (22 Nov):**
 
@@ -49,6 +49,15 @@ The Gemma baseline is therefore **~6.3 h: one full session**.
 | file answers | ~6.3/min (90 in 14.2 min) | 684 in **~1.8 h** |
 
 Its answers are longer and slower than Gemma's (~2.6×). The Qwen baseline is therefore **~9.3 h of answers + ~2.7 h of judging ≈ 2 sessions**.
+
+**Measured in the Qwen3-Next 80B pilot (24 Nov, PC A, context 50176, Parallel 4, 0 errors, no `<think>` text):**
+
+| Step | Speed | Full size |
+|---|---|---|
+| law answers | ~6.7/min (180 in 26.8 min, ~36 s per answer) | 3,285 in **~8.2 h** |
+| file answers | ~5.9/min (90 in 15.2 min, ~41 s per answer) | 684 in **~1.9 h** |
+
+That is ~10 h of answers, so 2 sessions, plus ~4 h of judging.
 
 **With a second DGX Spark (from 23 Nov): see [SECOND_PC.md](SECOND_PC.md).** PC A runs Gemma and the judge, PC B runs Qwen 30B. The before-fine-tuning part ends on 25 Nov.
 
@@ -120,8 +129,18 @@ Each day covers one answer model with **all 9 answer settings**:
 1. **Same everything except what's being tested:**
    - same test set (check its hash), same judge, same code (`baseline-v1` for before; only the model/embedder change after);
    - same quantization (**Q4_K_M**, like the current LM Studio files);
-   - same context length on every benchmark day: **49152 for each answer model**, Flash Attention ON, GPU offload MAX, Parallel 4.
-     Why 49152: LM Studio splits the context across the 4 parallel slots, so each request gets 1/4 (~12k). A high-effort law answer needs up to ~10–12k. With 32k, high-effort requests fail with "Context size has been exceeded".
+   - same context length on every benchmark day: **131072 for every model** (answer models and the judge), Flash Attention ON, GPU offload MAX, Parallel 4:
+     `lms unload --all && lms load <model> -c 131072 --parallel 4 --gpu max`.
+     Why 131072 (changed 24 Nov from 49152): the 4 parallel requests share the context. A high-effort answer is up to ~17k prompt + 6,000 answer tokens, so 4 at once need ~92k. With 49152, Qwen 30B answers on PC B were cut off ("Context size has been exceeded" in the LM Studio log, nothing in errors.jsonl). The runner now refuses to start below 131072 (`EVAL_MIN_CONTEXT`).
+
+## Cut-off answers: fixed 24 Nov (baseline-v1.1)
+Two things cut answers mid-sentence without any error:
+1. **Context overflow** (above). Fixed by context 131072 and the runner's start check. A mid-answer LM Studio error now fails the answer (errors.jsonl), so it is retried.
+2. **The effort length caps** in `backend/src/chat/answer.config.ts`, previously low 700 / mid 1,500 / high 3,000 tokens. Qwen's tokenizer needs about one token per Bangla character, so Qwen's Bangla answers hit the cap and stopped mid-word: ~100 of the first 1,568 Qwen 30B answers and ~26 of 1,456 80B answers. Gemma was not affected (its tokenizer is much more efficient for Bangla).
+   - New caps: **low 1,500 / mid 3,000 / high 6,000**. The effort instructions in the prompt still set the intended length.
+   - Only answers that hit the old cap can change (temperature 0), so only those were re-run: their keys were removed from answers.jsonl (backup kept as `answers.before-cap-fix.jsonl`) and the same command was run again.
+
+Every answer now stores `finishReason` (`stop` = finished; `length` = cut) and `cut`. Cut answers are listed in `cut.jsonl` and counted in the runner's last line: `Finished: N answers written, E errors, C cut`. **C must be 0**; anything else is investigated, never ignored.
 2. `EVAL_TEMPERATURE=0` for every run.
 3. **Load only the models the day needs.** Gemma is always needed, because it is the router and the vision model. Close the browser and stop other GPU work (OCR, ingest), so the speed numbers are comparable.
 4. **The router runs once per question.** Its decision is cached in `eval/runs/route-cache.jsonl` (made on Day 1) and reused by every setting, model and variant. So routing is identical everywhere, and only the answers differ. Never delete this file.

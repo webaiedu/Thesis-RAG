@@ -24,7 +24,7 @@ Run it over several daily sessions (09:15–16:30, nothing overnight). See the s
 ```bash
 # LM Studio: load
 #   - original google/gemma-4-e4b   (router + vision; stays the original in every variant)
-#   - ainkhoj-gemma-4-e4b           (fine-tuned answer model, context 49152, Parallel 4)
+#   - ainkhoj-gemma-4-e4b           (fine-tuned answer model, context 131072, Parallel 4)
 # Both: Flash Attention ON, GPU offload MAX.
 
 # Two retrieval servers side by side:

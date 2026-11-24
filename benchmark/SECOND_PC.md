@@ -95,7 +95,7 @@ Both PCs are DGX Spark (same hardware), each used 09:15–16:30 with nothing ove
 ## Plan from 23 Nov
 | Day | PC A | PC B |
 |---|---|---|
-| 23 Nov | Load the 80B. Judge the Qwen pilot + Gemma B0 (~2.9 h), reports. Then start training-question generation with the same 80B (`make_questions.py --split train`, resumable). | Setup (~1–1.5 h), verify search. Load **only Qwen 30B** (context 49152, Parallel 4). Then **Qwen B0 answers** (law, ~4.5 h of the ~7.5 h). |
+| 23 Nov | Load the 80B. Judge the Qwen pilot + Gemma B0 (~2.9 h), reports. Then start training-question generation with the same 80B (`make_questions.py --split train`, resumable). | Setup (~1–1.5 h), verify search. Load **only Qwen 30B** (context 131072, Parallel 4). Then **Qwen B0 answers** (law, ~4.5 h of the ~7.5 h). |
 | 24 Nov | Training questions (continue); fine-tuning preparation. | Finish Qwen B0 law answers (~3 h) + files (~1.8 h). Push. If time is left, unload Qwen, load the 80B and start judging Qwen B0. |
 | 25 Nov | Pull PC B's results; Gemma-vs-Qwen comparison. **Before fine-tuning:** the team recheck. | Finish judging Qwen B0 (~2.7 h total), `score.py report runs/B0/qwen3-30b` (+ `-files`), push. |
 

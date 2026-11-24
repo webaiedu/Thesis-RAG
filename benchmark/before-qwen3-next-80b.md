@@ -10,7 +10,7 @@
 
 ## 1. Start the services
 ```bash
-# LM Studio: load ONLY the 80B (Q4_K_M, context 49152, Parallel 4, Flash Attention ON, GPU offload MAX)
+# LM Studio: load ONLY the 80B (Q4_K_M, context 131072, Parallel 4, Flash Attention ON, GPU offload MAX)
 ~/.lmstudio/bin/lms ps     # must show qwen3-next-80b-a3b-instruct only
 cd retrieval && source .venv/bin/activate
 python -m uvicorn server:app --port 8000   # original bge-m3 index
@@ -45,14 +45,14 @@ EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 npm run eval -- \
 - [ ] 3,285 lines in `eval/runs/B0/qwen3-next-80b/answers.jsonl`, 684 in `…-files`, 0 errors.
 - [ ] `git status` shows `route-cache.jsonl` and `file-cache.jsonl` unchanged.
 
-## 4. Score (same 80B, now as judge; context ≥ 32768, Parallel 4)
+## 4. Score (same 80B, now as judge; context 131072, Parallel 4)
 ```bash
 cd eval
 python3 score.py judge runs/B0/qwen3-next-80b && python3 score.py report runs/B0/qwen3-next-80b
 python3 score.py judge runs/B0/qwen3-next-80b-files --test data/test_files.jsonl
 python3 score.py report runs/B0/qwen3-next-80b-files --test data/test_files.jsonl
-python3 score.py compare runs/B0/gemma runs/B0/qwen3-next-80b
-python3 score.py compare runs/B0/qwen3-30b runs/B0/qwen3-next-80b
+python3 score.py compare runs/B0/gemma runs/B0/qwen3-next-80b --across-models
+python3 score.py compare runs/B0/qwen3-30b runs/B0/qwen3-next-80b --across-models
 ```
 Judging ~4,000 answers at ~15–20/min takes **~3.5–4.5 h**.
 
@@ -64,5 +64,5 @@ Judging ~4,000 answers at ~15–20/min takes **~3.5–4.5 h**.
 ## Run log
 | Date | Git sha | Test set sha256 (first 12) | Variant | Answers | Errors | Wall time | Notes |
 |---|---|---|---|---|---|---|---|
-| | | | PILOT | /270 | | | |
+| 24 Nov | c27de76 | law 8de832e08f43, files c1c3832aeff7 | PILOT | 270/270 | 0 | 26.8 + 15.2 min | ~6.7/min law, ~5.9/min files; no cache misses, no `<think>` |
 | | | | B0 | /3969 | | | |

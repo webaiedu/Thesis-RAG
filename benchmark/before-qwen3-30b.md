@@ -14,7 +14,7 @@ The search-model baseline was measured on Day 1 and is not repeated.
 
 ## 1. Start the services
 ```bash
-# LM Studio: load Qwen3 30B (Q4_K_M, context 49152, Parallel 4, Flash Attention ON, GPU offload MAX)
+# LM Studio: load Qwen3 30B (Q4_K_M, context 131072, Parallel 4, Flash Attention ON, GPU offload MAX)
 #            AND Gemma 4 E4B (it is the router; same settings as Day 1)
 ~/.lmstudio/bin/lms ps     # must show qwen/qwen3-30b-a3b-2507 and google/gemma-4-e4b only
 
@@ -46,9 +46,9 @@ EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 npm run eval -- \
 ## 3. Score
 ```bash
 cd eval && source ../retrieval/.venv/bin/activate
-# load the 80B judge first (unload the answer model): context 32768, Parallel 4
+# load the 80B judge first (unload the answer model): context 131072, Parallel 4
 for r in B0/qwen3-30b B0/qwen3-30b-files; do python score.py judge runs/$r && python score.py report runs/$r; done
-python score.py compare runs/B0/gemma runs/B0/qwen3-30b
+python score.py compare runs/B0/gemma runs/B0/qwen3-30b --across-models
 ```
 The second command makes the "Gemma vs Qwen3 30B before fine-tuning" table, with significance tests.
 

@@ -21,8 +21,8 @@ Run it over several daily sessions (09:15–16:30, nothing overnight). See the s
 ## 1. Start the services
 ```bash
 # LM Studio: load
-#   - original google/gemma-4-e4b   (router + vision, context 32768)
-#   - ainkhoj-qwen3-30b             (fine-tuned, context 49152, Parallel 4)
+#   - original google/gemma-4-e4b   (router + vision, context 131072)
+#   - ainkhoj-qwen3-30b             (fine-tuned, context 131072, Parallel 4)
 #   - qwen/qwen3-30b-a3b-2507       (original, only for E1; load it after E3/E2 are done
 #                                    and unload the fine-tuned one, to save memory)
 # All: Flash Attention ON, GPU offload MAX.

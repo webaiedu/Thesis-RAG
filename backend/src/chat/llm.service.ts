@@ -11,8 +11,17 @@ export type Provider = 'gemini' | 'lmstudio';
 /** Counts the tokens a request uses (prompt + answer), across every model call. */
 export class Meter {
   tokens = 0;
+  /** Why each model call stopped: 'stop' = finished normally; 'length' = cut by max_tokens or the context. */
+  stops: string[] = [];
   add(n: number) {
     if (Number.isFinite(n) && n > 0) this.tokens += Math.round(n);
+  }
+  stop(reason: string | undefined | null) {
+    this.stops.push(String(reason || 'unknown'));
+  }
+  /** True when any call in this request did not finish normally. */
+  get cut() {
+    return this.stops.some((r) => r !== 'stop');
   }
 }
 
@@ -192,11 +201,19 @@ export class LlmService {
     const prompt = system + history.map((m) => m.content).join('');
     let text: string;
     let usage: number | undefined;
+    let finish: string | undefined;
     if (stream) {
       const out = new VisibleText(opts.onDelta!);
       for await (const ev of sseEvents(res)) {
+        // LM Studio reports a failure mid-answer (e.g. "Context size has been exceeded") as an error event
+        if (ev?.error) {
+          const msg = typeof ev.error === 'string' ? ev.error : ev.error.message ?? JSON.stringify(ev.error);
+          this.logger.error(`LM Studio stopped mid-answer (${model}): ${msg}`);
+          throw new BadGatewayException(`LM Studio stopped mid-answer: ${msg}`);
+        }
         const piece = ev?.choices?.[0]?.delta?.content;
         if (piece) out.push(piece);
+        if (ev?.choices?.[0]?.finish_reason) finish = ev.choices[0].finish_reason;
         if (ev?.usage?.total_tokens) usage = ev.usage.total_tokens;
       }
       text = out.finish();
@@ -206,7 +223,9 @@ export class LlmService {
         .replace(/<think>[\s\S]*?<\/think>/g, '')
         .trim();
       usage = data?.usage?.total_tokens;
+      finish = data?.choices?.[0]?.finish_reason;
     }
+    opts.meter?.stop(finish);
     opts.meter?.add(usage ?? estimate(prompt, text));
     if (!text) throw new BadGatewayException('The model returned an empty answer.');
     return text;
@@ -316,18 +335,27 @@ export class LlmService {
       (d?.candidates?.[0]?.content?.parts ?? []).map((p: { text?: string }) => p.text ?? '').join('');
     let text: string;
     let usage: number | undefined;
+    let finish: string | undefined;
+    // Gemini: STOP = finished normally; MAX_TOKENS = cut by the limit (same meaning as OpenAI's 'length')
+    const reason = (d: any) => {
+      const r = d?.candidates?.[0]?.finishReason;
+      return r ? (r === 'STOP' ? 'stop' : r === 'MAX_TOKENS' ? 'length' : String(r).toLowerCase()) : undefined;
+    };
     if (stream) {
       const out = new VisibleText(opts.onDelta!);
       for await (const ev of sseEvents(res)) {
         out.push(partsText(ev));
+        finish = reason(ev) ?? finish;
         if (ev?.usageMetadata?.totalTokenCount) usage = ev.usageMetadata.totalTokenCount;
       }
       text = out.finish();
     } else {
       const data: any = await res.json();
       text = partsText(data).trim();
+      finish = reason(data);
       usage = data?.usageMetadata?.totalTokenCount;
     }
+    opts.meter?.stop(finish);
     opts.meter?.add(usage ?? estimate(system, ...history.map((m) => m.content), text));
     if (!text) {
       throw new BadGatewayException('The AI service returned no answer. Try rephrasing.');

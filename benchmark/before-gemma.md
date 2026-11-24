@@ -12,7 +12,7 @@
 
 ## 1. Start the services
 ```bash
-# LM Studio: load ONLY Gemma 4 E4B (Q4_K_M, context 49152, Parallel 4, Flash Attention ON, GPU offload MAX)
+# LM Studio: load ONLY Gemma 4 E4B (Q4_K_M, context 131072, Parallel 4, Flash Attention ON, GPU offload MAX)
 ~/.lmstudio/bin/lms ps                     # must show only google/gemma-4-e4b
 
 cd retrieval && source .venv/bin/activate
@@ -58,7 +58,7 @@ EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 npm run eval -- \
 ## 4. Score
 ```bash
 cd eval && source ../retrieval/.venv/bin/activate
-# load the 80B judge first (unload the answer model): context 32768, Parallel 4
+# load the 80B judge first (unload the answer model): context 131072, Parallel 4
 for r in B0/gemma B0/gemma-files; do python score.py judge runs/$r && python score.py report runs/$r; done
 ```
 This writes `runs/B0/gemma/scores.csv` (one row per answer) and `runs/B0/gemma/summary.md`. The summary is one table per setting with:

@@ -408,9 +408,12 @@ def report(run_dir, test_path):
     print(f"wrote {run / 'scores.jsonl'}, summary.md, summary.json")
 
 
-def compare(run_a, run_b, test_path):
-    a = {(r["id"], r["model"], r["effort"], r["tech"]): r for r in score_rows(run_a, test_path)}
-    b = {(r["id"], r["model"], r["effort"], r["tech"]): r for r in score_rows(run_b, test_path)}
+def compare(run_a, run_b, test_path, across_models=False):
+    # same model (before/after): pair by question + model tier + setting; two different models: drop the tier
+    pk = (lambda r: (r["id"], r["effort"], r["tech"])) if across_models else \
+         (lambda r: (r["id"], r["model"], r["effort"], r["tech"]))
+    a = {pk(r): r for r in score_rows(run_a, test_path)}
+    b = {pk(r): r for r in score_rows(run_b, test_path)}
     keys = sorted(set(a) & set(b))
     if not keys:
         sys.exit("no common (question, setting) pairs")
@@ -448,10 +451,12 @@ if __name__ == "__main__":
     c = sub.add_parser("compare")
     c.add_argument("run_a"); c.add_argument("run_b")
     c.add_argument("--test", default=str(HERE / "data" / "test.jsonl"))
+    c.add_argument("--across-models", action="store_true",
+                   help="compare two different models: pair by question + effort + technicality only")
     a = ap.parse_args()
     if a.cmd == "judge":
         judge(a.run_dir, a.test, a.workers, a.limit)
     elif a.cmd == "report":
         report(a.run_dir, a.test)
     else:
-        compare(a.run_a, a.run_b, a.test)
+        compare(a.run_a, a.run_b, a.test, a.across_models)

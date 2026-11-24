@@ -23,6 +23,12 @@
  *
  * Resumable: run the same command again and finished question+setting pairs are skipped.
  * Set EVAL_TEMPERATURE=0 for repeatable answers.
+ *
+ * Cut-off protection (24 Nov): before answering, the runner checks that every answer model is loaded in
+ * LM Studio with at least EVAL_MIN_CONTEXT tokens (default 131072; 4 parallel long answers must fit).
+ * Every answer stores finishReason ('stop' = finished; 'length' = cut by max_tokens or the context);
+ * cut answers are flagged ("cut": true), listed in cut.jsonl and counted in the "Finished:" line.
+ * A mid-answer LM Studio error (e.g. "Context size has been exceeded") is an error, so it is retried.
  */
 import { NestFactory } from '@nestjs/core';
 import { Logger } from '@nestjs/common';
@@ -125,12 +131,42 @@ async function main() {
   const retrieval = app.get(RetrievalService);
   const llm = app.get(LlmService);
 
+  // ---- context check: the loaded answer models must have room for 4 parallel long answers ----
+  const minCtx = Number(process.env.EVAL_MIN_CONTEXT ?? 131072);
+  const loadedContext: Record<string, number> = {};
+  if ((process.env.LLM_PROVIDER ?? 'lmstudio') === 'lmstudio' || o.mode === 'general') {
+    const lm = (process.env.LMSTUDIO_URL ?? 'http://localhost:1234/v1').replace(/\/v1\/?$/, '');
+    let models: { id: string; state?: string; loaded_context_length?: number }[] = [];
+    try {
+      models = ((await (await fetch(`${lm}/api/v0/models`)).json()) as any).data ?? [];
+    } catch {
+      console.error(`STOP: could not ask LM Studio (${lm}/api/v0/models) which models are loaded.`);
+      process.exit(2);
+    }
+    for (const m of o.models) {
+      const id = modelId(m);
+      const hit = models.find((x) => x.state === 'loaded' &&
+        (x.id === id || x.id.endsWith('/' + id) || id.endsWith('/' + x.id)));
+      if (!hit) {
+        console.error(`STOP: answer model ${id} (${m}) is not loaded in LM Studio.`);
+        process.exit(2);
+      }
+      loadedContext[hit.id] = hit.loaded_context_length ?? 0;
+      if ((hit.loaded_context_length ?? 0) < minCtx) {
+        console.error(`STOP: ${hit.id} is loaded with context ${hit.loaded_context_length}; answers could be cut off. ` +
+          `Reload it with at least ${minCtx}: lms unload --all && lms load ${hit.id} -c ${minCtx} --parallel ${o.workers} --gpu max`);
+        process.exit(2);
+      }
+    }
+  }
+
   let tests = readJsonl<TestItem>(o.test);
   if (o.limit) tests = tests.slice(0, o.limit);
   fs.mkdirSync(o.out, { recursive: true });
   fs.mkdirSync(path.dirname(o.routeCache), { recursive: true });
   const answersFile = path.join(o.out, 'answers.jsonl');
   const errorsFile = path.join(o.out, 'errors.jsonl');
+  const cutFile = path.join(o.out, 'cut.jsonl');
 
   // Record exactly what produced these numbers.
   const git = (...a: string[]) => {
@@ -143,6 +179,7 @@ async function main() {
     git: { sha: git('rev-parse', 'HEAD'), dirty: git('status', '--porcelain', '--', '../../src', '../../../retrieval') !== '' },
     test: { file: o.test, sha256: sha(fs.readFileSync(o.test)), questions: tests.length },
     modelIds: Object.fromEntries(o.models.map((m) => [m, modelId(m)])),
+    loadedContext, minContext: minCtx,
     env: Object.fromEntries(['RETRIEVAL_URL', 'LMSTUDIO_URL', 'LMSTUDIO_CHAT_MODEL', 'ROUTER_PROVIDER',
       'ROUTER_LMSTUDIO_MODEL', 'LLM_PROVIDER', 'GENERAL_PROVIDER', 'LMSTUDIO_REASONING', 'EVAL_TEMPERATURE',
       'FALLBACK_DOMAIN', 'FALLBACK_MIN_SCORE', 'CASES_DOMAIN', 'CASES_MIN_SCORE'].map((k) => [k, env(k)])),
@@ -232,7 +269,7 @@ async function main() {
   console.log(`Answers: ${total - tasks.length} done, ${tasks.length} to do (${o.workers} workers)`);
 
   const t0 = Date.now();
-  let n = 0, errors = 0;
+  let n = 0, errors = 0, cut = 0;
   await pool(tasks, o.workers, async ({ q, s, key: k }) => {
     const meter = new Meter();
     const start = Date.now();
@@ -244,11 +281,17 @@ async function main() {
         onDelta: () => { if (!firstToken) firstToken = Date.now() - start; },
       });
       const r = cache.get(key(q));
+      const finishReason = meter.stops[meter.stops.length - 1] ?? 'unknown';
+      if (meter.cut) {
+        cut++;
+        fs.appendFileSync(cutFile, JSON.stringify({ key: k, finishReason, stops: meter.stops, at: new Date().toISOString() }) + '\n');
+      }
       fs.appendFileSync(answersFile, JSON.stringify({
         key: k, variant: o.variant, id: q.id, mode: o.mode, settings: s,
         question: q.question, file: q.file ?? null, reply: ans.reply, route: ans.route, meta: ans.meta,
         corrected: r?.question ?? null,
         sources: ans.sources.map(({ excerpt, ...src }) => src),
+        finishReason, cut: meter.cut,
         tokens: meter.tokens, routerTokens: r?.tokens ?? 0,
         ms: Date.now() - start, firstTokenMs: firstToken || null, routerMs: r?.ms ?? 0,
         at: new Date().toISOString(),
@@ -259,7 +302,8 @@ async function main() {
     }
     progress('answered', ++n, tasks.length, t0);
   });
-  console.log(`Finished: ${n - errors} answers written, ${errors} errors${errors ? ` (see ${errorsFile}; run again to retry)` : ''}`);
+  console.log(`Finished: ${n - errors} answers written, ${errors} errors, ${cut} cut` +
+    `${errors ? ` (see ${errorsFile}; run again to retry)` : ''}${cut ? ` (cut answers: ${cutFile})` : ''}`);
   await app.close();
 }
 

@@ -6,7 +6,12 @@
 - Gemma 4 E4B (`low`), Qwen3 30B (`mid`) and **Qwen3-Next 80B (`high`)**. The 80B runbook is `benchmark/before-qwen3-next-80b.md`.
 - **Only the best one is fine-tuned.** It's chosen after the gold-standard check; **the team decides, so Claude must ask before choosing.**
 - **Judge:** the 80B for everything (`eval/config.json`, `j1`, unchanged), so it also rates its own answers.
-- **Gold standard:** humans (each answer rated by 2 of 3 team members) and Claude (in Claude Code on PC A) rate a blind sample: 150 questions × 3 models. It measures the 80B judge's accuracy and any self-preference bias (`eval/GOLD_GUIDE.md`, `eval/gold.py`).
+- **Human scoring (from 24 Nov, replaces the humans' blind 150-question gold set):**
+  - The team scores answers continuously, for every model and setting, in a shared Google Sheet web page (Drive folder "Gold Judge"; `eval/HUMAN_GUIDE.md`, `eval/human.py`, `eval/human_app/`).
+  - It starts with Gemma; each new model is added with `human.py export --model X` when its run finishes.
+  - Nobody scores the same answers twice, except ~5% overlap for κ.
+  - Claude scores the same answers (`human.py claude-batch`; **ask before each batch**, ~3k tokens per answer).
+  - `human.py analyze` compares humans, Claude and the 80B judge, including self-preference bias.
 
 **PCs:**
 - **PC A** (`~/Desktop/Thesis-RAG`): Gemma (done), **80B answers**, the judge, Claude's gold ratings, training questions, fine-tuning.
@@ -35,7 +40,7 @@
 | 26–27 Nov | team: gold ratings (~4–5 h each) + test-set recheck (~1.5–2 h each) | free: training questions or privacy data prep |
 | 27 Nov | `gold.py analyze` → 3-model report → **ask the team which model to fine-tune** | |
 
-**PC A, 24 Nov morning:** Gemma judging is done. Reload the 80B as the **answer model** (context 49152, Parallel 4), start the retrieval server, then follow `benchmark/before-qwen3-next-80b.md`: the pilot first, then B0 law.
+**PC A, 24 Nov morning:** Gemma judging is done. Reload the 80B as the **answer model** (context 131072, Parallel 4), start the retrieval server, then follow `benchmark/before-qwen3-next-80b.md`: the pilot first, then B0 law.
 
 ## Start prompts (paste into Claude Code on each PC)
 **PC A:**
@@ -57,7 +62,7 @@
 > **Setup is finished** (torch 2.14.1+cu130 with CUDA True, chroma_db and .env copied, Node + npm done). The **Qwen3 30B B0** answers started on 23 Nov.
 >
 > **Today:**
-> 1. Load **only Qwen3 30B** (context 49152, Parallel 4, Flash Attention ON, GPU offload MAX); check with `lms ps`.
+> 1. Load **only Qwen3 30B** (context 131072, Parallel 4, Flash Attention ON, GPU offload MAX); check with `lms ps`.
 > 2. Start the retrieval server (`python -m uvicorn server:app --port 8000` in `retrieval`, background, log).
 > 3. **Resume** the Qwen B0 law run with the same command (`before-qwen3-30b.md` section 2, `--out ../eval/runs/B0/qwen3-30b`). It skips finished answers. Then run the files.
 >

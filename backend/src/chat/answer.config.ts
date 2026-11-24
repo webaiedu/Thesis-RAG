@@ -51,7 +51,7 @@ export const EFFORT: Record<Effort, EffortProfile> = {
     topK: 3,
     filePassages: 3,
     history: 4,
-    maxTokens: 700,
+    maxTokens: 1500,   // was 700 (baseline-v1): cut Qwen's Bangla answers mid-sentence
     temperature: 0.3,
     depth:
       'Effort: LOW. Give a short, direct answer (about 2-5 sentences or a few bullets). ' +
@@ -62,7 +62,7 @@ export const EFFORT: Record<Effort, EffortProfile> = {
     topK: 5,
     filePassages: 5,
     history: 6,
-    maxTokens: 1500,
+    maxTokens: 3000,   // was 1500 (baseline-v1)
     temperature: 0.2,
     depth:
       'Effort: MEDIUM. Give a clear, complete answer with the key conditions and penalties, ' +
@@ -73,7 +73,7 @@ export const EFFORT: Record<Effort, EffortProfile> = {
     topK: 8,
     filePassages: 8,
     history: 10,
-    maxTokens: 3000,
+    maxTokens: 6000,   // was 3000 (baseline-v1)
     temperature: 0.1,
     depth:
       'Effort: HIGH. Before answering, silently work through every excerpt and decide which ' +
