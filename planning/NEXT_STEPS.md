@@ -1,4 +1,39 @@
-# Where to start next (handoff, 24 Nov 2026 → 25 Nov; TWO PCs)
+# Where to start next (handoff, 25 Nov 2026 → 26 Nov; TWO PCs)
+
+**Project name:** the thesis project and chatbot are **AinSutro** (formerly Ainkhoj, renamed 25 Nov). The human gold-standard scoring page is the **AinSutro Scoring Page**. **The system-prompt name stays "Ainkhoj" until the whole benchmark (before and after fine-tuning) is finished** (`backend/src/bot.config.ts`, `eval/make_questions.py` unchanged), so every model gets the identical prompt. Never change anything that affects the benchmark.
+
+**Thesis:** *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering*. Fine-tuning **and** privacy. Three base models; only the best is fine-tuned, **the team chooses**.
+
+## State on 25 Nov evening
+| Item | Status |
+|---|---|
+| Gemma B0 | Answers + judging done. The one answer longer than the old 8,000-char judge window was re-judged with its full text (scores unchanged). |
+| **Qwen3 30B B0 (PC B)** | **Answers complete** (law 3,285 + files 684, 0 cut saved; `18fb054`). **Judging not done yet** (PC B, with its own 80B). |
+| **80B B0 (PC A)** | **Law complete 3,285 / 3,285** (0 cut saved; 3 timeouts redone with the new time limit). **Files 273 / 684** (stopped 16:09; resumes exactly). Then judging (~4 h). |
+| Judge | Now gets the **full answer** (`score.py`; hash still `aebea71088b8`); a judge reply without a score is retried, never saved. |
+| Long answers | LM Studio time limit now grows with the length limit (`llm.service.ts`): max(5 min, 0.12 s × max_tokens). Fixes "aborted due to timeout" on long high-effort answers. |
+| **AinSutro Scoring Page** | On **Firebase Hosting** (free; link on PC A only): Google sign-in, no warning; required legal-background acknowledgement; Law/File Answers with language (English default / Bangla / Other) and file-type choice; **Model menu** (80B greyed out until added); My ratings with re-scoring; one rater per answer enforced by the store. Holds **Gemma + Qwen3 30B (7,938 answers)**; audited: 0 differences from the judge's data (`eval/human_app/audit.py`). Team has rated 3 so far. |
+
+## Plan
+| When | PC A | PC B |
+|---|---|---|
+| 26 Nov morning | Resume the 80B file answers (~45 min), then the chain redoes 11 old pilot answers and judges the 80B (~4 h, automatic) | `git pull --rebase` (gets the judge full-answer fix), load the 80B, judge the Qwen 30B (law + files) |
+| when the 80B answers are done | `human.py export` + `push --model qwen3-next-80b`, then `human_app/audit.py qwen3-next-80b` (must print TOTAL PROBLEMS: 0) | push the 30B judgments + reports |
+| then | `compare --across-models` (Gemma vs 80B, Gemma vs 30B, 30B vs 80B), `human.py pull/status`; Claude scoring only after asking (token estimate) | |
+| ~27 Nov | three-model report → **ask the team which model to fine-tune** | |
+
+## Start prompts
+**PC A:** the same text as `~/Desktop/"Tomorrows promt.txt"` (on PC A's desktop).
+
+**PC B:**
+> This is PC B (`~/Desktop/Thesis-RAG PC-B`, branch `benchmark-setup`; quote the path, use `python -m pip` / `python -m uvicorn`). Read `CLAUDE.md`, `planning/NEXT_STEPS.md`, `planning/THESIS_LOG_PC_B.md` and `benchmark/SECOND_PC.md`, then `git pull --rebase` (it brings PC A's fixes: the judge now sees the full answer; long answers get a longer time limit). The PC is free 09:30–16:30. Free, local tools only.
+>
+> The Qwen3 30B answers are complete and pushed. Today: unload the 30B, load the Qwen3-Next 80B (`lms load <80B id> -c 131072 --parallel 4 --gpu max`, check its sha256 against `SECOND_PC.md`), start the retrieval server, then judge both runs in the background with a log: `score.py judge runs/B0/qwen3-30b` + `report`, then `runs/B0/qwen3-30b-files` with `--test data/test_files.jsonl` (+ report). Each must end with "0 errors" (run again to retry). Then `score.py compare runs/B0/gemma runs/B0/qwen3-30b --across-models`. Give me time estimates; don't stop at 16:15 by yourself.
+>
+> The project is now called AinSutro (formerly Ainkhoj); PC A did the rename in shared files. **Don't edit shared files, and never change `backend/src/bot.config.ts` or `eval/make_questions.py`** (the prompt name stays "Ainkhoj" until the benchmark is finished). Don't run `human.py` or touch the AinSutro Scoring Page, `eval/data/human/` or the Drive folder (PC A does that). Log every change or action in `planning/THESIS_LOG_PC_B.md` only. When I say "commit": `git pull --rebase`, then commit/push only `eval/runs/B0/qwen3-30b*` and `planning/THESIS_LOG_PC_B.md`.
+
+---
+# History (24 Nov handoff → 25 Nov, kept for reference)
 
 **Thesis:** *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering*. We do fine-tuning **and** privacy (`planning/PRIVACY_PLAN.md`). Three base models (Gemma 4 E4B, Qwen3 30B, Qwen3-Next 80B); **only the best is fine-tuned, and the team chooses**.
 

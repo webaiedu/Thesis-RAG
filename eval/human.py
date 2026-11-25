@@ -201,7 +201,7 @@ def export(args):
     write_csv(prev, ["id", "text"], [[i, cell(ch[i].get("text", ""))] for i in sorted(used) if i in ch])
     print(f"chunks.csv: {len(used) - len(missing_chunks)} chunks"
           + (f" ({len(missing_chunks)} cited ids not in the database: {missing_chunks[:3]})" if missing_chunks else ""))
-    print(f"-> {UPLOAD}/  Drag these files into the Drive folder 'Gold Judge', then Ainkhoj -> Import in the Sheet.")
+    print(f"-> {UPLOAD}/  Drag these files into the Drive folder 'Gold Judge', then AinSutro -> Import files from Gold Judge folder in the Sheet.")
 
 
 # ---------------------------------------------------------------- ratings in
@@ -256,6 +256,52 @@ def fetch_ratings():
     if out.get("error"):
         sys.exit("store refused: " + out["error"])
     return out["result"]
+
+
+def store_call(action, data=None, timeout=360):
+    """One admin call to the AinSutro store (data/human/api.json, not committed)."""
+    cfg = json.loads((OUT / "api.json").read_text(encoding="utf-8"))
+    body = {"secret": cfg["secret"], "action": action, "data": data or {}}
+    for attempt in range(3):
+        try:
+            req = urllib.request.Request(cfg["url"], data=json.dumps(body, ensure_ascii=False).encode(),
+                                         headers={"content-type": "text/plain;charset=utf-8"})
+            with urllib.request.urlopen(req, timeout=timeout) as r:
+                out = json.loads(r.read())
+            break
+        except Exception as e:  # noqa: BLE001 (Google sometimes answers 500 once; the import skips rows already in)
+            if attempt == 2:
+                raise
+            print(f"  store call failed ({e}); retrying")
+    if out.get("error"):
+        sys.exit("store refused: " + out["error"])
+    return out["result"]
+
+
+def push(args):
+    """Send the exported CSVs straight to the store (instead of the Drive folder), then build the queue."""
+    names = ["questions.csv", "chunks.csv"] + sorted(p.name for p in UPLOAD.glob("answers-*.csv")
+                                                    if not args.model or any(p.name.startswith(f"answers-{m}-") for m in args.model))
+    for name in names:
+        p = UPLOAD / name
+        if not p.exists():
+            sys.exit(f"missing {p}: run export first")
+        with open(p, encoding="utf-8-sig", newline="") as f:
+            rows = list(csv.reader(f))
+        head, body = rows[0], rows[1:]
+        added, part, size = 0, [], 0
+        for i, r in enumerate(body + [None]):
+            if r is not None:
+                part.append(r)
+                size += sum(len(v.encode()) for v in r) + 20
+            if part and (r is None or size > 1_500_000):
+                res = store_call("admin_import_rows", {"name": name.split("-")[0].replace(".csv", ""), "rows": [head] + part})
+                if res.get("left"):
+                    sys.exit(f"{name}: the store stopped early ({res}); run push again (rows already in are skipped)")
+                added += res["added"]
+                part, size = [], 0
+        print(f"{name}: {len(body)} rows, {added} new")
+    print("new questions in the queue:", store_call("admin_build_queue")["added"])
 
 
 def pull(args):
@@ -537,6 +583,8 @@ def main():
     p.add_argument("--allow-partial", action="store_true", help="export an unfinished run (testing only)")
     p = sub.add_parser("pull")
     p.add_argument("file", nargs="?", help="the Sheet's Ratings tab saved as CSV (default: fetch it from the store)")
+    p = sub.add_parser("push", help="send the exported CSVs straight to the store (no Drive upload)")
+    p.add_argument("--model", action="append", choices=list(MODELS), help="only this model's answers (default: all exported)")
     sub.add_parser("status")
     p = sub.add_parser("claude-batch")
     p.add_argument("--size", type=int, default=20)
@@ -544,7 +592,7 @@ def main():
     p.add_argument("file")
     sub.add_parser("analyze")
     a = ap.parse_args()
-    {"export": export, "pull": pull, "status": status, "claude-batch": claude_batch, "claude-add": claude_add,
+    {"export": export, "push": push, "pull": pull, "status": status, "claude-batch": claude_batch, "claude-add": claude_add,
      "analyze": analyze}[a.cmd](a)
 
 

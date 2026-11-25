@@ -1,12 +1,14 @@
 /**
  * AinSutro data store: Apps Script bound to the scoring Sheet "AinSutro human scoring" (eval/HUMAN_GUIDE.md).
- * Runs as the Sheet owner. It holds all data and answers the private API that the AinSutro page
- * (eval/human_app/web) calls with the shared secret (Secret.gs, never committed).
+ * Runs as the Sheet owner. It holds all data and answers the API that the AinSutro page calls
+ * (eval/human_app/site, on Firebase Hosting since 25 Nov).
  *
  * - Menu "AinSutro" (Sheet owner only): import CSVs from the Gold Judge folder, translate questions,
  *   progress, release claims, reset ratings.
- * - doPost: JSON API {secret, action, user:{email,name}, data}. Raters are identified by their Google email,
- *   which the AinSutro page reads from Google itself (it runs as the visitor).
+ * - doPost, rater actions: {idToken, action, data}. The page signs raters in with Firebase Auth (Google
+ *   account, basic profile only, so Google shows no "unverified app" warning). The store checks the ID token
+ *   with Google (verifyUser) and takes the email and name from Google, never from the page.
+ * - doPost, admin actions: {secret, action: 'admin_*'} for human.py (Secret.gs, never committed).
  * - doGet: the old link; shows "AinSutro has moved" with a button to the new page.
  * - One bundle = one question x one model = its 9 answers (3 effort x 3 technicality). A bundle is claimed by
  *   one rater under a lock, so nobody gets answers that are done or being done; claims expire after CLAIM_HOURS.
@@ -19,7 +21,8 @@
 const FOLDER_ID = '1e53LUi8-6m9D0CRVK-4u2iWM_VCuPID5';   // Drive folder "Gold Judge"
 const SHEET_ID = '1Xo1tdlE4T5Hd6kKStyhaVYnpHR1v3ir8CWAUX2ONwbI'; // Sheet "AinSutro human scoring"
 // API_SECRET and UI_URL are in Secret.gs (not committed).
-const CLAIM_HOURS = 3;
+const CLAIM_HOURS = 3;            // a question nobody has started scoring is released after 3 h idle
+const STARTED_CLAIM_HOURS = 168;  // a started question stays with its rater for 7 days, so nobody re-scores its answers
 const EXCERPT_CHARS = 6000;                              // eval/config.json judge.excerpt_chars
 const MODEL_ORDER = ['gemma', 'qwen3-30b', 'qwen3-next-80b'];
 const EFFORTS = ['low', 'mid', 'high'];
@@ -38,7 +41,11 @@ const HEAD = {
           'rated', 'done_raters', 'skipped_by'],
   Ratings: ['time', 'rater', 'key', 'bundle', 'qid', 'model', 'effort', 'technicality', 'correctness',
             'faithfulness', 'technicality_fit', 'language_ok', 'refused', 'note', 'second', 'rater_name', 'rubric'],
+  Acks: ['time', 'rater', 'rater_name', 'version'],     // the legal-background acknowledgement on the sign-in page
 };
+// The acknowledgement text raters tick (eval/human_app/site/public/index.html, #ackText). Change the version
+// whenever the wording changes; everyone is then asked again.
+const ACK_VERSION = 'ack-1';
 const NOT_IN_CSV = new Set(['question_tr', 'reference_tr']);   // filled here, not by human.py export
 const Q = colIndex(HEAD.Queue);
 const QS = colIndex(HEAD.Questions);
@@ -100,6 +107,7 @@ function onOpen() {
     .addItem('Translate questions (Bangla/English)', 'translateAll')
     .addItem('Show progress', 'showProgress')
     .addItem('Release all claims (nobody is rating)', 'releaseAll')
+    .addItem('Allow the sign-in check (once, owner)', 'authorizeMenu')
     .addSeparator()
     .addItem('Delete ALL ratings and claims (start fresh)', 'resetAskFirst')
     .addToUi();
@@ -155,6 +163,50 @@ function importInto(name, data, t0) {
 }
 
 function importAll() { return say(importFiles()); }
+
+// Read-only audit (25 Nov): fingerprints of what raters see, compared on PC A with the run files the judge used.
+function md5hex(v) {
+  return Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, String(v), Utilities.Charset.UTF_8)
+    .map(b => ('0' + ((b + 256) % 256).toString(16)).slice(-2)).join('');
+}
+function auditModel(model) {
+  const qs = {}, text = {}, out = {}, qh = {};
+  rowsOf(tab('Questions'), HEAD.Questions.length).forEach(r => { qs[String(r[0])] = objOf(HEAD.Questions, r); });
+  rowsOf(tab('Chunks'), 2).forEach(r => { text[String(r[0])] = String(r[1]); });
+  rowsOf(tab('Answers'), HEAD.Answers.length).forEach(r => {
+    const a = objOf(HEAD.Answers, r);
+    if (model && String(a.model) !== String(model)) return;
+    const ex = excerpts(a, qs[String(a.qid)] || {}, text);
+    out[String(a.key)] = [md5hex(a.reply), md5hex(ex.map(e => e.text).join('\u241e')), ex.length, String(a.qid)];
+  });
+  Object.keys(qs).forEach(k => {
+    const q = qs[k];
+    qh[k] = md5hex([q.question, q.reference, q.file_truth, q.lang, q.test, q.file, q.expected_route, q.history].join('\u241e'));
+  });
+  // every queue entry must point at its own question and at exactly its own 9 answers (3 effort x 3 technicality)
+  const ans = tab('Answers').getRange(2, 1, Math.max(1, tab('Answers').getLastRow() - 1), 6).getValues();
+  const qrows = rowsOf(tab('Questions'), 1).map(r => String(r[0]));
+  const queue = { rows: 0, bad: [], need2: {} };
+  rowsOf(tab('Queue'), HEAD.Queue.length).forEach(r => {
+    if (model && String(r[Q.model]) !== String(model)) return;
+    queue.rows++;
+    const ar = Number(r[Q.answer_row]) - 2, nine = ans.slice(ar, ar + 9);
+    const combos = new Set(nine.map(x => x[4] + '/' + x[5]));
+    const ok = nine.length === 9 && nine.every(x => String(x[1]) === String(r[Q.qid]) && String(x[2]) === String(r[Q.model])) &&
+      combos.size === 9 && qrows[Number(r[Q.question_row]) - 2] === String(r[Q.qid]) && String(r[Q.bundle]) === r[Q.qid] + '|' + r[Q.model];
+    if (!ok) queue.bad.push(String(r[Q.bundle]));
+    if (Number(r[Q.need]) === 2) queue.need2[String(r[Q.qid])] = 1;
+  });
+  queue.need2 = Object.keys(queue.need2).sort();
+  return { answers: out, questions: qh, queue: queue };
+}
+
+/** Import CSV rows sent by human.py push (header first). Only Questions, Chunks and Answers; existing ids are skipped. */
+function importRows(name, rows) {
+  const tabName = { questions: 'Questions', chunks: 'Chunks', answers: 'Answers' }[String(name)];
+  if (!tabName || !Array.isArray(rows) || rows.length < 1) throw new Error('import_rows: bad name or rows');
+  return withLock(() => importInto(tabName, rows.map(r => r.map(v => (v == null ? '' : String(v)))), Date.now()));
+}
 
 function importFiles() {
   const t0 = Date.now();
@@ -298,19 +350,28 @@ function doPost(e) {
   let out;
   try {
     const req = JSON.parse(e.postData.contents);
-    if (!req || req.secret !== API_SECRET) throw new Error('forbidden');
+    if (!req || typeof req.action !== 'string') throw new Error('bad request');
     const d = req.data || {};
     const admin = { import: importFiles, translate: translateQuestions, reset: resetRatings,
-                    progress: () => progressFor('', true), ratings: exportRatings };
+                    progress: () => progressFor('', true), ratings: exportRatings, acks: exportAcks,
+                    // human.py push: the same import as the Drive folder, sent directly (rows incl. the header row)
+                    import_rows: () => importRows(d.name, d.rows), build_queue: () => ({ added: buildQueue() }),
+                    audit: () => auditModel(d.model) };
     if (req.action.indexOf('admin_') === 0) {
+      if (req.secret !== API_SECRET) throw new Error('forbidden');
       const f = admin[req.action.slice(6)];
       if (!f) throw new Error('unknown action');
       out = { result: f() };
     } else {
-      const u = user(req.user);
-      if (req.action === 'next') out = { result: getNext(u, d.section) };
+      const u = verifyUser(req.idToken);
+      if (req.action === 'me') out = { result: { email: u.id, name: u.name, acked: hasAck(u) } };
+      else if (req.action === 'ack') out = { result: addAck(u, d.version) };
+      else if (!hasAck(u)) throw new Error('ACK_REQUIRED: Please confirm the acknowledgement on the sign-in page first.');
+      else if (req.action === 'next') out = { result: getNext(u, d.section, d.filter) };
+      else if (req.action === 'mine') out = { result: myRatings(u) };
+      else if (req.action === 'open') out = { result: openBundle(u, d.bundle) };
       else if (req.action === 'submit') out = { result: submit(u, d.row, d.bundle, d.rating) };
-      else if (req.action === 'skip') out = { result: skip(u, d.row, d.bundle, d.section) };
+      else if (req.action === 'skip') out = { result: skip(u, d.row, d.bundle, d.section, d.filter) };
       else if (req.action === 'progress') out = { result: progressFor(u.id, false) };
       else throw new Error('unknown action');
     }
@@ -320,11 +381,59 @@ function doPost(e) {
   return ContentService.createTextOutput(JSON.stringify(out)).setMimeType(ContentService.MimeType.JSON);
 }
 
-function user(u) {
-  const email = String((u && u.email) || '').trim().toLowerCase();
-  if (!/^[^@\s,]+@[^@\s,]+$/.test(email)) throw new Error('Not signed in with a Google account.');
-  const name = String((u && u.name) || email.split('@')[0]).replace(/[\n\r\t]/g, ' ').trim().slice(0, 60);
-  return { id: email, name: name };
+/**
+ * The signed-in rater, checked with Google: Firebase's accounts:lookup accepts only a valid, unexpired ID token
+ * issued for this Firebase project (FIREBASE_API_KEY in Secret.gs). Cached for 10 minutes per token.
+ */
+function verifyUser(idToken) {
+  if (typeof idToken !== 'string' || idToken.length < 100) throw new Error('Please sign in with Google.');
+  const cache = CacheService.getScriptCache();
+  const ck = 'u:' + Utilities.base64EncodeWebSafe(Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, idToken));
+  const hit = cache.get(ck);
+  if (hit) return JSON.parse(hit);
+  const res = UrlFetchApp.fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=' + FIREBASE_API_KEY, {
+    method: 'post', contentType: 'application/json', muteHttpExceptions: true,
+    payload: JSON.stringify({ idToken: idToken }),
+  });
+  if (res.getResponseCode() !== 200) throw new Error('Your sign-in has expired. Please reload the page.');
+  const g = (JSON.parse(res.getContentText()).users || [])[0] || {};
+  const email = String(g.email || '').trim().toLowerCase();
+  if (!g.emailVerified || !/^[^@\s,]+@[^@\s,]+$/.test(email)) throw new Error('Please sign in with a Google account.');
+  const name = String(g.displayName || email.split('@')[0]).replace(/[\n\r\t]/g, ' ').trim().slice(0, 60);
+  const u = { id: email, name: name };
+  cache.put(ck, JSON.stringify(u), 600);
+  return u;
+}
+
+function authorizeMenu() { authorize(); say('Done. The store can now check AinSutro sign-ins.'); }
+
+/** Has this rater ticked the current acknowledgement? (cached 6 h once true) */
+function hasAck(u) {
+  const cache = CacheService.getScriptCache(), ck = 'ack:' + ACK_VERSION + ':' + u.id;
+  if (cache.get(ck)) return true;
+  const ok = rowsOf(tab('Acks'), HEAD.Acks.length).some(r => String(r[1]) === u.id && String(r[3]) === ACK_VERSION);
+  if (ok) cache.put(ck, '1', 21600);
+  return ok;
+}
+
+function addAck(u, version) {
+  if (version !== ACK_VERSION) throw new Error('The acknowledgement has changed. Please reload the page.');
+  if (!hasAck(u)) {
+    withLock(() => appendText(tab('Acks'), [[new Date().toISOString(), u.id, u.name, ACK_VERSION]]));
+    CacheService.getScriptCache().put('ack:' + ACK_VERSION + ':' + u.id, '1', 21600);
+  }
+  return { acked: true };
+}
+
+function exportAcks() {
+  return rowsOf(tab('Acks'), HEAD.Acks.length).map(r => ({ time: String(r[0]), rater: String(r[1]), version: String(r[3]) }));
+}
+
+/** Run once (Sheet menu or the editor, as the owner) so the store may call Google's sign-in check. */
+function authorize() {
+  UrlFetchApp.fetch('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=' + FIREBASE_API_KEY,
+    { method: 'post', contentType: 'application/json', muteHttpExceptions: true, payload: '{}' });
+  return 'OK';
 }
 
 function exportRatings() {
@@ -336,8 +445,40 @@ function exportRatings() {
 }
 
 function claimLive(r, now) {
+  const hours = list(r[Q.rated]).length ? STARTED_CLAIM_HOURS : CLAIM_HOURS;
   return r[Q.claim_rater] && r[Q.claim_time] &&
-    now - new Date(r[Q.claim_time]).getTime() < CLAIM_HOURS * 3600 * 1000;
+    now - new Date(r[Q.claim_time]).getTime() < hours * 3600 * 1000;
+}
+
+/**
+ * Answers of this bundle scored by someone who left it unfinished (not one of its finished raters, not me).
+ * Their score stays and nobody scores those answers again, so outside the planned overlap every answer has
+ * exactly one rater. {key: 1}
+ */
+function abandonedKeys(bundle, done, u) {
+  const out = {};
+  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+    const who = String(r[1]);
+    if (String(r[3]) === String(bundle) && who !== u.id && done.indexOf(who) < 0) out[String(r[2])] = 1;
+  });
+  return out;
+}
+
+/** When a rater takes over a question: the answers already scored by unfinished raters (or by them) count as done. */
+function takeoverRated(r, u) {
+  const done = list(r[Q.done_raters]);
+  const keys = tab('Answers').getRange(Number(r[Q.answer_row]), 1, 9, 1).getValues().map(x => String(x[0]));
+  const scored = abandonedKeys(r[Q.bundle], done, u), mine = myKeys(u, r[Q.bundle]);
+  return keys.map((k, i) => (scored[k] || mine[k] ? String(i) : '')).filter(String).join(',');
+}
+
+/** Keys of this bundle the rater has scored before (any time). */
+function myKeys(u, bundle) {
+  const out = {};
+  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+    if (String(r[1]) === u.id && String(r[3]) === String(bundle)) out[String(r[2])] = 1;
+  });
+  return out;
 }
 
 /** < 0 when queue row a should be rated before b: lower question rank first, then model order. */
@@ -348,15 +489,56 @@ function better(a, b) {
 
 /** qid -> 'law' or 'file' (the test set the question comes from). */
 function sections() {
-  const out = {};
-  rowsOf(tab('Questions'), 4).forEach(r => { out[String(r[0])] = String(r[3]) === 'file' ? 'file' : 'law'; });
+  const out = {}, qi = qinfo();
+  Object.keys(qi).forEach(k => { out[k] = qi[k].sec; });
   return out;
 }
 
+// Rater filters (25 Nov). They only choose WHICH questions a rater gets; every question, answer and excerpt is
+// exactly the one the 80B judge and Claude score. Law: 'en' / 'bn' = normal law questions in that language,
+// 'other' = the special questions (typos, informal or Banglish wording, follow-ups, general, out of scope).
+// File: the type of the attached file.
+const SPECIAL_TYPES = ['typo', 'colloquial', 'follow_up', 'general', 'out_of_scope'];
+const LAW_GROUPS = ['en', 'bn', 'other'];
+const FILE_TYPES = ['pdf', 'scan', 'photo', 'word'];
+
+function fileType(f) {
+  f = String(f || '').toLowerCase();
+  if (/\.(jpe?g|png|webp|heic|heif)$/.test(f)) return 'photo';
+  if (/-scan\.pdf$/.test(f)) return 'scan';
+  if (/\.pdf$/.test(f)) return 'pdf';
+  if (/\.(docx?|odt)$/.test(f)) return 'word';
+  return 'other';
+}
+
+/** qid -> {sec, group (law: en/bn/other; file: pdf/scan/photo/word), question} */
+function qinfo() {
+  const out = {};
+  rowsOf(tab('Questions'), 11).forEach(r => {
+    const sec = String(r[3]) === 'file' ? 'file' : 'law';
+    const group = sec === 'file' ? fileType(r[8])
+      : SPECIAL_TYPES.indexOf(String(r[6])) >= 0 ? 'other' : (String(r[4]) === 'bn' ? 'bn' : 'en');
+    out[String(r[0])] = { sec: sec, group: group, question: String(r[10] || '') };
+  });
+  return out;
+}
+
+/** The rater's choice: law defaults to English, files to all types. */
+function wanted(section, filter) {
+  filter = filter || {};
+  if (section === 'file') return FILE_TYPES.indexOf(filter.ftype) >= 0 ? filter.ftype : 'all';
+  return LAW_GROUPS.indexOf(filter.lang) >= 0 ? filter.lang : 'en';
+}
+
+function matches(info, section, want) {
+  return !!info && info.sec === section && (want === 'all' || info.group === want);
+}
+
 /** Give the rater their current bundle in this section (law or file), or claim the next open one. */
-function getNext(u, section) {
+function getNext(u, section, filter) {
   section = section === 'file' ? 'file' : 'law';
-  const sec = sections();
+  const qi = qinfo(), want = wanted(section, filter);
+  const wantModel = filter && MODEL_ORDER.indexOf(filter.model) >= 0 ? filter.model : 'all';   // 'all' = any model
   const row = withLock(() => {
     const sh = tab('Queue');
     const vals = rowsOf(sh, HEAD.Queue.length);
@@ -365,7 +547,14 @@ function getNext(u, section) {
     let mine = -1, best = -1;
     for (let i = 0; i < vals.length; i++) {
       const r = vals[i];
-      if (sec[String(r[Q.qid])] !== section) continue;
+      if (!matches(qi[String(r[Q.qid])], section, want) || (wantModel !== 'all' && String(r[Q.model]) !== wantModel)) {
+        // a question I claimed but have not started, outside my new choice: give it back to the team
+        if (r[Q.claim_rater] === u.id && claimLive(r, now) && !list(r[Q.rated]).length) {
+          r[Q.claim_rater] = ''; r[Q.claim_time] = '';
+          writeRow(sh, i + 2, r);
+        }
+        continue;
+      }
       const done = list(r[Q.done_raters]);
       if (done.length >= Number(r[Q.need]) || done.indexOf(u.id) >= 0) continue;
       const live = claimLive(r, now);
@@ -377,7 +566,7 @@ function getNext(u, section) {
     if (i < 0) return -1;
     if (mine < 0) {
       const r = vals[i];
-      if (r[Q.claim_rater] !== u.id) r[Q.rated] = '';      // my own expired claim keeps what I rated
+      if (r[Q.claim_rater] !== u.id) r[Q.rated] = takeoverRated(r, u);   // answers already scored stay done
       r[Q.claim_rater] = u.id;
       r[Q.claim_time] = new Date(now).toISOString();
       writeRow(sh, i + 2, r);
@@ -387,7 +576,8 @@ function getNext(u, section) {
   if (row === 0) return { empty: true, msg: 'Nothing has been imported yet.' };
   if (row < 0) {
     return { empty: true, section: section, progress: progressFor(u.id, false),
-             msg: 'No ' + (section === 'file' ? 'file' : 'law') + ' answers are left for you right now. Thank you!' };
+             msg: 'No ' + (section === 'file' ? 'file' : 'law') + ' answers are left for you in this group right now. ' +
+                  'Choose another ' + (section === 'file' ? 'file type' : 'language') + ' above, or check back later.' };
   }
   const b = loadBundle(row, u);
   b.section = section;
@@ -421,6 +611,7 @@ function loadBundle(row, u) {
     const o = objOf(HEAD.Ratings, r);
     if (o.bundle === qr[Q.bundle] && o.rater === u.id) mine[o.key] = o;   // later rows win
   });
+  const locked = abandonedKeys(qr[Q.bundle], list(qr[Q.done_raters]), u);
   return {
     row: row, bundle: qr[Q.bundle],
     question: {
@@ -433,6 +624,7 @@ function loadBundle(row, u) {
       return {
         key: a.key, model_label: a.model_label, effort: a.effort, technicality: a.technicality,
         route: a.route, reply: a.reply, excerpts: ex, has_excerpts: ex.length > 0, rating: mine[a.key] || null,
+        locked: !mine[a.key] && !!locked[a.key],     // scored by a rater who left it unfinished: not scored again
       };
     }).sort((x, y) => EFFORTS.indexOf(x.effort) - EFFORTS.indexOf(y.effort) ||
                       TECHS.indexOf(x.technicality) - TECHS.indexOf(y.technicality)),
@@ -489,14 +681,26 @@ function submit(u, row, bundle, rating) {
     const q = tab('Questions').getRange(Number(r[Q.question_row]), 1, 1, HEAD.Questions.length).getValues()[0];
     const s = checkRating(rating, a, q, chunkRows());
     const doneBefore = list(r[Q.done_raters]);
-    const second = doneBefore.length > 0 && doneBefore.indexOf(u.id) < 0;
+    // Uniqueness: a rater may score a NEW answer here only if the question is theirs (their claim, or free and not
+    // finished by others). Changing their own earlier score is always allowed (My ratings).
+    const nowT = Date.now();
+    const mineNow = doneBefore.indexOf(u.id) >= 0 || r[Q.claim_rater] === u.id;
+    const takenByOther = r[Q.claim_rater] && r[Q.claim_rater] !== u.id && claimLive(r, nowT);
+    const finishedByOthers = doneBefore.length >= Number(r[Q.need]);
+    if (!mineNow && (takenByOther || finishedByOthers) && !myKeys(u, bundle)[rating.key]) {
+      throw new Error('TAKEN: This question is now with another rater. Please continue with a new question.');
+    }
+    if (abandonedKeys(bundle, doneBefore, u)[rating.key]) {
+      throw new Error('Another rater already scored this answer. Please go on to the next answer.');
+    }
+    const second = doneBefore.length > 0 && doneBefore[0] !== u.id;   // re-scoring keeps the first/second role
     appendText(tab('Ratings'), [[new Date().toISOString(), u.id, rating.key, bundle, a[1], a[2], a[4], a[5],
       s.correctness, s.faithfulness, s.technicality_fit, s.language_ok, s.refused,
       String(rating.note || '').slice(0, 2000), second ? '1' : '', u.name, RUBRIC]]);
     let finished = false;
     const now = Date.now();
     if (doneBefore.indexOf(u.id) < 0 && (r[Q.claim_rater] === u.id || !claimLive(r, now))) {
-      if (r[Q.claim_rater] !== u.id) r[Q.rated] = '';
+      if (r[Q.claim_rater] !== u.id) r[Q.rated] = takeoverRated(r, u);
       r[Q.claim_rater] = u.id;
       r[Q.claim_time] = new Date(now).toISOString();
       const rated = new Set(list(r[Q.rated]));
@@ -517,7 +721,10 @@ function submit(u, row, bundle, rating) {
 }
 
 /** Give the bundle back (someone else will rate it) and never offer it to this rater again. */
-function skip(u, row, bundle, section) {
+function skip(u, row, bundle, section, filter) {
+  if (Object.keys(myKeys(u, bundle)).length) {
+    throw new Error('You have already scored answers of this question, so it cannot be given to someone else. Please finish it.');
+  }
   withLock(() => {
     const sh = tab('Queue');
     row = findRow(sh, row, bundle);
@@ -528,7 +735,39 @@ function skip(u, row, bundle, section) {
     if (r[Q.claim_rater] === u.id) { r[Q.claim_rater] = ''; r[Q.claim_time] = ''; r[Q.rated] = ''; }
     writeRow(sh, row, r);
   });
-  return getNext(u, section);
+  return getNext(u, section, filter);
+}
+
+const MODEL_LABEL = { 'gemma': 'Gemma 4 E4B', 'qwen3-30b': 'Qwen3 30B', 'qwen3-next-80b': 'Qwen3-Next 80B' };
+
+/** The questions this rater has scored (newest first), for "My ratings". */
+function myRatings(u) {
+  const by = {};
+  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+    if (String(r[1]) !== u.id) return;
+    const b = String(r[3]);
+    const o = by[b] || (by[b] = { bundle: b, qid: String(r[4]), model: String(r[5]), keys: {}, last: '' });
+    o.keys[String(r[2])] = 1;
+    const t = r[0] instanceof Date ? r[0].toISOString() : String(r[0]);
+    if (t > o.last) o.last = t;
+  });
+  const qi = qinfo();
+  return Object.keys(by).map(b => {
+    const o = by[b], q = qi[o.qid] || {};
+    return { bundle: b, qid: o.qid, model: MODEL_LABEL[o.model] || o.model, rated: Object.keys(o.keys).length,
+             last: o.last, section: q.sec || 'law', group: q.group || '', question: String(q.question || '').slice(0, 200) };
+  }).sort((a, b) => (a.last < b.last ? 1 : -1));
+}
+
+/** One of my scored questions again, with my scores filled in, so I can change them. */
+function openBundle(u, bundle) {
+  const mineHere = rowsOf(tab('Ratings'), HEAD.Ratings.length).some(r => String(r[1]) === u.id && String(r[3]) === String(bundle));
+  if (!mineHere) throw new Error('You can only reopen questions you have scored.');
+  const b = loadBundle(findRow(tab('Queue'), 0, String(bundle)), u);
+  const q = qinfo()[String(b.question.qid)] || {};
+  b.section = q.sec || 'law';
+  b.review = true;
+  return b;
 }
 
 function findRow(sh, row, bundle) {
@@ -542,8 +781,9 @@ function findRow(sh, row, bundle) {
 /** Team progress (each answer counted once) and this rater's count. Rater names only for the owner. */
 function progressFor(id, withRaters) {
   const vals = rowsOf(tab('Queue'), HEAD.Queue.length);
-  const sec = sections();
-  const per = {}, bySec = { law: { done: 0, total: 0 }, file: { done: 0, total: 0 } };
+  const qi = qinfo(), sec = {};
+  Object.keys(qi).forEach(k => { sec[k] = qi[k].sec; });
+  const per = {}, bySec = { law: { done: 0, total: 0 }, file: { done: 0, total: 0 } }, groups = {};
   let done = 0;
   vals.forEach(r => {
     const m = String(r[Q.model]);
@@ -555,9 +795,17 @@ function progressFor(id, withRaters) {
     const x = bySec[sec[String(r[Q.qid])] === 'file' ? 'file' : 'law'];
     x.total += 9;
     x.done += d;
+    const info = qi[String(r[Q.qid])];
+    if (info) {
+      // per group, per model, and per model+section+group (the page shows the rater's current choice)
+      [info.sec + ':' + info.group, m + '|', m + '|' + info.sec, m + '|' + info.sec + ':' + info.group].forEach(k => {
+        const g = groups[k] || (groups[k] = { done: 0, total: 0 });
+        g.total += 9; g.done += d;
+      });
+    }
   });
   ['law', 'file'].forEach(k => { bySec[k].pct = bySec[k].total ? Math.round(1000 * bySec[k].done / bySec[k].total) / 10 : 0; });
-  const counts = {}, names = {};
+  const counts = {}, names = {}, mineBy = {};
   const seen = new Set();
   rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
     const k = r[1] + '|' + r[2];
@@ -565,12 +813,16 @@ function progressFor(id, withRaters) {
     if (seen.has(k)) return;
     seen.add(k);
     counts[r[1]] = (counts[r[1]] || 0) + 1;
+    if (r[1] === id) mineBy[String(r[5])] = (mineBy[String(r[5])] || 0) + 1;
   });
   const total = vals.length * 9;
   const out = {
     done: done, total: total, pct: total ? Math.round(1000 * done / total) / 10 : 0, mine: counts[id] || 0,
     models: MODEL_ORDER.filter(m => per[m]).map(m => per[m]),
     sections: bySec,
+    groups: groups,
+    mineByModel: mineBy,
+    modelsIn: Object.keys(per),        // models whose answers are in the scoring page
   };
   if (withRaters) {
     out.raters = Object.keys(counts).sort((a, b) => counts[b] - counts[a])

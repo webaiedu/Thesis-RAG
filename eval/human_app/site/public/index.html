@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>AinSutro Scoring Page</title>
+<meta name="description" content="Human gold-standard scoring of the AinSutro chatbot's answers on Bangladesh law">
+<meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#141415" media="(prefers-color-scheme: dark)">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f5b45'/%3E%3Cpath d='M16 7v18M9 25h14M7 12h3c3 0 4-1 6-2 2 1 3 2 6 2h3' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css?v=10">
+</head>
+<body>
+
+<!-- Sign-in -->
+<main id="signin" class="signin hidden">
+  <div class="signin-card">
+    <div class="wordmark"><svg class="mark" viewBox="0 0 24 24"><use href="#i-scale"/></svg>AinSutro Scoring Page</div>
+    <h1>Human gold-standard scoring for the AinSutro thesis</h1>
+    <p class="lead">Rate the chatbot's answers on Bangladesh law against reference answers, with the same rubric as the automatic judge.</p>
+    <label class="ack" for="ackBox">
+      <input type="checkbox" id="ackBox">
+      <span id="ackText">I confirm that I have knowledge of law, including the acts and ordinances of Bangladesh, the Constitution and other legal matters. I am a lawyer, judge, legal specialist, law student, or otherwise work or study in law. I understand that my ratings are used as the human gold standard for the AinSutro thesis.</span>
+    </label>
+    <p class="who-line hidden" id="gateWho"></p>
+    <button class="btn primary large" id="signinBtn" disabled><svg class="i" viewBox="0 0 24 24"><use href="#i-google"/></svg>Sign in with Google</button>
+    <button class="btn primary large hidden" id="ackContinue" disabled>Continue</button>
+    <p class="fine ack-hint" id="ackHint">Tick the box above to continue.</p>
+    <p class="fine">Google shares only your name and email. Your ratings go to the team's private Google Sheet, and the thesis uses anonymous rater ids.</p>
+    <div id="inapp" class="notice hidden">
+      <b>Open this page in Chrome or Safari</b>
+      <p>Google does not allow signing in inside apps like Messenger, Facebook or WhatsApp. Open the menu (⋮ or ⋯) and choose “Open in browser”, or copy the link.</p>
+      <button class="btn" id="copyLink"><svg class="i" viewBox="0 0 24 24"><use href="#i-copy"/></svg>Copy link</button>
+    </div>
+    <p class="err" id="signinErr" role="alert"></p>
+  </div>
+</main>
+
+<!-- App -->
+<div id="app" class="hidden">
+  <header class="top">
+    <div class="wordmark"><svg class="mark" viewBox="0 0 24 24"><use href="#i-scale"/></svg>AinSutro<span class="wm-sub">Scoring Page</span></div>
+    <nav class="seg" aria-label="Section">
+      <button data-sec="law" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-scale"/></svg><span>Law Answers</span><span class="count" id="secLaw"></span></button>
+      <button data-sec="file" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg><span>File Answers</span><span class="count" id="secFile"></span></button>
+    </nav>
+    <label class="model-pick" title="Rate answers of this model"><span>Model</span><select id="modelSel"></select></label>
+    <div class="grow"></div>
+    <div class="team" id="team" title="Answers rated by the whole team"></div>
+    <button class="btn ghost" id="guideBtn"><svg class="i" viewBox="0 0 24 24"><use href="#i-book"/></svg><span class="hide-sm">Guide</span></button>
+    <div class="account">
+      <button class="avatar" id="accountBtn" aria-haspopup="menu" aria-expanded="false"></button>
+      <div class="menu hidden" id="accountMenu" role="menu">
+        <div class="menu-who"><b id="meName"></b><span id="meEmail"></span><span class="meta" id="meCount"></span><div class="me-models" id="meModels"></div></div>
+        <button class="menu-row" id="mineBtn" role="menuitem">My ratings</button>
+        <label class="menu-row"><input type="checkbox" id="hideModel"> Hide model names (blind rating)</label>
+        <button class="menu-row" id="switchBtn" role="menuitem">Switch account</button>
+        <button class="menu-row" id="signoutBtn" role="menuitem">Sign out</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="pstrip" id="pstrip" aria-live="polite">
+    <div class="prow">
+      <div class="ptext" id="ptext"></div>
+      <label class="filter"><span id="filterLabel">Language</span><select id="filterSel"></select></label>
+    </div>
+    <div class="pbar" aria-hidden="true"><div id="pfill"></div></div>
+  </div>
+
+  <div class="review hidden" id="reviewBar">
+    <span>You are changing your earlier scores for this question. Your new score replaces the old one.</span>
+    <button class="btn small" id="reviewDone">Back to new questions</button>
+  </div>
+
+  <div id="status" class="status">Loading</div>
+
+  <div id="work" class="work hidden">
+    <!-- the case: question, reference, file -->
+    <section class="case" aria-label="Question">
+      <div class="case-inner">
+        <div class="model-tag hidden" id="qmodel"></div>
+        <div class="meta-row" id="qmeta"></div>
+        <div id="historyBox" class="block hidden">
+          <h3>Earlier conversation</h3>
+          <div class="plain muted-text" id="history"></div>
+        </div>
+        <div class="block">
+          <h3>Question <button class="spk" data-say="question" aria-label="Read the question aloud"></button></h3>
+          <div class="plain question" id="question"></div>
+          <div id="qtrBox" class="tr hidden">
+            <div class="tr-head"><span id="qtrLabel"></span><button class="spk" data-say="qtr" aria-label="Read the translation aloud"></button></div>
+            <div class="plain" id="qtr"></div>
+          </div>
+        </div>
+        <div class="block">
+          <h3>Reference answer <button class="spk" data-say="reference" aria-label="Read the reference aloud"></button></h3>
+          <div class="prose" id="reference"></div>
+          <div id="rtrBox" class="tr hidden">
+            <div class="tr-head"><span id="rtrLabel"></span><button class="spk" data-say="rtr" aria-label="Read the translation aloud"></button></div>
+            <div class="plain" id="rtr"></div>
+          </div>
+          <p class="fine">Translations are machine-made, only to help you understand. Score against the original.</p>
+        </div>
+        <div id="fileBox" class="block hidden">
+          <h3>Attached file <span class="meta" id="fileName"></span></h3>
+          <div class="doc-pages" id="filePages"></div>
+          <div class="file-links"><a id="fileOpen" target="_blank" rel="noopener"><svg class="i" viewBox="0 0 24 24"><use href="#i-external"/></svg>Open the original file</a></div>
+          <h4>Its content as text</h4>
+          <div class="plain file-text" id="fileTruth"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- the answer and the rating -->
+    <section class="judge" aria-label="Answer and rating">
+      <div class="nav-row">
+        <div class="grid9" id="grid9" aria-label="The 9 answers: effort by technicality"></div>
+        <div class="nav-side">
+          <div class="now" id="now"></div>
+          <button class="btn ghost small" id="skipBtn" title="Give this whole question to someone else">Skip question</button>
+        </div>
+      </div>
+
+      <article class="paper">
+        <div class="paper-head">
+          <div class="meta-row" id="ameta"></div>
+          <button class="spk" data-say="answer" aria-label="Read the answer aloud"></button>
+        </div>
+        <div class="prose answer" id="answer"></div>
+      </article>
+
+      <details class="excerpts" id="exBox">
+        <summary><svg class="i chev" viewBox="0 0 24 24"><use href="#i-chevron"/></svg><span id="exSum"></span></summary>
+        <div id="excerpts"></div>
+      </details>
+
+      <form class="rate" id="rateForm" autocomplete="off">
+        <p class="locked-note hidden" id="lockedNote">Another rater already scored this answer, so it is not scored again. Go on to the next answer.</p>
+        <fieldset>
+          <legend>Correctness <span class="hint">Same legal result as the reference?</span></legend>
+          <div id="corr"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Faithfulness <span class="hint">Backed by the source excerpts?</span></legend>
+          <div id="faithWrap"></div>
+        </fieldset>
+        <fieldset>
+          <legend>Technicality fit <span class="hint" id="techHint"></span></legend>
+          <div id="techWrap"></div>
+        </fieldset>
+        <div class="checks">
+          <label class="check"><input type="checkbox" id="langOk" checked> Language OK <span class="hint">same language as the question</span></label>
+          <label class="check"><input type="checkbox" id="refused"> Refused to answer <span class="hint">it declined or gave no answer</span></label>
+        </div>
+        <textarea id="note" rows="2" placeholder="Note, optional: what is missing or wrong"></textarea>
+        <p class="err" id="err" role="alert"></p>
+        <div class="actions">
+          <button type="button" class="btn" id="back"><svg class="i" viewBox="0 0 24 24"><use href="#i-left"/></svg>Back</button>
+          <button type="submit" class="btn primary" id="save">Save and next <kbd>Enter</kbd></button>
+        </div>
+      </form>
+    </section>
+  </div>
+</div>
+
+<dialog id="guide" aria-labelledby="guideTitle">
+  <div class="dlg-head">
+    <b id="guideTitle">How to score</b>
+    <div class="tabs" role="tablist"><button data-lang="en" aria-selected="true">English</button><button data-lang="bn" aria-selected="false">বাংলা</button></div>
+  </div>
+  <div class="dlg-body" id="guideEn">
+    <h4>What you do</h4>
+    <ul>
+      <li>Choose <b>Law Answers</b> or <b>File Answers</b> at the top. File questions are about an uploaded document. Please help the section that is further behind.</li>
+      <li>Next to the progress line you can choose what you get. <b>Law Answers</b>: English (the default), Bangla, or Other (questions with typos, informal or Banglish wording, follow-ups, general and out-of-scope questions). <b>File Answers</b>: all file types, or only PDF, scanned PDF, photo or Word document. These are the same questions and answers the AI judge scored.</li>
+      <li><b>Model</b> (next to File Answers): rate answers of one model, or of all models. A model is greyed out until its answers are in. Every model answers the same questions, and each question of each model goes to one rater only.</li>
+      <li><b>My ratings</b> (account menu, top right) lists the questions you have scored. Open one to change a score; your new score replaces the old one.</li>
+      <li>You get one question and its <b>9 answers</b>: the same chatbot with 3 effort levels × 3 technicality levels.</li>
+      <li>Read the question and the reference answer once. Then rate each answer and press <b>Save and next</b>.</li>
+      <li>The speaker button reads text aloud. Stop any time; your question waits for you for 3 hours.</li>
+    </ul>
+    <h4>Correctness: the same legal result as the reference?</h4>
+    <table>
+      <tr><td><b>5 Perfect</b></td><td>all key points right, nothing wrong</td></tr>
+      <tr><td><b>4 Good</b></td><td>right, with a small gap or imprecision</td></tr>
+      <tr><td><b>3 Partly good</b></td><td>main point right, but a key detail missing or wrong</td></tr>
+      <tr><td><b>2 Mostly wrong</b></td><td>little of it is right</td></tr>
+      <tr><td><b>1 Wrong</b></td><td>wrong, or no real answer</td></tr>
+    </table>
+    <p class="fine">Extra correct detail is fine. For an out-of-scope question, a polite “I can't answer this” is 5.</p>
+    <h4>Faithfulness: backed by the source excerpts?</h4>
+    <p>The chatbot searches the law database and gets some <b>source excerpts</b> (sections of acts, court decisions, or the attached file). Open “Source excerpts” under the answer to see exactly what it was given. Faithfulness asks whether the answer's legal claims come from those excerpts rather than from outside knowledge.</p>
+    <p>5 = everything is in the excerpts. 1 = mostly not in them, or invented sections.</p>
+    <p class="fine">Why it is sometimes missing: when the chatbot was given no excerpts (for example a general question), there is nothing to check against, so it shows <b>n/a</b>. The automatic judge does the same.</p>
+    <h4>Technicality fit: the right style for the requested level?</h4>
+    <p>Each answer was written for one <b>technicality</b> level, shown above the answer:</p>
+    <ul>
+      <li><b>low</b>: the user asked for plain, everyday words, little jargon.</li>
+      <li><b>high</b>: the user asked for precise legal terms and section numbers.</li>
+      <li><b>auto</b>: no style was requested, so there is nothing to judge. The buttons are replaced by <b>n/a</b>. This is on purpose, not a fault: 3 of the 9 answers are auto.</li>
+    </ul>
+    <p>5 = fits the requested style well. 1 = doesn't fit at all. Judge only the style here, not whether the law is right.</p>
+    <h4>Language OK</h4>
+    <p>Leave it ticked when the answer is in the <b>same language as the question</b>: a Bangla question answered in Bangla, an English question in English. Untick it when the language is wrong, for example a Bangla question answered in English. A question in Bangla written in English letters (“amar jomi…”) may be answered in Bangla or English; both are OK. A few English legal terms inside a Bangla answer are fine.</p>
+    <h4>Refused to answer</h4>
+    <p>Tick it when the chatbot <b>did not answer</b>: it declined, or said it could not find the answer or that the question is outside the law it covers. Leave it unticked when it gave an answer, even a wrong or partial one. Still give a correctness score: for a question that is really outside its scope, a polite refusal is 5; for a normal law question, a refusal is usually 1.</p>
+    <h4>What the labels mean</h4>
+    <ul>
+      <li><b>expected</b> (above the question): how a good chatbot should handle it. <b>law</b> = answer from Bangladesh law. <b>general</b> = an everyday question, judge plain helpfulness and accuracy. <b>unsupported</b> = outside the law the chatbot covers, so it should politely decline (5 = it declines clearly; 1 = it answers as if certain).</li>
+      <li><b>effort</b> (low, mid, high): how long and detailed the chatbot was asked to be. Don't reward length itself; judge what it says.</li>
+      <li><b>The 3 × 3 grid</b>: the 9 answers, effort in rows and technicality in columns. Green squares are rated. Click any square to go back and change a rating.</li>
+      <li><b>Translation</b>: machine-made, only to help you understand. Always score against the original.</li>
+      <li><b>Attached file</b> (file questions): the document the user uploaded, as page images and as text. Open the original file if a page is hard to read.</li>
+    </ul>
+    <h4>Tips</h4>
+    <ul>
+      <li>Unsure between two scores? Choose the lower one and write a short note.</li>
+      <li>Don't discuss your scores with others. The model name is shown above each answer; judge the answer, not the model. To rate blind, use the account menu → Hide model names.</li>
+      <li>Can't judge this area of law? Press <b>Skip question</b>.</li>
+      <li>Keyboard: <kbd>1</kbd>–<kbd>5</kbd> set correctness, <kbd>Enter</kbd> saves.</li>
+    </ul>
+  </div>
+  <div class="dlg-body hidden" id="guideBn" lang="bn">
+    <h4>আপনার কাজ</h4>
+    <ul>
+      <li>উপরে <b>Law Answers</b> বা <b>File Answers</b> বেছে নিন। File প্রশ্ন হলো আপলোড করা ডকুমেন্ট নিয়ে প্রশ্ন। যেটি পিছিয়ে আছে সেটিতে সাহায্য করুন।</li>
+      <li>অগ্রগতির লাইনের পাশে বেছে নিতে পারেন কী পাবেন। <b>Law Answers</b>: English (ডিফল্ট), Bangla, অথবা Other (বানান ভুল, অনানুষ্ঠানিক বা Banglish প্রশ্ন, follow-up, সাধারণ ও আওতার বাইরের প্রশ্ন)। <b>File Answers</b>: সব ধরনের ফাইল, অথবা শুধু PDF, স্ক্যান করা PDF, ছবি বা Word ডকুমেন্ট। এগুলো AI judge-এর মূল্যায়ন করা একই প্রশ্ন ও উত্তর।</li>
+      <li><b>Model</b> (File Answers-এর পাশে): একটি মডেলের উত্তর, অথবা সব মডেলের উত্তর বেছে নিন। কোনো মডেলের উত্তর যোগ না হওয়া পর্যন্ত সেটি ধূসর থাকে। সব মডেল একই প্রশ্নের উত্তর দিয়েছে, এবং প্রতিটি মডেলের প্রতিটি প্রশ্ন শুধু একজন রেটার পান।</li>
+      <li><b>My ratings</b> (উপরে ডানে অ্যাকাউন্ট মেনু) আপনার স্কোর দেওয়া প্রশ্নগুলোর তালিকা দেখায়। খুলে যেকোনো স্কোর বদলাতে পারেন; নতুন স্কোর পুরনোটির জায়গা নেয়।</li>
+      <li>আপনি একটি প্রশ্ন ও তার <b>৯টি উত্তর</b> পাবেন: একই চ্যাটবট, ৩টি effort × ৩টি technicality সেটিং।</li>
+      <li>প্রশ্ন ও রেফারেন্স উত্তর একবার পড়ুন। তারপর প্রতিটি উত্তরের স্কোর দিয়ে <b>Save and next</b> চাপুন।</li>
+      <li>স্পিকার বোতাম চাপলে লেখাটি পড়ে শোনানো হবে। যেকোনো সময় থামতে পারেন; আপনার প্রশ্নটি ৩ ঘণ্টা আপনার জন্য রাখা থাকবে।</li>
+    </ul>
+    <h4>Correctness: রেফারেন্সের মতো একই আইনি ফল দিয়েছে কি?</h4>
+    <table>
+      <tr><td><b>5 Perfect</b></td><td>সব মূল বিষয় সঠিক, কিছুই ভুল নয়</td></tr>
+      <tr><td><b>4 Good</b></td><td>সঠিক, সামান্য ঘাটতি বা অস্পষ্টতা</td></tr>
+      <tr><td><b>3 Partly good</b></td><td>মূল কথা সঠিক, কিন্তু একটি গুরুত্বপূর্ণ তথ্য নেই বা ভুল</td></tr>
+      <tr><td><b>2 Mostly wrong</b></td><td>খুব সামান্যই সঠিক</td></tr>
+      <tr><td><b>1 Wrong</b></td><td>ভুল, অথবা আসলে কোনো উত্তর নেই</td></tr>
+    </table>
+    <p class="fine">বাড়তি সঠিক তথ্য থাকলে সমস্যা নেই। আওতার বাইরের প্রশ্নে ভদ্রভাবে “উত্তর দিতে পারছি না” বললে 5।</p>
+    <h4>Faithfulness: উত্তরটি কি সোর্স অংশ (excerpts) দিয়ে সমর্থিত?</h4>
+    <p>চ্যাটবট আইনের ডাটাবেস খুঁজে কিছু <b>সোর্স অংশ (excerpts)</b> পায়: আইনের ধারা, আদালতের রায়, বা সংযুক্ত ফাইল। উত্তরের নিচে “Source excerpts” খুললে ঠিক কী দেওয়া হয়েছিল তা দেখা যাবে। Faithfulness মানে উত্তরের আইনি দাবিগুলো এই excerpts থেকে এসেছে কি না, বাইরের জ্ঞান থেকে নয়।</p>
+    <p>5 = সবকিছু excerpts-এ আছে। 1 = বেশিরভাগ সেখানে নেই, বা ধারা কাল্পনিক।</p>
+    <p class="fine">কেন কখনো থাকে না: চ্যাটবটকে কোনো excerpts দেওয়া না হলে (যেমন সাধারণ প্রশ্নে) মেলানোর কিছু নেই, তাই <b>n/a</b> দেখায়। স্বয়ংক্রিয় judge-ও একই নিয়ম মানে।</p>
+    <h4>Technicality fit: চাওয়া স্তরের সাথে লেখার ধরন মিলেছে কি?</h4>
+    <p>প্রতিটি উত্তর একটি <b>technicality</b> স্তরের জন্য লেখা, যা উত্তরের উপরে দেখানো থাকে:</p>
+    <ul>
+      <li><b>low</b>: ব্যবহারকারী সহজ, সাধারণ ভাষা চেয়েছেন।</li>
+      <li><b>high</b>: ব্যবহারকারী নির্ভুল আইনি পরিভাষা ও ধারা নম্বর চেয়েছেন।</li>
+      <li><b>auto</b>: কোনো ধরন চাওয়া হয়নি, তাই বিচার করার কিছু নেই। বোতামের বদলে <b>n/a</b> দেখায়। এটি ইচ্ছাকৃত, কোনো ত্রুটি নয়: ৯টির মধ্যে ৩টি উত্তর auto।</li>
+    </ul>
+    <p>5 = চাওয়া ধরনের সাথে ভালো মিলেছে। 1 = একেবারেই মেলেনি। এখানে শুধু লেখার ধরন বিচার করুন, আইন সঠিক কি না নয়।</p>
+    <h4>Language OK</h4>
+    <p>উত্তরটি <b>প্রশ্নের ভাষাতেই</b> হলে টিক রাখুন: বাংলা প্রশ্নের উত্তর বাংলায়, ইংরেজি প্রশ্নের উত্তর ইংরেজিতে। ভাষা ভুল হলে টিক তুলে দিন, যেমন বাংলা প্রশ্নের উত্তর ইংরেজিতে। ইংরেজি অক্ষরে লেখা বাংলা প্রশ্নের (“amar jomi…”) উত্তর বাংলা বা ইংরেজি দুটোই চলবে। বাংলা উত্তরে কিছু ইংরেজি আইনি শব্দ থাকলে সমস্যা নেই।</p>
+    <h4>Refused to answer</h4>
+    <p>চ্যাটবট <b>উত্তর না দিলে</b> টিক দিন: অস্বীকার করেছে, বা বলেছে উত্তর পায়নি, বা প্রশ্নটি তার আইনের আওতার বাইরে। ভুল বা আংশিক হলেও উত্তর দিলে টিক দেবেন না। তবুও correctness স্কোর দিন: সত্যিই আওতার বাইরের প্রশ্নে ভদ্র অস্বীকার = 5; সাধারণ আইনি প্রশ্নে অস্বীকার সাধারণত 1।</p>
+    <h4>লেবেলগুলোর অর্থ</h4>
+    <ul>
+      <li><b>expected</b> (প্রশ্নের উপরে): ভালো চ্যাটবট প্রশ্নটি কীভাবে সামলাবে। <b>law</b> = বাংলাদেশের আইন থেকে উত্তর। <b>general</b> = সাধারণ প্রশ্ন, সহায়কতা ও নির্ভুলতা বিচার করুন। <b>unsupported</b> = চ্যাটবটের আইনের আওতার বাইরে, তাই ভদ্রভাবে অস্বীকার করা উচিত (5 = স্পষ্টভাবে অস্বীকার; 1 = নিশ্চিতভাবে উত্তর দিয়েছে)।</li>
+      <li><b>effort</b> (low, mid, high): চ্যাটবটকে কতটা বিস্তারিত লিখতে বলা হয়েছিল। শুধু দৈর্ঘ্যের জন্য বেশি নম্বর দেবেন না; কী বলেছে তা বিচার করুন।</li>
+      <li><b>৩ × ৩ গ্রিড</b>: ৯টি উত্তর, সারিতে effort ও কলামে technicality। সবুজ ঘর মানে স্কোর দেওয়া হয়েছে। যেকোনো ঘরে চাপ দিয়ে আগের স্কোর বদলাতে পারেন।</li>
+      <li><b>অনুবাদ</b>: যন্ত্রে করা, শুধু বুঝতে সাহায্যের জন্য। সবসময় মূল লেখার উপর স্কোর দিন।</li>
+      <li><b>Attached file</b> (ফাইল প্রশ্নে): ব্যবহারকারী যে ডকুমেন্ট আপলোড করেছেন, পাতার ছবি ও লেখা হিসেবে। কোনো পাতা পড়তে কষ্ট হলে মূল ফাইল খুলুন।</li>
+    </ul>
+    <h4>পরামর্শ</h4>
+    <ul>
+      <li>দুটি স্কোরের মধ্যে দ্বিধা হলে কমটি দিন এবং একটি ছোট নোট লিখুন।</li>
+      <li>নিজের স্কোর নিয়ে অন্যদের সাথে আলোচনা করবেন না। প্রতিটি উত্তরের উপরে মডেলের নাম দেখানো থাকে; মডেল নয়, উত্তরটি বিচার করুন। নাম না দেখে স্কোর দিতে চাইলে অ্যাকাউন্ট মেনু → Hide model names।</li>
+      <li>এই আইনের বিষয়ে বিচার করতে না পারলে <b>Skip question</b> চাপুন।</li>
+      <li>কিবোর্ড: <kbd>1</kbd>–<kbd>5</kbd> correctness দেয়, <kbd>Enter</kbd> সেভ করে।</li>
+    </ul>
+  </div>
+  <div class="dlg-foot"><button class="btn primary" id="guideOk">Got it</button></div>
+</dialog>
+
+<dialog id="mineDlg" aria-labelledby="mineTitle">
+  <div class="dlg-head"><b id="mineTitle">My ratings</b><button class="btn ghost small" id="mineClose">Close</button></div>
+  <div class="dlg-body">
+    <p class="fine" style="margin-top:12px">Questions you have scored, newest first. Open one to see your scores and change any of them.</p>
+    <div id="mineList" class="mine-list"></div>
+  </div>
+</dialog>
+
+<div id="toast" class="toast hidden" role="status"></div>
+
+<!-- lucide icons (ISC), 1.5 stroke -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-scale" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></symbol>
+  <symbol id="i-file" viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M16 13H8"/><path d="M16 17H8"/><path d="M10 9H8"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></symbol>
+  <symbol id="i-volume" viewBox="0 0 24 24"><path d="M11 4.7a.7.7 0 0 0-1.2-.5L6.4 7.6A1.4 1.4 0 0 1 5.4 8H3a1 1 0 0 0-1 1v6a1 1 0 0 0 1 1h2.4a1.4 1.4 0 0 1 1 .4l3.4 3.4a.7.7 0 0 0 1.2-.5z"/><path d="M16 9a5 5 0 0 1 0 6"/><path d="M19.4 18.4a9 9 0 0 0 0-12.8"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-external" viewBox="0 0 24 24"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
+  <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-google" viewBox="0 0 24 24"><path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z" fill="#4285F4" stroke="none"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z" fill="#34A853" stroke="none"/><path d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14Z" fill="#FBBC05" stroke="none"/><path d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10c.8-2.4 3-4.1 5.6-4.1Z" fill="#EA4335" stroke="none"/></symbol>
+</svg>
+
+<script src="vendor/firebase-app-compat-10.12.2.js"></script>
+<script src="vendor/firebase-auth-compat-10.12.2.js"></script>
+<script src="vendor/marked-12.0.2.min.js"></script>
+<script src="vendor/purify-3.1.6.min.js"></script>
+<script src="config.js?v=1"></script>
+<script src="app.js?v=13"></script>
+</body>
+</html>

@@ -1,4 +1,4 @@
-# Privacy plan: multi-layer filtering in Ainkhoj (draft, 23 Nov 2026)
+# Privacy plan: multi-layer filtering in AinSutro, formerly Ainkhoj (draft, 23 Nov 2026)
 
 **Thesis title:** *Privacy Driven AI Protection: Safeguarding Sensitive Information in Retrieval-Augmented Generation System Using Multi-Layer Filtering.*
 **Objective:** design and experimentally evaluate a multi-layer privacy filter that minimises leakage of sensitive information from a RAG system while keeping answer quality.
@@ -8,7 +8,7 @@ Status: **plan only.** No code, prompt or test set changes until both models' B0
 
 ---
 
-## 1. Why this fits Ainkhoj
+## 1. Why this fits AinSutro
 - **Real data has the same problem.** Court judgments (`cases`, 14,855 chunks) name accused persons, victims and witnesses, with their father's or husband's name and village. Bangladeshi law itself restricts publishing victims' identities: Nari o Shishu Nirjatan Daman Ain 2000 s.14, and Children Act 2013 s.81 for children (**verify exact sections before citing**).
 - **Users upload files** (FIRs, deeds, notices) that contain NID numbers, phone numbers and addresses of other people. These go into the prompt through `/rank`.
 - **Bangla and English, Bangla digits, Bangla address formats** (`পিতা-`, `সাং-`, `থানা-`, `জেলা-`). Most published RAG-privacy work is English-only, so this is a contribution in itself.

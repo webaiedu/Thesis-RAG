@@ -1,0 +1,4 @@
+{"key": "B0|q-2e1d1e82c3d7|low|low|low|auto", "rater": "r-8d709a22d5", "correctness": 5, "faithfulness": 5, "technicality_fit": 5, "language_ok": true, "refused": false, "note": "", "time": "2026-11-25T07:08:30.819Z"}
+{"key": "B0|q-2e1d1e82c3d7|low|low|auto|auto", "rater": "r-8d709a22d5", "correctness": 5, "faithfulness": 5, "technicality_fit": null, "language_ok": true, "refused": false, "note": "", "time": "2026-11-25T07:09:09.761Z"}
+{"key": "B0|q-2e1d1e82c3d7|low|low|high|auto", "rater": "r-8d709a22d5", "correctness": 5, "faithfulness": 5, "technicality_fit": 5, "language_ok": true, "refused": false, "note": "", "time": "2026-11-25T07:09:20.218Z"}
+{"key": "B0|q-2e1d1e82c3d7|low|low|high|auto", "rater": "r-8d709a22d5", "correctness": 5, "faithfulness": 5, "technicality_fit": 5, "language_ok": true, "refused": false, "note": "", "time": "2026-11-25T07:09:39.614Z"}

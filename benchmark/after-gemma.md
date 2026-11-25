@@ -15,8 +15,8 @@ Run it over several daily sessions (09:15–16:30, nothing overnight). See the s
 
 ## 0. Before you start
 - [ ] Both "before" days are finished and committed.
-- [ ] The fine-tuned search model exists: `models/bge-m3-ainkhoj/`, indexed into `retrieval/chroma_db_ft/`.
-- [ ] The fine-tuned Gemma exists as GGUF, **Q4_K_M** (same as the baseline), with the same `mmproj` vision file, and is imported into LM Studio as `ainkhoj-gemma-4-e4b` (for example).
+- [ ] The fine-tuned search model exists: `models/bge-m3-ainsutro/`, indexed into `retrieval/chroma_db_ft/`.
+- [ ] The fine-tuned Gemma exists as GGUF, **Q4_K_M** (same as the baseline), with the same `mmproj` vision file, and is imported into LM Studio as `ainsutro-gemma-4-e4b` (for example).
 - [ ] The code is `baseline-v1` plus only the eval/training scripts. **No changes to prompts, `answer.config.ts`, the router or the retrieval code.** `git diff baseline-v1 -- backend/src retrieval/*.py` must be empty, except for the eval script.
 - [ ] Same test set hash and same judge config as Day 1.
 
@@ -24,13 +24,13 @@ Run it over several daily sessions (09:15–16:30, nothing overnight). See the s
 ```bash
 # LM Studio: load
 #   - original google/gemma-4-e4b   (router + vision; stays the original in every variant)
-#   - ainkhoj-gemma-4-e4b           (fine-tuned answer model, context 131072, Parallel 4)
+#   - ainsutro-gemma-4-e4b           (fine-tuned answer model, context 131072, Parallel 4)
 # Both: Flash Attention ON, GPU offload MAX.
 
 # Two retrieval servers side by side:
 cd retrieval && source .venv/bin/activate
 python -m uvicorn server:app --port 8000                       # original bge-m3 (for E2)
-EMBED_MODEL=../models/bge-m3-ainkhoj CHROMA_DIR=./chroma_db_ft \
+EMBED_MODEL=../models/bge-m3-ainsutro CHROMA_DIR=./chroma_db_ft \
   python -m uvicorn server:app --port 8001                     # fine-tuned (for E3, E1)
 ```
 Chroma allows only one process per folder. That's fine here: the two servers use different folders.
@@ -54,14 +54,14 @@ COMMON="--models low --efforts low,mid,high --tech low,auto,high --mode auto --t
 SMALL="--models low --efforts low,mid,high --tech auto --mode auto --test ../eval/data/test.jsonl --workers 4"   # E1/E2: 3 settings
 
 # 1) E3: fine-tuned search + fine-tuned Gemma (main result)
-EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b \
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=ainsutro-gemma-4-e4b \
   npm run eval -- --variant E3 $COMMON --out ../eval/runs/E3/gemma
 # 1b) E3 with attached files (file test set, same 9 settings)
-EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b \
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_LOW=ainsutro-gemma-4-e4b \
   npm run eval -- --variant E3 ${COMMON/test.jsonl/test_files.jsonl} --out ../eval/runs/E3/gemma-files
 
 # 2) E2: original search + fine-tuned Gemma
-EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b \
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 LMSTUDIO_MODEL_LOW=ainsutro-gemma-4-e4b \
   npm run eval -- --variant E2 $SMALL --out ../eval/runs/E2/gemma
 
 # 3) E1: fine-tuned search + original Gemma
@@ -83,7 +83,7 @@ python score.py compare runs/B0/gemma-files runs/E3/gemma-files
 ## 5. Optional: N1, no RAG with the fine-tuned Gemma
 ```bash
 cd backend
-EVAL_TEMPERATURE=0 LMSTUDIO_MODEL_LOW=ainkhoj-gemma-4-e4b npm run eval -- --variant N1 \
+EVAL_TEMPERATURE=0 LMSTUDIO_MODEL_LOW=ainsutro-gemma-4-e4b npm run eval -- --variant N1 \
   --models low --efforts low,mid,high --tech low,auto,high --mode general \
   --test ../eval/data/test.jsonl --out ../eval/runs/N1/gemma --workers 4
 cd ../eval && python score.py judge runs/N1/gemma && python score.py report runs/N1/gemma
@@ -92,7 +92,7 @@ python score.py compare runs/N0/gemma runs/N1/gemma
 This answers "does fine-tuning alone replace RAG?" Compare the hallucination rate with E3.
 
 ## 6. Sanity checks
-- [ ] General/identity questions in the test set still behave correctly (no "I am Ainkhoj…" where it shouldn't be, no broken refusals).
+- [ ] General/identity questions in the test set still behave correctly (no "I am Ainkhoj…" where it shouldn't be; the prompt still uses the name Ainkhoj during the benchmark, no broken refusals).
 - [ ] Bangla questions are still answered in Bangla.
 - [ ] Error analysis: take 30 failures from E3 and label each one router / retrieval / generation in `runs/E3/gemma/errors-labelled.csv`.
 - [ ] Commit `eval/runs/E1 E2 E3 (N1)/gemma` and `compare-gemma.md`.
@@ -100,7 +100,7 @@ This answers "does fine-tuning alone replace RAG?" Compare the hallucination rat
 ## Run log
 | Date | Git sha | Test set sha256 (first 12) | Variant | Model ids | Answers | Errors | Wall time | Notes |
 |---|---|---|---|---|---|---|---|---|
-| | | | retrieval (E1) | bge-m3-ainkhoj | – | | | |
+| | | | retrieval (E1) | bge-m3-ainsutro | – | | | |
 | | | | E3 | | /3600 | | | |
 | | | | E2 | | /3600 | | | |
 | | | | E1 | | /3600 | | | |

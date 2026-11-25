@@ -1,4 +1,7 @@
-// The assistant's name. Change it here (and in frontend/lib/brand.ts) to rename the bot.
+// The assistant's name inside the system prompt. The project and the on-screen name are AinSutro since 25 Nov 2026
+// (frontend/lib/brand.ts), but this stays 'Ainkhoj' until the thesis benchmark (before AND after fine-tuning) is
+// finished: every benchmark answer was made with this exact prompt, so changing it would break the comparison.
+// After the benchmark, set it to 'AinSutro'.
 export const BOT_NAME = 'Ainkhoj';
 
 /** Added to every system prompt so the model knows who it is. */

@@ -179,7 +179,9 @@ export class LlmService {
           ...(stream ? { stream: true, stream_options: { include_usage: true } } : {}),
           messages: [{ role: 'system', content: system }, ...history],
         }),
-        signal: signalFor(opts, stream ? 300_000 : 180_000), // local models can be slow
+        // local models can be slow: at least 5 min, more for long length limits (a 6,000-token answer with 4 in
+        // parallel can need >5 min; 25 Nov an 80B high-effort answer was stopped by the clock, not by the model)
+        signal: signalFor(opts, Math.max(stream ? 300_000 : 180_000, (opts.maxTokens ?? 0) * 120)),
       });
     } catch (err) {
       if (opts.signal?.aborted) throw err;

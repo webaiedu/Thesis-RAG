@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this is
 
-Ainkhoj: a RAG chatbot for Bangladesh law (mostly Bangla data, English too). Three services run separately and talk over HTTP:
+AinSutro (named Ainkhoj until 25 Nov 2026): a RAG chatbot for Bangladesh law (mostly Bangla data, English too). Three services run separately and talk over HTTP:
 
 | Dir | Stack | Port | Role |
 |---|---|---|---|
@@ -144,4 +144,4 @@ Every backend route uses `FirebaseAuthGuard`, which verifies `Authorization: Bea
 - **Saved preferences:** the mode and answer settings are kept in `localStorage`.
 
 ### Bot name
-The name `Ainkhoj` is set in two places: `backend/src/bot.config.ts` (`BOT_NAME` and `identityLine()`, which is added to every system prompt) and `frontend/lib/brand.ts`. To rename the bot, change both.
+The project and the chatbot are called **AinSutro** (renamed from Ainkhoj on 25 Nov 2026); the team's human-scoring page is the **AinSutro Scoring Page** (`eval/human_app/`). The on-screen name is `frontend/lib/brand.ts` (`AinSutro`). The name inside the system prompt, `backend/src/bot.config.ts` (`BOT_NAME` and `identityLine()`, added to every system prompt), **stays `Ainkhoj` until the thesis benchmark (before and after fine-tuning) is finished**, so every model gets the identical prompt; the question-generation prompts in `eval/make_questions.py` stay unchanged for the same reason. Don't change either before then; after the benchmark, set `BOT_NAME` in `bot.config.ts` to `AinSutro`.

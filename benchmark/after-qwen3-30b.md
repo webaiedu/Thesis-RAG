@@ -15,21 +15,21 @@ Run it over several daily sessions (09:15–16:30, nothing overnight). See the s
 
 ## 0. Before you start
 - [ ] Day 3 ([after-gemma.md](after-gemma.md)) is finished. The fine-tuned search model is already checked.
-- [ ] The fine-tuned Qwen3 30B exists as GGUF, **Q4_K_M** (same as the baseline), and is imported into LM Studio as `ainkhoj-qwen3-30b` (for example).
+- [ ] The fine-tuned Qwen3 30B exists as GGUF, **Q4_K_M** (same as the baseline), and is imported into LM Studio as `ainsutro-qwen3-30b` (for example).
 - [ ] Code unchanged since `baseline-v1` (except the eval scripts), same test set hash and same judge config.
 
 ## 1. Start the services
 ```bash
 # LM Studio: load
 #   - original google/gemma-4-e4b   (router + vision, context 131072)
-#   - ainkhoj-qwen3-30b             (fine-tuned, context 131072, Parallel 4)
+#   - ainsutro-qwen3-30b             (fine-tuned, context 131072, Parallel 4)
 #   - qwen/qwen3-30b-a3b-2507       (original, only for E1; load it after E3/E2 are done
 #                                    and unload the fine-tuned one, to save memory)
 # All: Flash Attention ON, GPU offload MAX.
 
 cd retrieval && source .venv/bin/activate
 python -m uvicorn server:app --port 8000                       # original bge-m3 (E2)
-EMBED_MODEL=../models/bge-m3-ainkhoj CHROMA_DIR=./chroma_db_ft \
+EMBED_MODEL=../models/bge-m3-ainsutro CHROMA_DIR=./chroma_db_ft \
   python -m uvicorn server:app --port 8001                     # fine-tuned (E3, E1)
 ```
 The router stays the original Gemma, as on Day 3.
@@ -41,14 +41,14 @@ COMMON="--models mid --efforts low,mid,high --tech low,auto,high --mode auto --t
 SMALL="--models mid --efforts low,mid,high --tech auto --mode auto --test ../eval/data/test.jsonl --workers 4"   # E1/E2: 3 settings
 
 # 1) E3: fine-tuned search + fine-tuned Qwen3 30B (main result)
-EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b \
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=ainsutro-qwen3-30b \
   npm run eval -- --variant E3 $COMMON --out ../eval/runs/E3/qwen3-30b
 # 1b) E3 with attached files (file test set, same 9 settings)
-EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b \
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8001 LMSTUDIO_MODEL_MID=ainsutro-qwen3-30b \
   npm run eval -- --variant E3 ${COMMON/test.jsonl/test_files.jsonl} --out ../eval/runs/E3/qwen3-30b-files
 
 # 2) E2: original search + fine-tuned Qwen3 30B
-EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b \
+EVAL_TEMPERATURE=0 RETRIEVAL_URL=http://localhost:8000 LMSTUDIO_MODEL_MID=ainsutro-qwen3-30b \
   npm run eval -- --variant E2 $SMALL --out ../eval/runs/E2/qwen3-30b
 
 # 3) E1: fine-tuned search + original Qwen3 30B (swap the loaded model first, see above)
@@ -73,7 +73,7 @@ python score.py compare runs/B0/qwen3-30b-files runs/E3/qwen3-30b-files
 ## 4. Optional: N1, no RAG with the fine-tuned Qwen3 30B
 ```bash
 cd backend
-EVAL_TEMPERATURE=0 LMSTUDIO_MODEL_MID=ainkhoj-qwen3-30b npm run eval -- --variant N1 \
+EVAL_TEMPERATURE=0 LMSTUDIO_MODEL_MID=ainsutro-qwen3-30b npm run eval -- --variant N1 \
   --models mid --efforts low,mid,high --tech low,auto,high --mode general \
   --test ../eval/data/test.jsonl --out ../eval/runs/N1/qwen3-30b --workers 4
 cd ../eval && python score.py judge runs/N1/qwen3-30b && python score.py report runs/N1/qwen3-30b

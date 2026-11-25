@@ -1,56 +1,22 @@
 /**
- * AinSutro: the answer-scoring page (eval/HUMAN_GUIDE.md).
- * Deployed as a web app that runs AS THE VISITOR ("Execute as: user accessing", anyone with a Google account),
- * so Google tells us who is signed in: their email (rater id) and account name (shown on the page).
- * The visitor gets no access to the Sheet: every data call goes to the store project (eval/human_app/store),
- * which runs as the Sheet owner and checks the shared secret. API_URL and API_SECRET are in Secret.gs
- * (not committed). Scopes: see the visitor's email and name, and call the store (appsscript.json).
+ * The OLD AinSutro link (Apps Script web app). Since 25 Nov AinSutro runs on Firebase Hosting
+ * (eval/human_app/site), because this page ran as the visitor: Google showed every rater an
+ * "unverified app" warning, and browsers signed into several Google accounts got a Drive error.
+ * This project now only forwards people to the new page. It runs as the owner, needs no sign-in and
+ * no permissions, so the old link shows no warning. UI_URL is in Secret.gs (not committed).
  */
-
 function doGet() {
-  return HtmlService.createHtmlOutputFromFile('Index')
-    .setTitle('AinSutro')
+  const url = String(UI_URL);
+  const html = '<!doctype html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1"><title>AinSutro Scoring Page has moved</title></head>' +
+    '<body style="margin:0;background:#f6f6f4;color:#1a1a19;font:15px/1.6 system-ui,-apple-system,Segoe UI,Roboto,sans-serif">' +
+    '<div style="max-width:440px;margin:15vh auto;padding:32px;background:#fff;border:1px solid rgba(26,26,25,.09);border-radius:16px">' +
+    '<div style="font-weight:600;font-size:17px">AinSutro Scoring Page</div>' +
+    '<h1 style="font-size:22px;font-weight:500;margin:20px 0 8px">The AinSutro Scoring Page has a new address</h1>' +
+    '<p style="color:#4d4d4a;margin:0 0 20px">Sign in with Google there. Please save the new link.</p>' +
+    '<a href="' + url + '" target="_top" style="display:block;text-align:center;padding:12px 16px;background:#0f5b45;' +
+    'color:#fff;border-radius:8px;text-decoration:none;font-weight:500">Open the AinSutro Scoring Page</a>' +
+    '<p style="color:#6e6e6a;font-size:13px;margin:16px 0 0;word-break:break-all">' + url + '</p></div></body></html>';
+  return HtmlService.createHtmlOutput(html).setTitle('AinSutro Scoring Page has moved')
     .addMetaTag('viewport', 'width=device-width, initial-scale=1');
 }
-
-/** The signed-in Google account: email from Apps Script, name from Google's userinfo (cached 6 h). */
-function me() {
-  const email = Session.getActiveUser().getEmail();
-  if (!email) throw new Error('Please sign in with a Google account.');
-  const cache = CacheService.getUserCache();
-  let name = cache.get('name');
-  if (!name) {
-    try {
-      const r = UrlFetchApp.fetch('https://www.googleapis.com/oauth2/v2/userinfo',
-        { headers: { Authorization: 'Bearer ' + ScriptApp.getOAuthToken() }, muteHttpExceptions: true });
-      name = (JSON.parse(r.getContentText()).name || '').trim();
-    } catch (e) {
-      name = '';
-    }
-    name = name || email.split('@')[0];
-    cache.put('name', name, 21600);
-  }
-  return { email: email, name: name };
-}
-
-function api(action, data) {
-  const res = UrlFetchApp.fetch(API_URL, {
-    method: 'post', contentType: 'application/json', muteHttpExceptions: true, followRedirects: true,
-    payload: JSON.stringify({ secret: API_SECRET, action: action, user: me(), data: data || {} }),
-  });
-  let j;
-  try {
-    j = JSON.parse(res.getContentText());
-  } catch (e) {
-    throw new Error('The scoring server did not answer (HTTP ' + res.getResponseCode() + '). Please try again.');
-  }
-  if (j.error) throw new Error(j.error);
-  return j.result;
-}
-
-// ---- called from Index.html with google.script.run
-function whoAmI() { return me(); }
-function getNext(section) { return api('next', { section: section }); }
-function submit(row, bundle, rating) { return api('submit', { row: row, bundle: bundle, rating: rating }); }
-function skip(row, bundle, section) { return api('skip', { row: row, bundle: bundle, section: section }); }
-function pageUrl() { return ScriptApp.getService().getUrl(); }

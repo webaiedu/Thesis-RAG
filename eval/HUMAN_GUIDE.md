@@ -6,32 +6,46 @@
 - **Ratings are stored** in the **Ratings** tab of the Google Sheet **"AinSutro human scoring"** (Drive folder **Gold Judge**).
 - Claude scores **the same answers** separately. The 80B judge has already scored everything. `python3 human.py analyze` compares humans, Claude and the 80B judge.
 
-Everything is free: Google Sheets, Apps Script and Google sign-in on normal Google accounts, Google's built-in translation in Apps Script, and the browser's own voices. No paid APIs.
+Everything is free: Firebase Hosting and Firebase Auth (free Spark plan), Google Sheets and Apps Script on normal Google accounts, Google's built-in translation in Apps Script, and the browser's own voices. No paid APIs.
 
 ## How it works
-- **Sign-in:** AinSutro asks visitors to choose a Google account once and then remembers them. Their Google name and email identify them; nobody types a name.
-- **Two sections:** **⚖️ Law questions** (3,285 answers per model) and **📄 File questions** (684 per model, questions about an uploaded document). Each shows its own progress. On a first visit the page opens the section the team is further behind in.
+- **Acknowledgement (required, since 25 Nov):** before signing in, every rater must tick: *"I confirm that I have knowledge of law, including the acts and ordinances of Bangladesh, the Constitution and other legal matters. I am a lawyer, judge, legal specialist, law student, or otherwise work or study in law. I understand that my ratings are used as the human gold standard for the AinSutro thesis."* Sign-in stays disabled until it is ticked; raters who were already signed in are asked the same before they can rate. The store refuses questions and ratings without it, and records each acknowledgement in the Sheet tab **Acks** (time, rater, version `ack-1`; export: store action `admin_acks`). Change `ACK_VERSION` (store) and `ACK_V` (page) together if the wording changes; everyone is then asked again.
+- **Sign-in:** AinSutro shows one "Sign in with Google" button (name and email only, so Google shows no warning) and the browser remembers the rater. Their Google name and email identify them; nobody types a name.
+- **Two sections:** **Law questions** (3,285 answers per model) and **File questions** (684 per model, questions about an uploaded document). Each shows its own progress. On a first visit the page opens the section the team is further behind in.
 - **One unit of work** is one question × one model, which means its **9 answers** (effort low/mid/high × technicality low/auto/high). You read the question and reference once, then rate the 9 answers.
-- **Nobody scores the same thing twice.** Each question×model goes to one person only. If they are idle for **3 hours**, it is released to someone else.
+- **Choosing what to rate (since 25 Nov):** the sections are called **Law Answers** and **File Answers**. Next to the progress line a rater picks a group. Law: **English** (default; normal law questions in English, 161), **Bangla** (158), **Other** (46 special questions: typos, informal or Banglish wording, follow-ups, general and out-of-scope, either language). Files: **all types** (default), PDF (15), scanned PDF (25), photo (25), Word document (11). Each question is in exactly one group. The choice only decides which questions a rater gets; the questions, answers and excerpts are exactly the ones the 80B judge and Claude score.
+- **Model choice (since 25 Nov):** next to File Answers a rater picks All models, Gemma 4 E4B, Qwen3 30B or Qwen3-Next 80B; a model is greyed out until its answers are imported. The progress line shows the chosen model's count for the section/group, the model's total and all models; the account menu shows the rater's count per model. Uniqueness is per question × model, as before.
+- **My ratings (account menu):** a rater sees the questions they scored (newest first), can reopen one with their scores filled in and change any score. The new score is added to the Sheet; `human.py` always uses each rater's **latest** score per answer. The first/second rater roles of overlap questions stay as they were.
+- **Nobody scores the same thing twice.** Each question×model goes to one person only, handed out under a server lock. Outside the planned overlap, every answer has exactly one rater (enforced by the store, since 25 Nov):
+  - A question nobody has started scoring is released after **3 hours** idle. A **started** question stays with its rater for **7 days**.
+  - **Skip** is possible only before the first answer of a question is scored.
+  - If a question passes to someone else (after 7 days), the answers the first rater scored stay theirs and are shown to the new rater as "scored by another rater" (locked); the new rater scores only the rest. The first rater can still change their own earlier scores (My ratings) but cannot add new ones to that question.
+  - Overlap questions (every 20th) go to exactly one second rater, only after the first has finished.
 - **Order:** every question has a fixed priority (balanced over law areas, Bangla/English and the special question types), so whatever we finish is a fair sample. A new model's answers to the early questions come first, so we get the same questions for every model.
 - **Overlap (~5%):** every 20th question is also given to a second person, who isn't told. This measures how much we agree with each other (κ).
-- **Help on the page:** 🔊 reads the question, translation, reference or answer aloud. A Bangla translation is shown for English questions, and an English one for Bangla questions (machine translation; score against the original). 📘 **Guide** opens a short guide in English and বাংলা.
+- **Help on the page:** the speaker button reads the question, translation, reference or answer aloud. A Bangla translation is shown for English questions, and an English one for Bangla questions (machine translation; score against the original). **Guide** opens a short guide in English and বাংলা.
 
 ## How it is built (owner)
-Two Google Apps Script projects, both in `eval/human_app/`, uploaded with Google's free `clasp` tool (`npx -y @google/clasp@2.4.2`, logged in as the Sheet owner):
+Since 25 Nov 2026 the page is a static site on **Firebase Hosting**; the data stays in the Google Sheet.
 
-| Folder | Project | Runs as | What it does |
-|---|---|---|---|
-| `web/` | standalone "AinSutro" | **the visitor** (anyone with a Google account) | The page. It reads the visitor's Google email and name, then calls the store. Visitors get no access to the Sheet. |
-| `store/` | bound to the Sheet | **the owner** (anyone, protected by a secret) | All data, the private API, the Sheet menu **AinSutro**. Its old link now shows "AinSutro has moved → Open AinSutro". |
+| Folder | What it is | What it does |
+|---|---|---|
+| `site/` | static page on Firebase Hosting, free project the AinSutro Firebase project (name on PC A only) (owner: the PC A Google account) | The page (`public/index.html`, `app.js`, `app.css`). Raters sign in with **Firebase Auth, Google provider** (basic profile only). It calls the store with the rater's Firebase ID token. Shows each answer in full (Markdown rendered, sanitised), the same 6,000-char excerpts as the judge, and attached files as real page images + the original file + the text. |
+| `store/` | Apps Script bound to the Sheet, runs as **the owner**, open to anyone | All data and the API. Rater actions need a valid Firebase ID token, which it checks with Google (`verifyUser`, Identity Toolkit `accounts:lookup`); the email and name come from Google, never from the page. Admin actions (`admin_*`, for `human.py`) need the shared secret. Sheet menu **AinSutro**. |
+| `web/` | the OLD page's Apps Script project, now runs as the owner, no sign-in | Shows "AinSutro has a new address" with a button, so old bookmarks still work and show no warning. |
 
-- `Secret.gs` (in both folders), `.clasp.json` and `eval/data/human/api.json` are **not committed**. They hold the shared secret and the project ids.
-- **To change the code:** edit the folder, then run `clasp push -f` there, then `clasp deploy -i <deploymentId> -d "…"`. Use the same deployment id so the link stays the same; `clasp deployments` lists them.
+**Why it moved (25 Nov):** the old page ran "as the visitor" with an extra permission, so Google showed every rater an "unverified app" warning, and browsers signed into several Google accounts got a Google Drive error ("unable to open the file"). Both come from Apps Script itself. Firebase sign-in with basic profile needs no Google verification and works on phones and every normal browser. In-app browsers (Messenger, Facebook, WhatsApp) are told to open the link in Chrome or Safari, because Google blocks sign-in inside them.
+
+- **Not committed:** `Secret.gs` (store: `API_SECRET`, `UI_URL`, `FIREBASE_API_KEY`; web: `UI_URL`), `.clasp.json`, `site/.firebaserc`, `eval/data/human/api.json` (store URL + secret) and `eval/data/human/firebase.json` (Firebase web config). **The page link is on PC A only** (`UI_URL`); it is `https://<projectId>.web.app`.
+- **Build and publish the page:** `retrieval/.venv/bin/python eval/human_app/site/build.py` (writes `public/config.js` and `public/files/`: every benchmark file as page images, Word files via LibreOffice), then in `eval/human_app/site`: `npx -y firebase-tools@13 deploy --only hosting` (logged in as the owner with `firebase-tools login` in a normal terminal).
+- **Change the store:** edit `store/`, `clasp push -f`, then `clasp deploy -i <deploymentId> -d "…"` with the same deployment id, so its URL in `api.json` stays the same (`clasp deployments` lists them). `clasp` is `npx -y @google/clasp@2.4.2`, logged in as the Sheet owner.
+- **One-time owner step (done 25 Nov):** Sheet menu **AinSutro → Allow the sign-in check**, so the store may call Google's token check.
 - **Sheet menu AinSutro:**
   - Import files from Gold Judge folder
   - Translate questions
   - Show progress (law and file, per model, per rater)
   - Release all claims
+  - Allow the sign-in check (once, owner)
   - Delete ALL ratings and claims (asks first)
 
 ## Adding a model when its run finishes
@@ -39,20 +53,20 @@ On PC A, in `eval/`:
 ```bash
 python3 human.py export --model qwen3-30b        # refuses until all 3,969 answers exist
 ```
-1. Claude uploads the new `answers-qwen3-30b-*.csv` and the updated `chunks.csv` to the Gold Judge folder.
-2. Then the import runs, either through the store API or with **AinSutro → Import files from Gold Judge folder** in the Sheet. New questions appear in both sections right away.
+1. `python3 human.py push --model qwen3-30b` sends the new CSVs straight to the store (since 25 Nov; no Drive upload needed) and builds the queue. Rows already in the Sheet are skipped, so it can be run again safely. (The Drive way still works: upload to Gold Judge, then **AinSutro → Import files from Gold Judge folder**.)
+2. New questions appear in both sections right away, and the model becomes selectable in the Model menu.
 3. **Existing ratings are never touched.** The import only adds.
 
 ## How to rate
-1. Open the AinSutro link and choose your Google account (once; the browser remembers it). Pick **⚖️ Law** or **📄 File** questions.
+1. Open the AinSutro link and press **Sign in with Google** (once; the browser remembers you). Pick **Law** or **File** questions.
 2. You see the question, the reference answer and a badge row. Then you rate **answers 1–9** one at a time:
    - The badges show the model, effort and technicality.
    - Each answer has the source excerpts the chatbot was given.
-   - Use **Back** or the numbered dots to change an earlier rating.
+   - Use **Back** or the 3 × 3 grid (effort × technicality) to change an earlier rating.
 3. **Skip this question** gives the whole question to someone else, for example if you can't judge that area of law.
 4. Rate in short sittings and stop whenever you like. Your current question waits for you for 3 hours.
 
-**Tip:** tick **hide model name** at the top. Knowing which model wrote an answer biases people, and the thesis is stronger if you rate blind.
+**Tip:** the model name is shown at the top of the question and above each answer (team decision, 25 Nov). Judge the answer, not the model. To rate blind, use account menu → "Hide model names". Knowing which model wrote an answer biases people, and the thesis is stronger if you rate blind.
 
 **Same rules as the 80B judge:** the page only offers the judge's scores. Faithfulness can't be skipped when excerpts were given, and is n/a automatically when none were. Technicality fit is n/a for *auto* and required for *low*/*high*. Each rating is stamped with rubric `j1`.
 
@@ -121,7 +135,9 @@ python3 human.py export --model qwen3-30b        # refuses until all 3,969 answe
 | File | What |
 |---|---|
 | `eval/human.py` | export / pull / status / claude-batch / claude-add / analyze |
-| `eval/human_app/web/`, `eval/human_app/store/` | the two Apps Script projects (page / data store) |
+| `eval/human_app/site/` | the page on Firebase Hosting (`build.py`, `firebase.json`, `public/`) |
+| `eval/human_app/store/` | the data store (Apps Script bound to the Sheet) |
+| `eval/human_app/web/` | the old link, now a "moved" page |
 | `eval/data/human/upload/` | CSVs for the Sheet (not committed; rebuild with `export`) |
 | `eval/data/human/ratings.jsonl`, `claude.jsonl`, `report.md` | pulled human ratings, Claude's ratings, the report |
 

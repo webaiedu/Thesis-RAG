@@ -223,6 +223,8 @@ def call_judge(prompt):
     for k in ("correctness", "faithfulness", "technicality_fit"):
         v = out.get(k)
         out[k] = None if v in (None, "null", "") else max(1, min(5, int(round(float(v)))))
+    if out["correctness"] is None or "language_ok" not in out:   # incomplete judgment: retry, never save it
+        raise ValueError(f"incomplete judge reply: {txt[:200]}")
     return out
 
 
@@ -247,7 +249,9 @@ def judge(run_dir, test_path, workers, limit):
             question=a["question"], reference=q.get("reference_answer") or "(none)",
             excerpts=excerpts_for(a, CONFIG["judge"]["excerpt_chars"]),
             tech=a["settings"]["technicality"], tech_hint=TECH_HINT[a["settings"]["technicality"]],
-            answer=(a.get("reply") or "")[:8000])
+            # the FULL answer (25 Nov): it was cut at 8,000 chars, which hid the end of 1 Gemma answer (8,530).
+            # Prompts for answers up to 8,000 chars are unchanged, so earlier judgments stay valid.
+            answer=a.get("reply") or "")
         for attempt in range(3):
             try:
                 return {"key": a["key"], "judge": h, **call_judge(prompt)}

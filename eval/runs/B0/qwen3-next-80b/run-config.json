@@ -14,9 +14,9 @@
     "auto",
     "high"
   ],
-  "startedAt": "2026-11-24T09:56:23.694Z",
+  "startedAt": "2026-11-25T09:35:45.763Z",
   "git": {
-    "sha": "7a3ac94ffe3ee2b94743a7cfb1164ef52a142562",
+    "sha": "18fb054930ba37b0fc42a28d65f8adff8e53a6b4",
     "dirty": true
   },
   "test": {
@@ -28,7 +28,7 @@
     "high": "qwen3-next-80b-a3b-instruct"
   },
   "loadedContext": {
-    "qwen3-next-80b-a3b-instruct": 131072
+    "qwen3-next-80b-a3b-instruct": 262144
   },
   "minContext": 131072,
   "env": {

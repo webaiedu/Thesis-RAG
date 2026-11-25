@@ -1,7 +1,7 @@
-# Ainkhoj 2.0: case-trained model, no-RAG answering, and a vision module
+# AinSutro 2.0 (formerly Ainkhoj): case-trained model, no-RAG answering, and a vision module
 
 ## Context
-Ainkhoj today answers law questions only from retrieved statute excerpts (RAG over 8 Chroma domains, about 70 MB of `.jsonl`). The thesis wants three more things:
+AinSutro today answers law questions only from retrieved statute excerpts (RAG over 8 Chroma domains, about 70 MB of `.jsonl`). The thesis wants three more things:
 1. a model trained on real Bangladeshi court cases,
 2. answers that work without RAG,
 3. computer vision and pattern recognition.

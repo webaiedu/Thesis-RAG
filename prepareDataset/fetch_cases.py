@@ -41,7 +41,7 @@ SITE = "https://www.supremecourt.gov.bd"
 SCOB_URL = SITE + "/resources/bulletin/{vol}_SCOB_{year}.pdf"
 FIELDS = ["file", "url", "sha256", "bytes", "downloaded", "source", "division"]
 DELAY = 1.0
-UA = "Ainkhoj-thesis-research (Python urllib)"
+UA = "AinSutro-thesis-research (Python urllib)"
 
 
 def load_manifest() -> dict:
