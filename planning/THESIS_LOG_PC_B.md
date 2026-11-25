@@ -140,3 +140,93 @@ PC B found this problem, and it led to the project-wide fix **baseline-v1.1**.
    - `score.py compare runs/B0/gemma runs/B0/qwen3-30b --across-models` (check `--help` first).
 4. **Results to add here:** Qwen 30B B0 correctness, faithfulness, route_ok and ctx_hit (law and files), and the paired difference vs Gemma.
 5. **Later (planned):** Qwen privacy runs (P0 and the layers, ~9 h, 2 sessions) and, if Qwen is chosen for fine-tuning, the "after" runs E1/E2/E3 (`benchmark/after-qwen3-30b.md`).
+
+---
+
+## 6. 25 Nov 2026 (session log)
+- **10:00 checks:**
+  - `git pull --rebase`: already up to date (`f6d77a2`).
+  - Providers in `backend/.env` (LLM, ROUTER, GENERAL) are `lmstudio`; the judge in `eval/config.json` is `lmstudio` (`qwen3-next-80b-a3b-instruct`, j1). Nothing calls an online model.
+  - "Context size has been exceeded" in the LM Studio server log: 24 Nov (1) 28, 24 Nov (2) 0, 25 Nov 0.
+- **10:00 reload:** Qwen was loaded with the default id `qwen3-30b-a3b-instruct-2507` (the run needs `qwen/qwen3-30b-a3b-2507`) and context 262,144. Reloaded with the right identifier, **keeping the model's maximum context of 262,144** at the user's request (Parallel 4, GPU max). That is 65,536 tokens per slot, more than the runner's minimum of 131,072 in total. The context size does not change the answer text; it only rules out the context errors from 24 Nov. `run-config.json` records the loaded context.
+- **10:00:** retrieval server started (`~/retrieval.log`, bge-m3 on CUDA).
+- **10:00:48:** resumed the run with `STOP=23:59 ~/qwen-b0.sh`. Cache check: 0 misses. 2,801 of 3,285 law answers were already done, so 484 are left.
+- **10:15 audit of every saved law answer (read only, 2,811):**
+  - 0 duplicates, 0 empty, 0 saved with `finishReason: length` or `cut: true`.
+  - All 181 answers made by the v1.1 runner have `finishReason: stop`.
+  - The 2 answers that don't end with punctuation are `stop` (they end on a list line), so they are complete.
+  - The 2 old errors in `errors.jsonl` (24 Nov 14:02/14:15) were redone and saved.
+  - Every redo in `cut.jsonl` ended in a complete saved answer. The 2 new ones from 10:06 today (high effort, reached 6,000) are being redone at 12,000.
+  - The 2,630 older answers carry no `finishReason` (old runner). They passed both exact-token `cut_check` runs on 24 Nov. Planned: re-measure them read-only when Qwen is idle after the files run.
+- **10:10–10:17 exact re-check of the old answers** (user's request). Paused the run with SIGINT at 2,819/3,285 and measured all 2,630 answers that have no `finishReason` with Qwen's own tokenizer through LM Studio (read only, 6.6 min).
+  - **0 flagged:** none reached the old cap they were made under, and all end like a finished sentence.
+  - Longest answer per effort: low 683/700, mid 1,483/1,500, high 2,921/3,000 tokens.
+  - Together with the audit above, **every one of the 2,819 saved law answers is complete**.
+- **10:17:** the run resumed: 466 law answers left, all high effort.
+  - Speed estimate corrected: high effort runs at ~2.5–3 answers/min (24 Nov log), not ~7/min. Long redos at 12,000 tokens slow it further.
+- **10:22 one error (not a saved cut):** `q-b2435167e8e5` high/auto reached 6,000 tokens at 10:06 (very probably a repetition loop; normal high answers use ~1,500). The runner's redo at 12,000 then hit the 300 s LM Studio streaming timeout (`llm.service.ts:182`, "operation was aborted due to timeout"), so it went to `errors.jsonl` and nothing was saved.
+  - The other redo from 10:06, `q-8a9b64fa0180` high/auto, succeeded: a normal answer (3,172 chars, `stop`). The loops are not deterministic.
+  - Plan: `qwen-b0.sh` attempt 2 retries the key on its own, which is faster per stream (fits in 300 s) and uses a different batch. If it still fails, the only fixes change code (timeout or repetition penalty) for every model: stop and tell the user and PC A.
+- **10:40 check that the judge sees the full answers** (user's request):
+  - `score.py` gives the judge only the first **8,000 characters** of each answer (`score.py:250`). Qwen law answers so far: 0 are longer (the longest is 3,863). Gemma B0: law 0; files 1 (8,530 chars, already judged on PC A; tell PC A).
+  - The longest judge prompt is ~16k characters, ~16k tokens at worst. That fits easily in one 80B slot (32,768 at 131,072/4).
+  - A judge reply cut at its 500-token cap can't be saved silently: no JSON means an error, the error is not written, and the next run retries it.
+  - Gemma's judgments: 3,285 + 684, no errors.
+  - New `~/judge-30b.sh` (outside the repo, log `~/judge-30b.log`):
+    - before judging, it refuses to start unless both runs are complete (3,285 / 684 unique keys), with none cut or empty and none over 8,000 chars, and the judge is the local 80B;
+    - then it judges and reports law and files, retrying once;
+    - it checks that every answer key has a judgment;
+    - it runs `compare --across-models` only if `--help` lists it.
+- **10:26 second timeout:** `q-14413599c3f5` high/auto timed out on its **first** try (300 s), before the runner could mark it as cut.
+  - Cause: with 4 parallel streams Qwen writes ~21–23 tokens/s per stream (LM Studio `print_timing`, the same on 24 Nov at 131,072, so the larger context is not the cause). A 6,000-token answer therefore takes ~285 s plus the prompt, right at the backend's 300 s streaming timeout.
+  - Only answers that run far past normal length (repetition loops; normal high answers are ~1,500 tokens) are affected. Nothing cut is saved: these become errors and are retried.
+  - **Fix (no code change):** `~/qwen-b0.sh` (PC B's own script, outside the repo; backup `~/qwen-b0.sh.bak-25nov`) now retries with `--workers 1` when 8 or fewer answers are left, up to 3 attempts. One stream is ~3× faster, so a 12k–16k-token redo fits in 300 s, and the different batching usually breaks the loop. Workers only change the batching, not the settings (temperature 0, same caps).
+- **10:50 judge sees the whole answer (user's request):** `eval/score.py:250` no longer cuts the answer at 8,000 characters before judging.
+  - The judge config hash is unchanged (`aebea71088b8`): it covers the config, system prompt and template, not this limit. For every answer of 8,000 chars or less, the prompt is byte-for-byte the same, so all existing judgments stay valid (Gemma law, all pilots, and Qwen law so far: 0 answers over 8,000).
+  - **For PC A:** one Gemma file answer (`runs/B0/gemma-files`, 8,530 chars) was judged on its first 8,000 chars only; its judgment would need redoing to be exact. PC A's 80B answers may include longer ones too. Context check: even a 16,000-token answer plus excerpts fits one 80B slot.
+  - `~/judge-30b.sh` now judges long answers in full instead of refusing them.
+  - This is PC B's only code change. It is not committed yet: ask the user, because PC B normally commits only runs and this log.
+- **11:00:** the user is fixing the Gemma 8,000-char judging issue on PC A. Plan: if PC A pushes its own `score.py` change, PC B drops its local edit and uses PC A's version, so the code stays the same on both PCs. Check before judging that the code still passes the whole answer.
+- **11:50 law main pass finished:** "458 answers written, 8 errors, 0 cut saved". All 8 errors are runaway high-effort answers that hit the 300 s timeout: `q-b2435167e8e5` auto+high, `q-14413599c3f5` auto+high, `q-183d232a214e` auto, `q-cb2eb5f67a2d` high, `q-425512a5c4b8` high, `q-c373d7224b24` high. In one case LM Studio showed 5,858 tokens generated in 300 s; normal high answers today were at most ~3,300.
+  - The 1-worker threshold was raised to ≤20 left (11:40).
+  - A handoff script stopped the old `qwen-b0.sh` (still running the 4-worker retry version) and started the new one: **3,277/3,285, retrying the 8 with `--workers 1`**.
+- **12:04 repeatable loop:** `q-b2435167e8e5` high/high ran alone (1 worker, ~56 tokens/s) and reached the cap at 6,000, 12,000 and **16,000** tokens. The runner recorded "answer still cut at max_tokens 16000; not saved", so nothing cut was saved.
+  - This question looped in all three technicality settings today. The other two recovered: `auto` at 12,000 (3,849 chars, `stop`); `low` on 24 Nov.
+  - `q-14413599c3f5` high/auto also recovered on the 12,000 redo (3,849 chars, `stop`).
+  - Run alone at temperature 0 the loop repeats, so the script's attempts 2 and 3 would waste ~20 min and then stop before the files.
+  - So `~/qwen-b0.sh` got a `SKIP_LAW=1` option. A handoff starts the files run as soon as this law pass ends, if only this key is missing.
+- **12:18 law retries done:** "6 answers written, 2 errors, 0 cut saved".
+  - Law: **3,283/3,285**. Every saved answer is complete.
+  - Two repeatable loops are left, both high effort, technicality high: `q-b2435167e8e5` (cut at 6k, 12k and 16k) and `q-14413599c3f5` (cut at 6k and 12k, then timed out during the 16k attempt).
+  - Both questions recovered in other settings: `q-b2435167e8e5` low (24 Nov) and auto (12k redo); `q-14413599c3f5` auto (12k redo, 3,849 chars).
+- **12:18 files started** by the handoff (`SKIP_LAW=1 ~/qwen-b0.sh`): 0/684, 4 workers, router 76 cached, 0 to route.
+- **12:18 one more try for the two loops:** a separate runner with `--workers 2`, run at the same time as the files run, so the requests are batched with others like most answers (log `~/qwen-b0-loops.log`). Same code, settings and caps. If they still loop, ask the user how to record them (no code/sampling change on PC B).
+- **12:28 batched loop retry:** `q-b2435167e8e5` high/high **recovered**: it reached 6,000 again, and the 12,000 redo then finished normally (2,554 chars, `stop`, no repeated sentence). So batching with other requests changes the floating-point path enough to break a loop that repeats when the question runs alone.
+  - `q-14413599c3f5` high/high looped again (6,000, then timed out on the 12,000 redo at the batched speed of ~20 tokens/s). Law: **3,284/3,285**.
+  - 12:29: one more batched try for it.
+- **12:39:** `q-14413599c3f5` high/high looped again on the second batched try (6,000, then timed out at 12,000). That is 5 failed tries: alone at 6k/12k/16k, and batched twice.
+  - `~/qwen-loop-retry.sh` keeps retrying it batched alongside the files run, up to 6 tries, and stops when it is saved.
+  - File redo `f-09f20d621af7` low/auto reached 1,500 and 3,000, then finished at the 6,000 limit (895 chars, `stop`).
+- **13:15 what `q-14413599c3f5` high/high really produces** (the user said "retry with whatever you need"): a read-only probe in the scratchpad sends the runner's exact request (cached route, same settings, cap 6,000) and saves the streamed text, without writing to the run.
+  - Batched with the files run, it gave a **normal, complete answer**: 4,636 chars, `stop`, 45 lines, none repeated, about 5,000 tokens, in 248 s.
+  - So the failures have two causes. Alone at temperature 0 it slips into a loop (cut at 6k, 12k and 16k). Batched, the normal ~5,000-token Bangla answer needs ~250 s at ~20 tokens/s, so a slightly slower batch hits the backend's 300 s timeout.
+  - Batched tries 1–5: 5 timeouts.
+  - Next if try 6 fails: a batch of 2 (~45 tokens/s, so ~110 s), which needs no code change.
+- **13:24:** all 6 batched tries (4 parallel file requests) timed out for `q-14413599c3f5` high/high.
+  - Queued `~/qwen-loop-pair.sh`: when the files run ends, it runs the key in a **batch of 2** (the runner plus one companion probe request of the same question, output to the scratchpad only), up to 4 tries. A batch of 2 runs at ~45 tokens/s, so the ~5,000-token answer fits the 300 s timeout, and the batch is not the solo one that loops.
+- **13:35 naming decision (user, told to both PCs):** the human-scoring web app is now called **"AinSutro Scoring Page"**, and the thesis chatbot is renamed **Ainkhoj → AinSutro**. From now on this log uses these names. Earlier entries that say "AinSutro" mean the scoring page.
+  - **No code change on PC B, for these reasons:**
+    - `BOT_NAME` is not only a label. `identityLine()` (`backend/src/bot.config.ts`) puts it into **every system prompt** ("You are Ainkhoj, …"), so renaming changes the prompt of every answer.
+    - All B0 answers so far (Gemma, Qwen 30B 3,284/3,285 + files in progress, 80B on PC A in progress) were made with "Ainkhoj". Changing it now would give the last Qwen answers and PC A's running 80B a different prompt from the rest of the baseline.
+    - The rename touches code, docs and the scoring app, which PC A maintains (PC B never edits `eval/human_app/` or `human.py`); doing it on both PCs would also cause git conflicts.
+  - **Proposed for PC A:** rename in code (`bot.config.ts` + `frontend/lib/brand.ts`) and docs only **after all B0 answer runs are finished** (Qwen 30B and 80B). For the before/after comparison, the fine-tuning "after" runs must use the same system prompt as the baseline. So either keep "Ainkhoj" in the benchmark prompt, or document the name change as a prompt change (tag it, e.g. baseline-v1.2). The team decides.
+- **13:50 rename confirmed by the user:** the rename (chatbot Ainkhoj → AinSutro; scoring page "AinSutro Scoring Page") is done **on PC A only** and arrives with PC A's next push.
+  - The system prompt keeps **"Ainkhoj"** (`backend/src/bot.config.ts`, `eval/make_questions.py` unchanged) until the whole benchmark is finished, so every model gets the identical prompt.
+  - PC B edits no files for it, keeps the Qwen 30B run going, and runs `git pull --rebase` before its next commit.
+- **14:24 files main pass finished:** "679 answers written, 5 errors, 0 cut saved (9 redone longer)". The 5 errors are long high-effort file answers that hit the 300 s timeout with 4 parallel requests: `f-73dca01deaf4` high/low, `f-09f20d621af7` high/low and high/auto, `f-15c4e271b8b2` high/low, `f-69429ef0b9a2` high/high. `qwen-b0.sh` now retries them with 1 worker (up to 3 attempts). After that, `~/qwen-loop-pair.sh` retries the last law answer (`q-14413599c3f5` high/high) in a batch of 2.
+- **14:27 files complete: 684/684.** The 1-worker retry saved all 5: "5 answers written, 0 errors". Shared caches unchanged.
+- **14:30 law complete: 3,285/3,285.** The batch-of-2 retry (pair try 1) saved `q-14413599c3f5` high/high complete. The companion request for the same question looped to its 6,000 cap in the same batch. Every Qwen 30B B0 answer is now saved complete (law 3,285 + files 684), with 0 cut answers saved.
+  - Next: `git pull --rebase --autostash` and push `eval/runs/B0/qwen3-30b*` + this log, then the 80B sha256 check and `~/judge-30b.sh`.
+- **15:00 final audit before the push:**
+  - law 3,285 rows / 3,285 unique keys; files 684 / 684; 0 cut or empty; every old-format answer ends like a finished sentence; 0 answers over 8,000 chars (longest law 6,409, files 4,612); 0 "Context size has been exceeded" today.
+  - Pushed `eval/runs/B0/qwen3-30b*` + this log so PC A can add the 30B to the AinSutro Scoring Page. The local `eval/score.py` change (whole answer to the judge) is not committed: PC A maintains the code.

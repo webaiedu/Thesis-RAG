@@ -14,9 +14,9 @@
     "auto",
     "high"
   ],
-  "startedAt": "2026-11-24T10:10:14.541Z",
+  "startedAt": "2026-11-25T08:27:37.548Z",
   "git": {
-    "sha": "fdaa9827503147fd0017b7196552ab2bae7206d7",
+    "sha": "f6d77a2fcc2f4e8abeb142dfdc4daf0861698cd2",
     "dirty": false
   },
   "test": {
@@ -28,7 +28,7 @@
     "mid": "qwen/qwen3-30b-a3b-2507"
   },
   "loadedContext": {
-    "qwen/qwen3-30b-a3b-2507": 131072
+    "qwen/qwen3-30b-a3b-2507": 262144
   },
   "minContext": 131072,
   "env": {
