@@ -230,3 +230,47 @@ PC B found this problem, and it led to the project-wide fix **baseline-v1.1**.
 - **15:00 final audit before the push:**
   - law 3,285 rows / 3,285 unique keys; files 684 / 684; 0 cut or empty; every old-format answer ends like a finished sentence; 0 answers over 8,000 chars (longest law 6,409, files 4,612); 0 "Context size has been exceeded" today.
   - Pushed `eval/runs/B0/qwen3-30b*` + this log so PC A can add the 30B to the AinSutro Scoring Page. The local `eval/score.py` change (whole answer to the judge) is not committed: PC A maintains the code.
+- **14:50 judge loaded:** Qwen unloaded. 80B sha256 `eeece92fb61a7810d58a76bf211cb38331b74945e277921cd3fa7b8b575a4472` matches. Loaded `qwen3-next-80b-a3b-instruct` with **context 262,144** (its maximum, like the 30B today), Parallel 4, GPU max.
+- **14:52 judging started** with `~/judge-30b.sh` (log `~/judge-30b.log`):
+  - the gate passed: law 3,285/3,285, files 684/684, 0 cut or empty, 0 over 8,000 chars;
+  - judge hash `aebea71088b8` (j1, same as Gemma);
+  - the first judgments are being written.
+- **16:17 stopped for today** (user). The judge was stopped with SIGINT: **law 1,684/3,285 judged, files 0/684**. All unique, 0 errors, one judge hash (`aebea71088b8`), 0 incomplete by PC A's new rule (correctness and language_ok present). Judge speed: ~22/min on low/mid answers, ~17/min on high.
+- **16:20 pulled PC A's `b0e3c31`** (80B law complete, AinSutro Scoring Page on Firebase, 30B added to it):
+  - PC B's local `score.py` edit was dropped. PC A's `score.py` has the same whole-answer change, plus "an incomplete judge reply is retried, never saved". So the code is the same on both PCs.
+  - PC A's `bot.config.ts` change is only a comment: `BOT_NAME` stays 'Ainkhoj', so the prompt is unchanged.
+  - Shared caches unchanged.
+
+### Summary of 25 Nov on PC B
+| Item | Result |
+|---|---|
+| Qwen3 30B B0 law answers | **3,285 / 3,285** complete (from 2,801), 0 cut saved |
+| Qwen3 30B B0 file answers | **684 / 684** complete, 0 cut saved |
+| Pushed for the AinSutro Scoring Page | `18fb054` (answers + log), 14:45 |
+| Judging Qwen 30B B0 (80B, j1) | law **1,684 / 3,285**, files 0 / 684; resume on 26 Nov |
+| Context errors ("Context size has been exceeded") | 0 all day (Qwen at context 262,144, 80B at 262,144) |
+| Audits | all 2,630 old-format law answers re-measured with Qwen's tokenizer: 0 cut; every new answer `finishReason: stop`; 0 answers over 8,000 chars |
+| Same test as Gemma | test sha256 identical; the same 3,285 + 684 question × setting pairs; question text and files identical |
+
+**Problems and fixes today (for the thesis):**
+1. **Wrong LM Studio identifier at start:** Qwen was loaded without the `qwen/` id, so it was reloaded at the user's maximum context of 262,144.
+2. **Runaway / very long answers vs. the 300 s timeout:**
+   - With 4 parallel requests Qwen writes ~21–23 tokens/s per stream, so an answer of ~6,000 tokens needs ~285 s, right at the backend's 300 s streaming timeout.
+   - Affected: 8 law and 5 file answers, all high effort. Some were repetition loops; some were genuinely long Bangla answers (~5,000 tokens).
+   - Fixed without code changes:
+     - retries with **1 worker** (~56 tokens/s): 6 of 8 law and all 5 files;
+     - **batched retries**: `q-b2435167e8e5`;
+     - a **batch of 2** (~45 tokens/s): `q-14413599c3f5` high/high, after 11 failed tries (alone it loops; batched with 4 it times out).
+   - **Finding:** at temperature 0 the output depends on how requests are batched (floating-point order), so a loop can be repeatable when the request runs alone and disappear in a batch.
+3. **The judge saw only the first 8,000 chars of an answer:** fixed in `score.py` (PC A's version is now in git). It changes no existing judgment, because 0 Qwen answers are over 8,000 chars.
+4. **Renaming:** chatbot → AinSutro, scoring page → "AinSutro Scoring Page", done on PC A only. The system prompt keeps "Ainkhoj" until the benchmark is finished.
+
+**PC B scripts outside the repo:**
+- `~/qwen-b0.sh`: 1 worker when 20 or fewer answers are left, 3 attempts, `SKIP_LAW=1`.
+- `~/qwen-loop-retry.sh` and `~/qwen-loop-pair.sh`.
+- `~/judge-30b.sh`: checks the answers first (complete, none cut), then judge + report for law and files, checks every answer is judged, then `compare --across-models`. It is resumable.
+
+## 7. Next on PC B (26 Nov)
+1. `git pull --rebase`; `lms ps` must show only `qwen3-next-80b-a3b-instruct` (context 262,144 or at least 131,072, Parallel 4). If it doesn't, reload it after checking its sha256.
+2. Resume the judge: `setsid nohup ~/judge-30b.sh >> ~/judge-30b.log 2>&1 < /dev/null &`. It skips the 1,684 done; ~2,285 judgments are left at ~17–22/min (≈2–2.3 h). Then the reports and `compare runs/B0/gemma runs/B0/qwen3-30b --across-models` run automatically.
+3. Add the results to this log: correctness, faithfulness, route_ok, ctx_hit (law and files) and the paired difference vs Gemma. Commit/push `eval/runs/B0/qwen3-30b*` + this log.
