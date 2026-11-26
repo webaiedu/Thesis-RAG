@@ -217,14 +217,28 @@ def call_judge(prompt):
         txt = json.loads(r.read())["choices"][0]["message"]["content"]
     txt = re.sub(r"<think>.*?</think>", "", txt, flags=re.S)
     m = re.search(r"\{.*\}", txt, re.S)
+    repaired = None
     if not m:
-        raise ValueError(f"no JSON in judge reply: {txt[:200]}")
-    out = json.loads(m.group(0))
+        # 26 Nov: the 80B once ended a complete judgment without its final "}" (finish_reason stop, same at temperature 0).
+        # Add the brace and parse; replies that parsed before are unchanged, and the repair is recorded.
+        t = txt.strip()
+        if t.startswith("{") and t.count("{") == t.count("}") + 1:
+            try:
+                out = json.loads(t + "}")
+                repaired = "closing brace added"
+            except ValueError:
+                pass
+        if repaired is None:
+            raise ValueError(f"no JSON in judge reply: {txt[:200]}")
+    else:
+        out = json.loads(m.group(0))
     for k in ("correctness", "faithfulness", "technicality_fit"):
         v = out.get(k)
         out[k] = None if v in (None, "null", "") else max(1, min(5, int(round(float(v)))))
     if out["correctness"] is None or "language_ok" not in out:   # incomplete judgment: retry, never save it
         raise ValueError(f"incomplete judge reply: {txt[:200]}")
+    if repaired:
+        out["repaired"] = repaired
     return out
 
 

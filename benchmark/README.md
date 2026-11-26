@@ -90,7 +90,7 @@ The rows below are the original estimates; the four sessions above replace sessi
 **Ways to shorten it:**
 - **A second PC with ≥ 48 GB GPU/unified memory** runs the 80B judge in parallel. The judge server URL is not part of the judge's identity, so the scores stay valid. That removes the judging sessions: about 10 instead of 14.
 - **A smaller grid for Qwen 30B:** effort low/mid/high × technicality auto (3 settings, not 9). This saves ~1.5 sessions per part. Decide before session 3 and use the same grid after fine-tuning.
-- **N0/N1 (no RAG) are optional:** only on spare time, at 3 settings.
+- **N0/N1 (no RAG) are required since 26 Nov (team decision: the thesis needs "before RAG vs after RAG"):** law test set (1,095 answers) **and** file test set (228 answers; the attached file is still given, only the law search is off), 3 settings (effort low/mid/high × technicality auto), N0 for all three base models before fine-tuning, N1 for the fine-tuned model after it.
 
 Both "before" parts must be finished **before any fine-tuning starts**. Otherwise the baseline is not trustworthy.
 
@@ -119,11 +119,11 @@ Each day covers one answer model with **all 9 answer settings**:
 | Code | Search model | Answer LLM | Run on |
 |---|---|---|---|
 | B0 | bge-m3 (original) | original | before-* |
-| N0 | none (General mode, no RAG) | original | before-* (optional block) |
+| N0 | none (General mode, no RAG) | original | before-* (**required**, all 3 base models, 3 settings) |
 | E1 | bge-m3 fine-tuned | original | after-* |
 | E2 | bge-m3 (original) | fine-tuned | after-* |
 | E3 | bge-m3 fine-tuned | fine-tuned | after-* (the main result) |
-| N1 | none (General mode, no RAG) | fine-tuned | after-* (optional block) |
+| N1 | none (General mode, no RAG) | fine-tuned | after-* (**required**, the fine-tuned model, 3 settings) |
 
 ## Rules for every day (so the before/after comparison is fair)
 1. **Same everything except what's being tested:**

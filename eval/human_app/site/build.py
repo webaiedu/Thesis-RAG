@@ -30,7 +30,10 @@ def write_config():
     # AinSutro has its own free Firebase project (AinSutro project, name on PC A only), separate from the chatbot's.
     fb = json.loads((ROOT / "eval" / "data" / "human" / "firebase.json").read_text())
     api = json.loads((ROOT / "eval" / "data" / "human" / "api.json").read_text())
-    cfg = {"firebase": {k: fb[k] for k in ("apiKey", "authDomain", "projectId", "appId")}, "store": api["url"]}
+    cfg = {"firebase": {k: fb[k] for k in ("apiKey", "authDomain", "projectId", "appId")}, "store": api["url"],
+           # true once https://<project>.web.app/__/auth/handler (and .firebaseapp.com) are redirect URIs of the Google
+           # OAuth web client: sign-in then runs through the page's own address (works with third-party storage blocked)
+           "authSameHost": bool(fb.get("authSameHost", False))}
     (PUB / "config.js").write_text("window.AINSUTRO_CONFIG = " + json.dumps(cfg, indent=1) + ";\n", encoding="utf-8")
 
 

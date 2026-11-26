@@ -14,9 +14,9 @@
     "auto",
     "high"
   ],
-  "startedAt": "2026-11-24T06:36:31.643Z",
+  "startedAt": "2026-11-26T10:15:18.929Z",
   "git": {
-    "sha": "c27de76a5a81d7cbb8fb161472c8bfb8887554c5",
+    "sha": "10187d1d48483555f140f8995f8c32185c87b42c",
     "dirty": false
   },
   "test": {
@@ -27,6 +27,10 @@
   "modelIds": {
     "high": "qwen3-next-80b-a3b-instruct"
   },
+  "loadedContext": {
+    "qwen3-next-80b-a3b-instruct": 262144
+  },
+  "minContext": 131072,
   "env": {
     "RETRIEVAL_URL": "http://localhost:8000",
     "LMSTUDIO_URL": "http://localhost:1234/v1",
@@ -48,7 +52,7 @@
       "topK": 3,
       "filePassages": 3,
       "history": 4,
-      "maxTokens": 700,
+      "maxTokens": 1500,
       "temperature": 0.3,
       "depth": "Effort: LOW. Give a short, direct answer (about 2-5 sentences or a few bullets). Cover only the main point."
     },
@@ -57,7 +61,7 @@
       "topK": 5,
       "filePassages": 5,
       "history": 6,
-      "maxTokens": 1500,
+      "maxTokens": 3000,
       "temperature": 0.2,
       "depth": "Effort: MEDIUM. Give a clear, complete answer with the key conditions and penalties, organised in short paragraphs or bullets."
     },
@@ -66,7 +70,7 @@
       "topK": 8,
       "filePassages": 8,
       "history": 10,
-      "maxTokens": 3000,
+      "maxTokens": 6000,
       "temperature": 0.1,
       "depth": "Effort: HIGH. Before answering, silently work through every excerpt and decide which ones apply and how they interact. Then give a thorough, well-structured answer: the governing provisions, conditions and elements, exceptions, penalties or consequences, related sections, and anything the excerpts leave unclear. Use headings where helpful."
     }

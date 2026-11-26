@@ -19,8 +19,21 @@
 |---|---|---|
 | 26 Nov morning | Resume the 80B file answers (~45 min), then the chain redoes 11 old pilot answers and judges the 80B (~4 h, automatic) | `git pull --rebase` (gets the judge full-answer fix), load the 80B, judge the Qwen 30B (law + files) |
 | when the 80B answers are done | `human.py export` + `push --model qwen3-next-80b`, then `human_app/audit.py qwen3-next-80b` (must print TOTAL PROBLEMS: 0) | push the 30B judgments + reports |
-| then | `compare --across-models` (Gemma vs 80B, Gemma vs 30B, 30B vs 80B), `human.py pull/status`; Claude scoring only after asking (token estimate) | |
-| ~27 Nov | three-model report → **ask the team which model to fine-tune** | |
+| then | `human.py pull/status`. **No model comparisons yet (team decision, 26 Nov)**: see "Final comparison" below | judge the full 30B run (law + files), push; **no `score.py compare`** |
+| when the team says the human scoring is finished | final comparison (below) → **ask the team which model to fine-tune** | |
+
+## RAG vs no RAG (decided 26 Nov; required)
+- The thesis needs "before RAG vs after RAG". **N0** = the same base model in the chatbot's General mode (no law search, no router; `--mode general`, no code change, baseline stays frozen). Law test set (365) and file test set (76), **3 settings**: effort low/mid/high × technicality auto = 1,095 + 228 answers per model. Compared with the same questions × settings of B0. After fine-tuning, **N1** = the fine-tuned model without RAG, next to E2/E3, giving the 2 × 2 {no RAG, RAG} × {base, fine-tuned}.
+- **Who:** PC B Qwen3 30B (started 26 Nov afternoon), PC A Gemma + 80B (29 Nov; PC A's GPU is judging on 26 Nov). Judge: the 80B (j1) on every N0 answer; faithfulness is n/a without excerpts, so the main measures are correctness vs the reference, invented section numbers, refusals, language. Claude checks a sample (~150 B0/N0 pairs) only after asking (token estimate).
+- **File questions too** (team choice, 26 Nov): `test_files.jsonl`, same 3 settings = 228 answers per model; the attached file is still given (it is the user's document), only the law search is off; needs the retrieval server (file passages via `/rank`). Output dirs: `eval/runs/N0/<model>/` and `eval/runs/N0/<model>-files/`.
+- PC A chain: `eval/runs/logs/n0chain.sh` (Gemma law → Gemma files → 80B law → 80B files, each judged right after; resumable: run it again).
+
+## Final comparison (decided 26 Nov; starts only when the user says the human scoring is finished)
+- **Gemma vs Qwen3 30B vs Qwen3-Next 80B, under three judges: humans, Claude, the 80B judge, on exactly the same answers.**
+- The 80B judges **every** answer of every model now (PC A: 80B; PC B: 30B; Gemma done), because nobody knows how many answers the humans will rate.
+- When the humans finish: `human.py pull` → the human-rated set H. Claude scores **exactly H** (token estimate and ask first). The 80B judgments are **filtered to H**; 80B judgments outside H are not used in the comparison.
+- Then `eval/final_compare.py` (one tidy table, checks the three judges cover identical answers) and `eval/analysis/thesis_figures.ipynb` (all plots, statistics and tables for a Q1 journal: model ranking per judge with CIs and tests, judge agreement, 80B self-preference bias, breakdowns, quality vs cost, coverage). Plan: `~/.claude/plans/i-want-to-do-calm-snail-of-22e3936d-fcbf-440a-9cd7-046b7b96c3ae.md` (PC A).
+- **No `score.py compare` before that, on either PC.** The team chooses the model to fine-tune.
 
 ## Start prompts
 **PC A:** the same text as `~/Desktop/"Tomorrows promt.txt"` (on PC A's desktop).
@@ -28,7 +41,7 @@
 **PC B:**
 > This is PC B (`~/Desktop/Thesis-RAG PC-B`, branch `benchmark-setup`; quote the path, use `python -m pip` / `python -m uvicorn`). Read `CLAUDE.md`, `planning/NEXT_STEPS.md`, `planning/THESIS_LOG_PC_B.md` and `benchmark/SECOND_PC.md`, then `git pull --rebase` (it brings PC A's fixes: the judge now sees the full answer; long answers get a longer time limit). The PC is free 09:30–16:30. Free, local tools only.
 >
-> The Qwen3 30B answers are complete and pushed. Today: unload the 30B, load the Qwen3-Next 80B (`lms load <80B id> -c 131072 --parallel 4 --gpu max`, check its sha256 against `SECOND_PC.md`), start the retrieval server, then judge both runs in the background with a log: `score.py judge runs/B0/qwen3-30b` + `report`, then `runs/B0/qwen3-30b-files` with `--test data/test_files.jsonl` (+ report). Each must end with "0 errors" (run again to retry). Then `score.py compare runs/B0/gemma runs/B0/qwen3-30b --across-models`. Give me time estimates; don't stop at 16:15 by yourself.
+> The Qwen3 30B answers are complete and pushed. Today: unload the 30B, load the Qwen3-Next 80B (`lms load <80B id> -c 131072 --parallel 4 --gpu max`, check its sha256 against `SECOND_PC.md`), start the retrieval server, then judge both runs in the background with a log: `score.py judge runs/B0/qwen3-30b` + `report`, then `runs/B0/qwen3-30b-files` with `--test data/test_files.jsonl` (+ report). Each must end with "0 errors" (run again to retry). **Don't run any `score.py compare`** (team decision, 26 Nov: all comparisons are made later on PC A, for all three models). Give me time estimates; don't stop at 16:15 by yourself.
 >
 > The project is now called AinSutro (formerly Ainkhoj); PC A did the rename in shared files. **Don't edit shared files, and never change `backend/src/bot.config.ts` or `eval/make_questions.py`** (the prompt name stays "Ainkhoj" until the benchmark is finished). Don't run `human.py` or touch the AinSutro Scoring Page, `eval/data/human/` or the Drive folder (PC A does that). Log every change or action in `planning/THESIS_LOG_PC_B.md` only. When I say "commit": `git pull --rebase`, then commit/push only `eval/runs/B0/qwen3-30b*` and `planning/THESIS_LOG_PC_B.md`.
 

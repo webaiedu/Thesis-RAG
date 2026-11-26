@@ -61,19 +61,24 @@ function md(s) {
 }
 
 // ---------------------------------------------------------------- the store API
+const API_TIMEOUT = 45000;            // Apps Script can take 10-20 s when it starts cold; never wait forever
 async function api(action, data, tries = 3) {
   for (let i = 1; ; i++) {
-    let res, j;
+    let res, j, timer = null;
     try {
       const idToken = await USER.getIdToken(i > 1);
+      const ctl = typeof AbortController === 'function' ? new AbortController() : null;
+      if (ctl) timer = setTimeout(() => ctl.abort(), API_TIMEOUT);
       // text/plain body: a "simple" request, so browsers need no CORS preflight to Apps Script
-      res = await fetch(CFG.store, { method: 'POST', body: JSON.stringify({ idToken, action, data: data || {} }), redirect: 'follow' });
+      res = await fetch(CFG.store, { method: 'POST', body: JSON.stringify({ idToken, action, data: data || {} }), redirect: 'follow',
+                                     cache: 'no-store', signal: ctl ? ctl.signal : undefined });
       j = await res.json();
     } catch (e) {
-      if (i < tries) { await sleep(1200 * i); continue; }
+      if (i < tries) { await sleep(1500 * i); continue; }
       throw new Error(navigator.onLine === false ? 'You are offline. Check the internet connection and try again.'
-                                                 : 'The scoring server did not answer. Please try again.');
-    }
+        : 'The scoring server did not answer (it runs on Google, script.google.com). Please press Try again. ' +
+          'If it keeps failing, this network may block Google scripts: try mobile data or another Wi-Fi, or switch off a VPN or ad blocker.');
+    } finally { if (timer) clearTimeout(timer); }
     if (j.error) {
       if (/sign-in has expired/i.test(j.error) && i < tries) continue;
       if (/^ACK_REQUIRED/.test(j.error)) { store(ackKey(USER), '0'); showGate(USER); throw new Error('Please confirm the acknowledgement first.'); }
@@ -128,6 +133,32 @@ const SAY = {
   reference: () => B.question.reference, rtr: () => B.question.reference_tr, answer: () => B.answers[cur].reply,
 };
 
+// ---------------------------------------------------------------- layout helpers (every screen size)
+/** The sticky header's height, so the question panel and scrolling stop below it (0 when the header scrolls away). */
+function topHeight() {
+  const t = document.querySelector('.top');
+  if (!t) return;
+  const sticky = getComputedStyle(t).position === 'sticky';
+  document.documentElement.style.setProperty('--top-h', (sticky ? t.offsetHeight : 0) + 'px');
+}
+/** The account panel opens under the avatar and is moved/shrunk so all of it is on screen, on any device. */
+function placeMenu() {
+  const m = $('accountMenu');
+  if (m.classList.contains('hidden')) return;
+  const r = $('accountBtn').getBoundingClientRect();
+  const vw = document.documentElement.clientWidth || window.innerWidth;
+  const vh = window.visualViewport ? window.visualViewport.height : window.innerHeight;
+  if (r.bottom < 0 || r.top > vh) { closeMenu(); return; }    // the avatar scrolled out of view
+  const w = Math.min(300, vw - 16);
+  const top = Math.max(8, r.bottom + 8);
+  m.style.width = w + 'px';
+  m.style.left = Math.round(Math.max(8, Math.min(r.right - w, vw - w - 8))) + 'px';
+  m.style.right = 'auto';
+  m.style.top = Math.round(top) + 'px';
+  m.style.maxHeight = Math.round(Math.max(160, vh - top - 8)) + 'px';
+}
+function closeMenu() { $('accountMenu').classList.add('hidden'); $('accountBtn').setAttribute('aria-expanded', 'false'); }
+
 // ---------------------------------------------------------------- page state
 function status(msg, retry) {
   $('work').classList.add('hidden');
@@ -147,6 +178,7 @@ function progress(p) {
     .map(([k, t]) => `<span>${esc(t)}</span><b>${num(mb[k] || 0)}</b>`).join('');
   fillModels();
   strip();
+  topHeight();
 }
 
 /** Law/File buttons: answers rated in the section, out of ALL answers in the scoring page (team request),
@@ -340,7 +372,8 @@ async function save(ev) {
   busy = true; $('save').disabled = true; $('save').firstChild.textContent = 'Saving ';
   const B0 = B;
   try {
-    const res = await api('submit', { row: B0.row, bundle: B0.bundle, rating });
+    const nx = B0.review ? null : { section: SECTION, filter: filterObj() };     // finished? the next question comes back at once
+    const res = await api('submit', { row: B0.row, bundle: B0.bundle, rating, next: nx });
     a.rating = { ...rating, faithfulness: res.saved.faithfulness, technicality_fit: res.saved.technicality_fit };
     if (B !== B0) return;              // another question was opened meanwhile; the score is saved anyway
     if (B.review) {                       // changing earlier scores: stay on this question
@@ -348,7 +381,10 @@ async function save(ev) {
       else { show(cur); toast('All your changes to this question are saved'); }
       return;
     }
-    if (res.finished || B.answers.every(x => x.rating || x.locked)) { busy = false; toast('Question finished. Loading the next one'); return next(); }
+    if (res.finished || B.answers.every(x => x.rating || x.locked)) {
+      busy = false; toast('Question finished. Here is the next one');
+      return next(res.next ? Promise.resolve(res.next) : undefined);
+    }
     const open = x => !x.rating && !x.locked;
     const n = B.answers.findIndex((x, j) => j > cur && open(x));
     show(n >= 0 ? n : B.answers.findIndex(open));
@@ -429,7 +465,7 @@ async function start(user) {
   USER = user;
   $('signinBtn').disabled = true;
   if (!(await ensureAck(user))) return;
-  $('signin').classList.add('hidden'); $('app').classList.remove('hidden');
+  $('signin').classList.add('hidden'); $('app').classList.remove('hidden'); topHeight();
   const name = user.displayName || (user.email || '').split('@')[0];
   $('meName').textContent = name; $('meEmail').textContent = user.email || '';
   $('accountBtn').innerHTML = user.photoURL ? `<img src="${esc(user.photoURL)}" alt="" referrerpolicy="no-referrer">` : esc(name.slice(0, 1).toUpperCase());
@@ -439,25 +475,133 @@ async function start(user) {
   await next();
 }
 
+/** "My scored answers", grouped like the page: Law Answers -> language, File Answers -> file type, then the model.
+ *  Newest first inside each group. */
+const MINE_GROUPS = { law: ['en', 'bn', 'other'], file: ['pdf', 'scan', 'photo', 'word', 'other'] };
+function mineTree(list) {
+  const models = MODELS.filter(m => m[0] !== 'all').map(m => m[1]);
+  const answers = list.reduce((n, m) => n + Number(m.rated || 0), 0);
+  const cnt = (xs) => `${xs.length} question${xs.length === 1 ? '' : 's'} · ${xs.reduce((n, m) => n + Number(m.rated || 0), 0)} answers`;
+  const row = m => {
+    const when = m.last ? new Date(m.last).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '';
+    return `<button type="button" class="mine-row" data-b="${esc(m.bundle)}">` +
+      `<span class="q" lang="${isBangla(m.question) ? 'bn' : 'en'}">${esc(m.question)}</span>` +
+      `<span class="meta">${m.rated} of 9 scored · ${esc(when)}</span>` +
+      `<span class="edit">See and change my scores ›</span></button>`;
+  };
+  let h = `<p class="mine-total">You have scored <b>${answers}</b> answers in <b>${list.length}</b> question${list.length === 1 ? '' : 's'}.</p>`;
+  ['law', 'file'].forEach(sec => {
+    const inSec = list.filter(m => (m.section === 'file' ? 'file' : 'law') === sec);
+    if (!inSec.length) return;
+    h += `<details class="mine-sec" open><summary><span class="t">${esc(SEC_NAME[sec])}</span><span class="cnt">${cnt(inSec)}</span></summary>`;
+    const groups = MINE_GROUPS[sec].concat([...new Set(inSec.map(m => m.group))].filter(g => MINE_GROUPS[sec].indexOf(g) < 0));
+    groups.forEach(g => {
+      const inG = inSec.filter(m => (m.group || 'other') === g);
+      if (!inG.length) return;
+      h += `<details class="mine-grp" open><summary><span class="t">${esc(GROUP_NAME[g] || g)}</span><span class="cnt">${cnt(inG)}</span></summary>`;
+      models.concat([...new Set(inG.map(m => m.model))].filter(x => models.indexOf(x) < 0)).forEach(mo => {
+        const inM = inG.filter(m => m.model === mo);
+        if (!inM.length) return;
+        h += `<div class="mine-model"><div class="mh"><span class="t">${esc(mo)}</span><span class="cnt">${cnt(inM)}</span></div>` +
+             inM.map(row).join('') + '</div>';
+      });
+      h += '</details>';
+    });
+    h += '</details>';
+  });
+  return h;
+}
+
+/** Choices in "My scored answers", like the main page: section, language / file type, model (remembered). */
+const MINE = { list: [] };
+function mineChoice() {
+  const sec = ['all', 'law', 'file'].indexOf(store('ainsutro-mine-sec')) >= 0 ? store('ainsutro-mine-sec') : 'all';
+  const grp = store('ainsutro-mine-grp-' + sec) || 'all', model = store('ainsutro-mine-model') || 'all';
+  return { sec, grp, model };
+}
+function renderMine() {
+  const c = mineChoice(), list = MINE.list;
+  const secOf = m => (m.section === 'file' ? 'file' : 'law');
+  const label = k => (MODELS.find(m => m[0] === k) || [k, k])[1];
+  document.querySelectorAll('#mineFilters .seg button').forEach(b => {
+    const n = b.dataset.v === 'all' ? list.length : list.filter(m => secOf(m) === b.dataset.v).length;
+    b.setAttribute('aria-pressed', String(b.dataset.v === c.sec));
+    let cnt = b.querySelector('.cnt'); if (!cnt) { cnt = document.createElement('span'); cnt.className = 'cnt'; b.appendChild(cnt); }
+    cnt.textContent = n;
+  });
+  // language (Law) or file type (File); hidden for All
+  const inSec = list.filter(m => c.sec === 'all' || secOf(m) === c.sec);
+  $('mineGroupWrap').classList.toggle('hidden', c.sec === 'all');
+  let grp = c.grp;
+  if (c.sec !== 'all') {
+    const groups = MINE_GROUPS[c.sec].filter(g => g !== 'other' || c.sec === 'law' || inSec.some(m => m.group === g));
+    if (groups.indexOf(grp) < 0) grp = 'all';
+    $('mineGroupLabel').textContent = c.sec === 'law' ? 'Language' : 'File type';
+    const opts = [['all', c.sec === 'law' ? 'All languages' : 'All file types']].concat(groups.map(g => [g, GROUP_NAME[g] || g]));
+    $('mineGroup').innerHTML = opts.map(([k, t]) => {
+      const n = k === 'all' ? inSec.length : inSec.filter(m => (m.group || 'other') === k).length;
+      return `<option value="${k}"${k === grp ? ' selected' : ''}>${esc(t)} (${n})</option>`;
+    }).join('');
+  } else grp = 'all';
+  const inGrp = inSec.filter(m => grp === 'all' || (m.group || 'other') === grp);
+  // model (the store sends the model's display name)
+  const mods = MODELS.filter(m => m[0] !== 'all');
+  let model = mods.some(m => m[0] === c.model) ? c.model : 'all';
+  $('mineModel').innerHTML = [['all', 'All models']].concat(mods).map(([k, t]) => {
+    const n = k === 'all' ? inGrp.length : inGrp.filter(m => m.model === t).length;
+    return `<option value="${k}"${k === model ? ' selected' : ''}>${esc(t)} (${n})</option>`;
+  }).join('');
+  const shown = inGrp.filter(m => model === 'all' || m.model === label(model));
+  $('mineList').innerHTML = shown.length ? mineTree(shown)
+    : '<p class="fine">You have not scored any answers in this choice. Choose another section, ' +
+      (c.sec === 'file' ? 'file type' : 'language') + ' or model above.</p>';
+  $('mineList').querySelectorAll('.mine-row').forEach(b => b.onclick = () => {
+    const d = $('mineDlg'); d.close ? d.close() : d.removeAttribute('open');
+    next(api('open', { bundle: b.dataset.b }));
+  });
+}
+
+// ---------------------------------------------------------------- share (one main link for everyone)
+function mainLink() { return location.origin.replace(/\.firebaseapp\.com$/, '.web.app') + '/'; }
+const SHARE_TEXT = 'Please help score the AinSutro chatbot\'s answers on Bangladesh law (for people with a law background; sign in with Google):';
+function openShare() {
+  closeMenu();
+  const url = mainLink(), u = encodeURIComponent(url), t = encodeURIComponent(SHARE_TEXT), tu = encodeURIComponent(SHARE_TEXT + ' ' + url);
+  $('shareUrl').value = url;
+  $('shareWa').href = 'https://wa.me/?text=' + tu;
+  $('shareMsg').href = 'fb-messenger://share/?link=' + u;
+  $('shareTg').href = 'https://t.me/share/url?url=' + u + '&text=' + t;
+  $('shareFb').href = 'https://www.facebook.com/sharer/sharer.php?u=' + u;
+  $('shareLi').href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + u;
+  $('shareMail').href = 'mailto:?subject=' + encodeURIComponent('AinSutro Scoring Page') + '&body=' + tu;
+  // Messenger opens only where its app is installed (phones); elsewhere it is hidden
+  $('shareMsg').classList.toggle('hidden', !/Android|iPhone|iPad|iPod/i.test(navigator.userAgent));
+  $('shareNative').classList.toggle('hidden', !navigator.share);
+  const d = $('shareDlg');
+  if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+}
+async function copyShareLink() {
+  const url = mainLink();
+  try { await navigator.clipboard.writeText(url); toast('Link copied. Paste it anywhere to share.'); }
+  catch (e) { const i = $('shareUrl'); i.focus(); i.select(); toast('Press Copy (or Ctrl+C) to copy the selected link.'); }
+}
+async function nativeShare() {
+  try { await navigator.share({ title: 'AinSutro Scoring Page', text: SHARE_TEXT, url: mainLink() }); }
+  catch (e) { if (!e || e.name !== 'AbortError') copyShareLink(); }
+}
+
 async function openMine() {
-  $('accountMenu').classList.add('hidden');
+  closeMenu();
   const d = $('mineDlg');
-  $('mineList').innerHTML = '<p class="fine">Loading</p>';
+  $('mineList').innerHTML = '<p class="fine">Loading</p>'; $('mineFilters').classList.add('hidden');
   if (d.showModal) d.showModal(); else d.setAttribute('open', '');
   let list;
   try { list = await api('mine'); }
   catch (e) { $('mineList').innerHTML = `<p class="err">${esc(e.message || e)}</p>`; return; }
+  MINE.list = list;
+  $('mineFilters').classList.toggle('hidden', !list.length);
   if (!list.length) { $('mineList').innerHTML = '<p class="fine">You have not scored any answers yet.</p>'; return; }
-  $('mineList').innerHTML = list.map(m => {
-    const when = m.last ? new Date(m.last).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }) : '';
-    return `<button type="button" class="mine-row" data-b="${esc(m.bundle)}">` +
-      `<span class="q" lang="${isBangla(m.question) ? 'bn' : 'en'}">${esc(m.question)}</span>` +
-      `<span class="meta">${esc(SEC_NAME[m.section] || '')} · ${esc(GROUP_NAME[m.group] || m.group)} · ${esc(m.model)} · ${m.rated} of 9 scored · ${esc(when)}</span></button>`;
-  }).join('');
-  $('mineList').querySelectorAll('.mine-row').forEach(b => b.onclick = () => {
-    d.close ? d.close() : d.removeAttribute('open');
-    next(api('open', { bundle: b.dataset.b }));
-  });
+  renderMine();
 }
 
 function guide(open) {
@@ -491,12 +635,31 @@ function wire() {
   $('hideModel').onchange = () => { store('ainsutro-hide-model', $('hideModel').checked ? '1' : '0'); if (B && !B.empty) { renderModel(); show(cur); } };
   $('exBox').addEventListener('toggle', () => store('ainsutro-ex-open', $('exBox').open ? '1' : '0'));
   const menu = $('accountMenu');
-  $('accountBtn').onclick = e => { e.stopPropagation(); const open = menu.classList.toggle('hidden') === false; $('accountBtn').setAttribute('aria-expanded', String(open)); };
-  document.addEventListener('click', e => { if (!menu.contains(e.target)) { menu.classList.add('hidden'); $('accountBtn').setAttribute('aria-expanded', 'false'); } });
+  $('accountBtn').onclick = e => {
+    e.stopPropagation();
+    const open = menu.classList.toggle('hidden') === false;
+    $('accountBtn').setAttribute('aria-expanded', String(open));
+    if (open) placeMenu();
+  };
+  document.addEventListener('click', e => { if (!menu.contains(e.target)) closeMenu(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !menu.classList.contains('hidden')) { closeMenu(); $('accountBtn').focus(); } });
+  const relayout = () => { topHeight(); placeMenu(); };
+  window.addEventListener('resize', relayout);
+  window.addEventListener('orientationchange', () => setTimeout(relayout, 300));
+  window.addEventListener('scroll', placeMenu, { passive: true });
+  if (window.visualViewport) window.visualViewport.addEventListener('resize', placeMenu);
+  if (typeof ResizeObserver === 'function') new ResizeObserver(topHeight).observe(document.querySelector('.top'));
   $('signoutBtn').onclick = () => auth.signOut();
   $('switchBtn').onclick = async () => { await auth.signOut(); signIn(); };
   $('signinBtn').onclick = signIn;
   $('mineBtn').onclick = openMine;
+  document.querySelectorAll('#mineFilters .seg button').forEach(b => b.onclick = () => { store('ainsutro-mine-sec', b.dataset.v); renderMine(); });
+  $('mineGroup').onchange = () => { store('ainsutro-mine-grp-' + mineChoice().sec, $('mineGroup').value); renderMine(); };
+  $('mineModel').onchange = () => { store('ainsutro-mine-model', $('mineModel').value); renderMine(); };
+  $('shareBtn').onclick = openShare; $('shareBtn2').onclick = openShare;
+  $('shareCopy').onclick = copyShareLink; $('shareNative').onclick = nativeShare;
+  $('shareUrl').onfocus = () => $('shareUrl').select();
+  $('shareClose').onclick = () => { const d = $('shareDlg'); d.close ? d.close() : d.removeAttribute('open'); };
   $('mineClose').onclick = () => { const d = $('mineDlg'); d.close ? d.close() : d.removeAttribute('open'); };
   $('reviewDone').onclick = () => next();
   fillModels();
@@ -509,7 +672,7 @@ function wire() {
     catch (e) { prompt('Copy this link and open it in Chrome or Safari:', location.href); }
   };
   document.addEventListener('keydown', e => {
-    if (!B || B.empty || $('work').classList.contains('hidden') || $('guide').open || $('mineDlg').open || e.altKey || e.ctrlKey || e.metaKey) return;
+    if (!B || B.empty || $('work').classList.contains('hidden') || $('guide').open || $('mineDlg').open || $('shareDlg').open || e.altKey || e.ctrlKey || e.metaKey) return;
     const el = document.activeElement;
     if (el && (el.tagName === 'TEXTAREA' || el.tagName === 'SELECT' || (el.tagName === 'INPUT' && el.type === 'text'))) return;
     if (/^[1-5]$/.test(e.key)) { setVal('corr', e.key); $('err').textContent = ''; }
@@ -518,8 +681,18 @@ function wire() {
 }
 
 (function boot() {
-  if (!CFG || !window.firebase) { document.body.innerHTML = '<p style="padding:24px;font-family:sans-serif">AinSutro Scoring Page could not load. Please reload the page.</p>'; return; }
+  if (!CFG || !window.firebase) {
+    document.body.innerHTML = '<div style="max-width:440px;margin:15vh auto;padding:24px;font:15px/1.6 system-ui,sans-serif">' +
+      '<p><b>The AinSutro Scoring Page could not load completely.</b> The connection may be slow, or a browser extension or ' +
+      'network filter blocked a part of it.</p><p><button onclick="location.reload()" style="font:inherit;padding:8px 16px">Reload</button></p></div>';
+    return;
+  }
   wire();
+  // authSameHost (config.js): sign in through this page's own address (web.app or firebaseapp.com), so the redirect
+  // sign-in also works in Safari/iPhone, Firefox and Chrome with third-party storage blocked. Needs both addresses'
+  // /__/auth/handler in the Google OAuth client's redirect URIs (eval/HUMAN_GUIDE.md).
+  const host = location.hostname;
+  if (CFG.authSameHost && /(^|\.)(web\.app|firebaseapp\.com)$/.test(host)) CFG.firebase.authDomain = host;
   firebase.initializeApp(CFG.firebase);
   auth = firebase.auth();
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL).catch(() => {});

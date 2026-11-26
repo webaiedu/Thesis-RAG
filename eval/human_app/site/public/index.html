@@ -2,23 +2,38 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>AinSutro Scoring Page</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AinSutro Scoring Page (Before fine-tune)</title>
 <meta name="description" content="Human gold-standard scoring of the AinSutro chatbot's answers on Bangladesh law">
 <meta name="theme-color" content="#f6f6f4" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#141415" media="(prefers-color-scheme: dark)">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f5b45'/%3E%3Cpath d='M16 7v18M9 25h14M7 12h3c3 0 4-1 6-2 2 1 3 2 6 2h3' stroke='%23fff' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<script>
+/* One link for everyone: the same page is also served at <project>.firebaseapp.com (Firebase's built-in second address).
+   Visitors there are sent to the main address <project>.web.app, unless their network cannot reach it (then they stay: backup). */
+(function () {
+  var h = location.hostname;
+  if (!/\.firebaseapp\.com$/.test(h) || !window.fetch) return;
+  var main = 'https://' + h.replace(/\.firebaseapp\.com$/, '.web.app'), late = false;
+  setTimeout(function () { late = true; }, 5000);
+  fetch(main + '/config.js?reach=' + Date.now(), { mode: 'no-cors', cache: 'no-store' })
+    .then(function () { if (!late) location.replace(main + location.pathname + location.search + location.hash); })
+    .catch(function () {});
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="app.css?v=10">
+<!-- fonts load without blocking the page (slow or filtered networks still get the page at once, in system fonts) -->
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=Noto+Sans+Bengali:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
+<link rel="stylesheet" href="app.css?v=15">
 </head>
 <body>
 
 <!-- Sign-in -->
 <main id="signin" class="signin hidden">
   <div class="signin-card">
-    <div class="wordmark"><svg class="mark" viewBox="0 0 24 24"><use href="#i-scale"/></svg>AinSutro Scoring Page</div>
+    <div class="wordmark"><svg class="mark" viewBox="0 0 24 24"><use href="#i-scale"/></svg><span class="wm-name">AinSutro Scoring Page<span class="phase" title="These are the chatbot's answers before fine-tuning">(Before fine-tune)</span></span></div>
     <h1>Human gold-standard scoring for the AinSutro thesis</h1>
     <p class="lead">Rate the chatbot's answers on Bangladesh law against reference answers, with the same rubric as the automatic judge.</p>
     <label class="ack" for="ackBox">
@@ -36,32 +51,43 @@
       <button class="btn" id="copyLink"><svg class="i" viewBox="0 0 24 24"><use href="#i-copy"/></svg>Copy link</button>
     </div>
     <p class="err" id="signinErr" role="alert"></p>
+    <button class="btn ghost small share-signin" id="shareBtn2"><svg class="i" viewBox="0 0 24 24"><use href="#i-share"/></svg>Share this page</button>
   </div>
 </main>
 
 <!-- App -->
 <div id="app" class="hidden">
   <header class="top">
-    <div class="wordmark"><svg class="mark" viewBox="0 0 24 24"><use href="#i-scale"/></svg>AinSutro<span class="wm-sub">Scoring Page</span></div>
-    <nav class="seg" aria-label="Section">
-      <button data-sec="law" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-scale"/></svg><span>Law Answers</span><span class="count" id="secLaw"></span></button>
-      <button data-sec="file" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg><span>File Answers</span><span class="count" id="secFile"></span></button>
-    </nav>
-    <label class="model-pick" title="Rate answers of this model"><span>Model</span><select id="modelSel"></select></label>
-    <div class="grow"></div>
-    <div class="team" id="team" title="Answers rated by the whole team"></div>
-    <button class="btn ghost" id="guideBtn"><svg class="i" viewBox="0 0 24 24"><use href="#i-book"/></svg><span class="hide-sm">Guide</span></button>
-    <div class="account">
-      <button class="avatar" id="accountBtn" aria-haspopup="menu" aria-expanded="false"></button>
-      <div class="menu hidden" id="accountMenu" role="menu">
-        <div class="menu-who"><b id="meName"></b><span id="meEmail"></span><span class="meta" id="meCount"></span><div class="me-models" id="meModels"></div></div>
-        <button class="menu-row" id="mineBtn" role="menuitem">My ratings</button>
-        <label class="menu-row"><input type="checkbox" id="hideModel"> Hide model names (blind rating)</label>
-        <button class="menu-row" id="switchBtn" role="menuitem">Switch account</button>
-        <button class="menu-row" id="signoutBtn" role="menuitem">Sign out</button>
+    <div class="wordmark"><svg class="mark" viewBox="0 0 24 24"><use href="#i-scale"/></svg><span class="wm-name">AinSutro<span class="wm-sub">Scoring Page</span><span class="phase" title="These are the chatbot's answers before fine-tuning">(Before fine-tune)</span></span></div>
+    <div class="controls">
+      <nav class="seg" aria-label="Section">
+        <button data-sec="law" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-scale"/></svg><span class="lbl">Law Answers</span><span class="count" id="secLaw"></span></button>
+        <button data-sec="file" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg><span class="lbl">File Answers</span><span class="count" id="secFile"></span></button>
+      </nav>
+      <label class="model-pick" title="Rate answers of this model"><span>Model</span><select id="modelSel"></select></label>
+    </div>
+    <div class="top-right">
+      <div class="team" id="team" title="Answers rated by the whole team"></div>
+      <button class="btn ghost share-btn" id="shareBtn" aria-label="Share this page"><svg class="i" viewBox="0 0 24 24"><use href="#i-share"/></svg><span class="hide-sm">Share</span></button>
+      <button class="btn ghost" id="guideBtn" aria-label="Guide"><svg class="i" viewBox="0 0 24 24"><use href="#i-book"/></svg><span class="hide-sm">Guide</span></button>
+      <div class="account">
+        <button class="avatar" id="accountBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="accountMenu"></button>
       </div>
     </div>
   </header>
+  <div class="menu hidden" id="accountMenu" role="menu">
+    <div class="menu-who"><b id="meName"></b><span id="meEmail"></span><span class="meta" id="meCount"></span><div class="me-models" id="meModels"></div></div>
+    <div class="menu-actions">
+      <button class="menu-btn main" id="mineBtn" role="menuitem">
+        <svg class="i" viewBox="0 0 24 24"><use href="#i-list"/></svg>
+        <span class="mb-text"><b>My scored answers</b><span class="sub">See and change the scores you gave</span></span>
+        <svg class="i go" viewBox="0 0 24 24"><use href="#i-chevron"/></svg>
+      </button>
+      <label class="menu-toggle"><input type="checkbox" id="hideModel"> Hide model names (blind rating)</label>
+      <button class="menu-btn" id="switchBtn" role="menuitem"><svg class="i" viewBox="0 0 24 24"><use href="#i-switch"/></svg><span class="mb-text">Switch account</span></button>
+      <button class="menu-btn danger" id="signoutBtn" role="menuitem"><svg class="i" viewBox="0 0 24 24"><use href="#i-logout"/></svg><span class="mb-text">Sign out</span></button>
+    </div>
+  </div>
 
   <div class="pstrip" id="pstrip" aria-live="polite">
     <div class="prow">
@@ -173,15 +199,49 @@
     <div class="tabs" role="tablist"><button data-lang="en" aria-selected="true">English</button><button data-lang="bn" aria-selected="false">বাংলা</button></div>
   </div>
   <div class="dlg-body" id="guideEn">
-    <h4>What you do</h4>
+    <h4>Start in 4 steps</h4>
+    <ol>
+      <li>Choose <b>Law Answers</b> or <b>File Answers</b> at the top. Please help the section that is further behind.</li>
+      <li>Read the <b>question</b> and the <b>reference answer</b> once (left side; on a phone, at the top).</li>
+      <li>Read the chatbot's answer and give the scores under it (explained below).</li>
+      <li>Press <b>Save and next</b>. Each question has <b>9 answers</b>; after the 9th, the next question opens by itself.</li>
+    </ol>
+    <h4>Where everything is</h4>
+    <table class="where">
+      <tr><td><b>Law Answers / File Answers</b><span>top</span></td><td>The two sections. The % shows how much the team has rated. File questions are about a document the user uploaded.</td></tr>
+      <tr><td><b>Model</b><span>top, next to File Answers</span></td><td>Rate one model's answers, or All models. A greyed-out model is not in yet. Every model answered the same questions; each question of each model goes to one rater only.</td></tr>
+      <tr><td><b>Language / File type</b><span>next to the progress line</span></td><td>Law: English (default), Bangla, or Other (typos, informal or Banglish wording, follow-ups, general and out-of-scope questions). File: all types, or only PDF, scanned PDF, photo or Word document.</td></tr>
+      <tr><td><b>Progress line</b><span>under the top bar</span></td><td>Answers rated in what you chose, for all models, and by you.</td></tr>
+      <tr><td><b>Share</b><span>top right (and on the sign-in page)</span></td><td>Send the page to others: copy the link, or share it by WhatsApp, Messenger, Telegram, Facebook, LinkedIn, email or your phone's share menu. It always shares the one main link.</td></tr>
+      <tr><td><b>(Before fine-tune)</b><span>next to the title</span></td><td>You are scoring the chatbot's answers <b>before</b> fine-tuning. A later round will score the answers after fine-tuning.</td></tr>
+      <tr><td><b>Guide</b> (book icon)<span>top right</span></td><td>Opens this guide. Switch English / বাংলা at its top.</td></tr>
+      <tr><td><b>Your picture or initial</b><span>top right</span></td><td>Your account panel: how many answers you rated per model, <b>My scored answers</b> (see and change your earlier scores), Hide model names, Switch account, Sign out.</td></tr>
+      <tr><td><b>Numbers 1–9</b> (3 × 3 grid)<span>above the answer</span></td><td>The 9 answers of this question: effort in rows, technicality in columns. Green = you rated it. Grey dashed = scored by another rater (locked). Outlined = the one open now. Tap a number to open that answer.</td></tr>
+      <tr><td><b>Speaker button</b><span>next to each title</span></td><td>Reads the text aloud with your browser's voice. Tap again to stop.</td></tr>
+      <tr><td><b>Source excerpts</b><span>under the answer</span></td><td>Tap to open the law sections, court decisions or file text the chatbot was given. You need them for Faithfulness.</td></tr>
+      <tr><td><b>Attached file</b><span>file questions</span></td><td>The uploaded document as page images and as text. Tap a page to see it full size, or “Open the original file”.</td></tr>
+      <tr><td><b>Back / Save and next</b><span>bottom</span></td><td>Back opens the previous answer. Save and next saves this answer and opens the next one.</td></tr>
+      <tr><td><b>Skip question</b><span>next to the grid</span></td><td>Gives the whole question to someone else (for example an area of law you can't judge). Only before you score its first answer.</td></tr>
+    </table>
+    <h4>Change a score you already gave</h4>
     <ul>
-      <li>Choose <b>Law Answers</b> or <b>File Answers</b> at the top. File questions are about an uploaded document. Please help the section that is further behind.</li>
-      <li>Next to the progress line you can choose what you get. <b>Law Answers</b>: English (the default), Bangla, or Other (questions with typos, informal or Banglish wording, follow-ups, general and out-of-scope questions). <b>File Answers</b>: all file types, or only PDF, scanned PDF, photo or Word document. These are the same questions and answers the AI judge scored.</li>
-      <li><b>Model</b> (next to File Answers): rate answers of one model, or of all models. A model is greyed out until its answers are in. Every model answers the same questions, and each question of each model goes to one rater only.</li>
-      <li><b>My ratings</b> (account menu, top right) lists the questions you have scored. Open one to change a score; your new score replaces the old one.</li>
-      <li>You get one question and its <b>9 answers</b>: the same chatbot with 3 effort levels × 3 technicality levels.</li>
-      <li>Read the question and the reference answer once. Then rate each answer and press <b>Save and next</b>.</li>
-      <li>The speaker button reads text aloud. Stop any time; your question waits for you for 3 hours.</li>
+      <li><b>In the question you have open:</b> tap the answer's number in the 3 × 3 grid, change the scores, press <b>Save and next</b>.</li>
+      <li><b>In an earlier question:</b>
+        <ol>
+          <li>Tap <b>your picture or initial</b> (top right).</li>
+          <li>Tap <b>My scored answers</b>. At its top choose what to see, like on the main page: <b>All</b>, <b>Law Answers</b> or <b>File Answers</b>; then the <b>language</b> (Law) or <b>file type</b> (File); and the <b>model</b>. The list is grouped the same way, newest first; tap a heading to fold it.</li>
+          <li>Tap the question (“See and change my scores ›”). Your scores are already filled in.</li>
+          <li>Change any score and press <b>Save and next</b>. A green bar at the top shows that you are changing earlier scores.</li>
+          <li>When you are done, press <b>Back to new questions</b> in that bar.</li>
+        </ol>
+      </li>
+    </ul>
+    <p class="fine">Your new score replaces the old one. Answers scored by another rater can't be changed by you.</p>
+    <h4>Stopping and coming back</h4>
+    <ul>
+      <li>Every score is saved when you press Save and next. After the 9th answer the next question opens at once. You can close the page any time.</li>
+      <li>Open the same link again: you stay signed in and get your question back (it waits 3 hours if you haven't scored any of it yet, 7 days once you have).</li>
+      <li>Always use the one link the team shared (it ends in <b>web.app</b>). It works on phones, tablets and computers in Chrome, Safari, Edge or Firefox. Don't open it inside Messenger, WhatsApp or Facebook: Google blocks sign-in there.</li>
     </ul>
     <h4>Correctness: the same legal result as the reference?</h4>
     <table>
@@ -219,21 +279,55 @@
     <h4>Tips</h4>
     <ul>
       <li>Unsure between two scores? Choose the lower one and write a short note.</li>
-      <li>Don't discuss your scores with others. The model name is shown above each answer; judge the answer, not the model. To rate blind, use the account menu → Hide model names.</li>
+      <li>Don't discuss your scores with others. The model name is shown above each answer; judge the answer, not the model. To rate blind: tap your picture or initial (top right) → Hide model names.</li>
       <li>Can't judge this area of law? Press <b>Skip question</b>.</li>
       <li>Keyboard: <kbd>1</kbd>–<kbd>5</kbd> set correctness, <kbd>Enter</kbd> saves.</li>
     </ul>
   </div>
   <div class="dlg-body hidden" id="guideBn" lang="bn">
-    <h4>আপনার কাজ</h4>
+    <h4>৪ ধাপে শুরু করুন</h4>
+    <ol>
+      <li>উপরে <b>Law Answers</b> বা <b>File Answers</b> বেছে নিন। যেটি পিছিয়ে আছে সেটিতে সাহায্য করুন।</li>
+      <li><b>প্রশ্ন</b> ও <b>রেফারেন্স উত্তর</b> একবার পড়ুন (বাম পাশে; ফোনে উপরে)।</li>
+      <li>চ্যাটবটের উত্তর পড়ে তার নিচে স্কোর দিন (নিচে ব্যাখ্যা আছে)।</li>
+      <li><b>Save and next</b> চাপুন। প্রতিটি প্রশ্নের <b>৯টি উত্তর</b>; ৯ নম্বরের পর পরের প্রশ্ন নিজে থেকেই খুলবে।</li>
+    </ol>
+    <h4>কোথায় কী আছে</h4>
+    <table class="where">
+      <tr><td><b>Law Answers / File Answers</b><span>উপরে</span></td><td>দুটি অংশ। % দেখায় টিম কতটা স্কোর দিয়েছে। File প্রশ্ন হলো ব্যবহারকারীর আপলোড করা ডকুমেন্ট নিয়ে।</td></tr>
+      <tr><td><b>Model</b><span>উপরে, File Answers-এর পাশে</span></td><td>একটি মডেলের উত্তর, অথবা All models বেছে নিন। ধূসর মডেল এখনো যোগ হয়নি। সব মডেল একই প্রশ্নের উত্তর দিয়েছে; প্রতিটি মডেলের প্রতিটি প্রশ্ন শুধু একজন রেটার পান।</td></tr>
+      <tr><td><b>Language / File type</b><span>অগ্রগতির লাইনের পাশে</span></td><td>Law: English (ডিফল্ট), Bangla, অথবা Other (বানান ভুল, অনানুষ্ঠানিক বা Banglish, follow-up, সাধারণ ও আওতার বাইরের প্রশ্ন)। File: সব ধরন, অথবা শুধু PDF, স্ক্যান করা PDF, ছবি বা Word ডকুমেন্ট।</td></tr>
+      <tr><td><b>অগ্রগতির লাইন</b><span>উপরের বারের নিচে</span></td><td>আপনার বেছে নেওয়া অংশে, সব মডেলে এবং আপনার দেওয়া স্কোরের সংখ্যা।</td></tr>
+      <tr><td><b>Guide</b> (বই আইকন)<span>উপরে ডানে</span></td><td>এই নির্দেশিকা খোলে। উপরে English / বাংলা বদলান।</td></tr>
+      <tr><td><b>Share</b><span>উপরে ডানে (সাইন-ইন পেজেও)</span></td><td>পেজটি অন্যদের পাঠান: লিংক কপি করুন, অথবা WhatsApp, Messenger, Telegram, Facebook, LinkedIn, ইমেইল বা ফোনের শেয়ার মেনু দিয়ে শেয়ার করুন। সবসময় একটি মূল লিংকই শেয়ার হয়।</td></tr>
+      <tr><td><b>(Before fine-tune)</b><span>শিরোনামের পাশে</span></td><td>আপনি fine-tuning-এর <b>আগের</b> উত্তরগুলোতে স্কোর দিচ্ছেন। পরে fine-tuning-এর পরের উত্তরগুলোর জন্য আরেকটি পর্ব হবে।</td></tr>
+      <tr><td><b>আপনার ছবি বা নামের অক্ষর</b><span>উপরে ডানে</span></td><td>আপনার অ্যাকাউন্ট প্যানেল: প্রতিটি মডেলে আপনি কতগুলো স্কোর দিয়েছেন, <b>My scored answers</b> (আগের স্কোর দেখা ও বদলানো), Hide model names, Switch account, Sign out।</td></tr>
+      <tr><td><b>১–৯ নম্বর</b> (৩ × ৩ গ্রিড)<span>উত্তরের উপরে</span></td><td>এই প্রশ্নের ৯টি উত্তর: সারিতে effort, কলামে technicality। সবুজ = আপনি স্কোর দিয়েছেন। ধূসর ড্যাশ = অন্য রেটার স্কোর দিয়েছেন (লক করা)। দাগ দেওয়া = এখন খোলা উত্তর। নম্বরে চাপ দিয়ে সেই উত্তর খুলুন।</td></tr>
+      <tr><td><b>স্পিকার বোতাম</b><span>প্রতিটি শিরোনামের পাশে</span></td><td>ব্রাউজারের ভয়েসে লেখা পড়ে শোনায়। আবার চাপলে থামে।</td></tr>
+      <tr><td><b>Source excerpts</b><span>উত্তরের নিচে</span></td><td>চাপ দিলে চ্যাটবটকে দেওয়া আইনের ধারা, আদালতের রায় বা ফাইলের লেখা খুলবে। Faithfulness-এর জন্য দরকার।</td></tr>
+      <tr><td><b>Attached file</b><span>ফাইল প্রশ্নে</span></td><td>আপলোড করা ডকুমেন্ট, পাতার ছবি ও লেখা হিসেবে। পাতায় চাপ দিলে বড় করে দেখবেন, অথবা “Open the original file”।</td></tr>
+      <tr><td><b>Back / Save and next</b><span>নিচে</span></td><td>Back আগের উত্তর খোলে। Save and next এই উত্তর সেভ করে পরেরটি খোলে।</td></tr>
+      <tr><td><b>Skip question</b><span>গ্রিডের পাশে</span></td><td>পুরো প্রশ্নটি অন্য কাউকে দেয় (যেমন যে আইনের বিষয়ে আপনি বিচার করতে পারবেন না)। শুধু প্রথম উত্তরে স্কোর দেওয়ার আগে।</td></tr>
+    </table>
+    <h4>আগে দেওয়া স্কোর বদলানো</h4>
     <ul>
-      <li>উপরে <b>Law Answers</b> বা <b>File Answers</b> বেছে নিন। File প্রশ্ন হলো আপলোড করা ডকুমেন্ট নিয়ে প্রশ্ন। যেটি পিছিয়ে আছে সেটিতে সাহায্য করুন।</li>
-      <li>অগ্রগতির লাইনের পাশে বেছে নিতে পারেন কী পাবেন। <b>Law Answers</b>: English (ডিফল্ট), Bangla, অথবা Other (বানান ভুল, অনানুষ্ঠানিক বা Banglish প্রশ্ন, follow-up, সাধারণ ও আওতার বাইরের প্রশ্ন)। <b>File Answers</b>: সব ধরনের ফাইল, অথবা শুধু PDF, স্ক্যান করা PDF, ছবি বা Word ডকুমেন্ট। এগুলো AI judge-এর মূল্যায়ন করা একই প্রশ্ন ও উত্তর।</li>
-      <li><b>Model</b> (File Answers-এর পাশে): একটি মডেলের উত্তর, অথবা সব মডেলের উত্তর বেছে নিন। কোনো মডেলের উত্তর যোগ না হওয়া পর্যন্ত সেটি ধূসর থাকে। সব মডেল একই প্রশ্নের উত্তর দিয়েছে, এবং প্রতিটি মডেলের প্রতিটি প্রশ্ন শুধু একজন রেটার পান।</li>
-      <li><b>My ratings</b> (উপরে ডানে অ্যাকাউন্ট মেনু) আপনার স্কোর দেওয়া প্রশ্নগুলোর তালিকা দেখায়। খুলে যেকোনো স্কোর বদলাতে পারেন; নতুন স্কোর পুরনোটির জায়গা নেয়।</li>
-      <li>আপনি একটি প্রশ্ন ও তার <b>৯টি উত্তর</b> পাবেন: একই চ্যাটবট, ৩টি effort × ৩টি technicality সেটিং।</li>
-      <li>প্রশ্ন ও রেফারেন্স উত্তর একবার পড়ুন। তারপর প্রতিটি উত্তরের স্কোর দিয়ে <b>Save and next</b> চাপুন।</li>
-      <li>স্পিকার বোতাম চাপলে লেখাটি পড়ে শোনানো হবে। যেকোনো সময় থামতে পারেন; আপনার প্রশ্নটি ৩ ঘণ্টা আপনার জন্য রাখা থাকবে।</li>
+      <li><b>খোলা প্রশ্নে:</b> ৩ × ৩ গ্রিডে উত্তরের নম্বরে চাপ দিন, স্কোর বদলান, <b>Save and next</b> চাপুন।</li>
+      <li><b>আগের কোনো প্রশ্নে:</b>
+        <ol>
+          <li>উপরে ডানে <b>আপনার ছবি বা নামের অক্ষরে</b> চাপুন।</li>
+          <li><b>My scored answers</b> চাপুন। উপরে মূল পেজের মতোই বেছে নিন কী দেখবেন: <b>All</b>, <b>Law Answers</b> বা <b>File Answers</b>; তারপর <b>ভাষা</b> (Law) বা <b>ফাইলের ধরন</b> (File); এবং <b>মডেল</b>। তালিকাও একইভাবে ভাগ করা, নতুনগুলো আগে; শিরোনামে চাপ দিলে ভাঁজ হবে।</li>
+          <li>প্রশ্নটিতে চাপুন (“See and change my scores ›”)। আপনার স্কোর আগে থেকেই বসানো থাকবে।</li>
+          <li>যেকোনো স্কোর বদলে <b>Save and next</b> চাপুন। উপরের সবুজ বার জানাবে যে আপনি আগের স্কোর বদলাচ্ছেন।</li>
+          <li>শেষ হলে ওই বারে <b>Back to new questions</b> চাপুন।</li>
+        </ol>
+      </li>
+    </ul>
+    <p class="fine">নতুন স্কোর পুরনোটির জায়গা নেয়। অন্য রেটারের দেওয়া স্কোর আপনি বদলাতে পারবেন না।</p>
+    <h4>থামা ও আবার ফিরে আসা</h4>
+    <ul>
+      <li>Save and next চাপলেই প্রতিটি স্কোর সেভ হয়। ৯ নম্বর উত্তরের পর পরের প্রশ্ন সঙ্গে সঙ্গে খুলবে। যেকোনো সময় পেজ বন্ধ করতে পারেন।</li>
+      <li>একই লিংক আবার খুলুন: আপনি সাইন ইন থাকবেন এবং আপনার প্রশ্ন ফিরে পাবেন (একটিও স্কোর না দিলে ৩ ঘণ্টা, দিলে ৭ দিন অপেক্ষা করে)।</li>
+      <li>সবসময় টিমের দেওয়া একটি লিংকই ব্যবহার করুন (শেষে <b>web.app</b>)। ফোন, ট্যাবলেট ও কম্পিউটারে Chrome, Safari, Edge বা Firefox-এ চলে। Messenger, WhatsApp বা Facebook-এর ভেতরে খুলবেন না: সেখানে Google সাইন ইন বন্ধ রাখে।</li>
     </ul>
     <h4>Correctness: রেফারেন্সের মতো একই আইনি ফল দিয়েছে কি?</h4>
     <table>
@@ -271,7 +365,7 @@
     <h4>পরামর্শ</h4>
     <ul>
       <li>দুটি স্কোরের মধ্যে দ্বিধা হলে কমটি দিন এবং একটি ছোট নোট লিখুন।</li>
-      <li>নিজের স্কোর নিয়ে অন্যদের সাথে আলোচনা করবেন না। প্রতিটি উত্তরের উপরে মডেলের নাম দেখানো থাকে; মডেল নয়, উত্তরটি বিচার করুন। নাম না দেখে স্কোর দিতে চাইলে অ্যাকাউন্ট মেনু → Hide model names।</li>
+      <li>নিজের স্কোর নিয়ে অন্যদের সাথে আলোচনা করবেন না। প্রতিটি উত্তরের উপরে মডেলের নাম দেখানো থাকে; মডেল নয়, উত্তরটি বিচার করুন। নাম না দেখে স্কোর দিতে চাইলে: উপরে ডানে আপনার ছবি বা নামের অক্ষর → Hide model names।</li>
       <li>এই আইনের বিষয়ে বিচার করতে না পারলে <b>Skip question</b> চাপুন।</li>
       <li>কিবোর্ড: <kbd>1</kbd>–<kbd>5</kbd> correctness দেয়, <kbd>Enter</kbd> সেভ করে।</li>
     </ul>
@@ -280,10 +374,39 @@
 </dialog>
 
 <dialog id="mineDlg" aria-labelledby="mineTitle">
-  <div class="dlg-head"><b id="mineTitle">My ratings</b><button class="btn ghost small" id="mineClose">Close</button></div>
+  <div class="dlg-head"><b id="mineTitle">My scored answers</b><button class="btn ghost small" id="mineClose">Close</button></div>
   <div class="dlg-body">
-    <p class="fine" style="margin-top:12px">Questions you have scored, newest first. Open one to see your scores and change any of them.</p>
+    <div class="mine-filters" id="mineFilters">
+      <nav class="seg" aria-label="Section">
+        <button type="button" data-v="all" aria-pressed="true">All</button>
+        <button type="button" data-v="law" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-scale"/></svg>Law Answers</button>
+        <button type="button" data-v="file" aria-pressed="false"><svg class="i" viewBox="0 0 24 24"><use href="#i-file"/></svg>File Answers</button>
+      </nav>
+      <div class="mine-selects">
+        <label class="filter hidden" id="mineGroupWrap"><span id="mineGroupLabel">Language</span><select id="mineGroup"></select></label>
+        <label class="filter"><span>Model</span><select id="mineModel"></select></label>
+      </div>
+    </div>
+    <p class="fine" style="margin-top:8px">Choose what to see, like on the main page. Tap a question to see your scores and change any of them.</p>
     <div id="mineList" class="mine-list"></div>
+  </div>
+</dialog>
+
+<dialog id="shareDlg" aria-labelledby="shareTitle">
+  <div class="dlg-head"><b id="shareTitle">Share the AinSutro Scoring Page</b><button class="btn ghost small" id="shareClose">Close</button></div>
+  <div class="dlg-body">
+    <p class="fine" style="margin-top:12px">Send the page to people with a law background who can help score. Everyone uses this one link.</p>
+    <div class="share-link"><input id="shareUrl" readonly aria-label="Link to the page"><button class="btn primary" id="shareCopy"><svg class="i" viewBox="0 0 24 24"><use href="#i-copy"/></svg>Copy link</button></div>
+    <div class="share-grid">
+      <button class="btn share-native hidden" id="shareNative"><svg class="i" viewBox="0 0 24 24"><use href="#i-share"/></svg>Share with an app…</button>
+      <a class="btn" id="shareWa" target="_blank" rel="noopener">WhatsApp</a>
+      <a class="btn" id="shareMsg" target="_blank" rel="noopener">Messenger</a>
+      <a class="btn" id="shareTg" target="_blank" rel="noopener">Telegram</a>
+      <a class="btn" id="shareFb" target="_blank" rel="noopener">Facebook</a>
+      <a class="btn" id="shareLi" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" id="shareMail">Email</a>
+    </div>
+    <p class="fine">People who get the link in Messenger, WhatsApp or Facebook should open it in Chrome or Safari: Google sign-in does not work inside those apps.</p>
   </div>
 </dialog>
 
@@ -300,6 +423,10 @@
   <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 18 6-6-6-6"/></symbol>
   <symbol id="i-left" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="m3 17 2 2 4-4"/><path d="m3 7 2 2 4-4"/><path d="M13 6h8"/><path d="M13 12h8"/><path d="M13 18h8"/></symbol>
+  <symbol id="i-switch" viewBox="0 0 24 24"><path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/></symbol>
+  <symbol id="i-logout" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/></symbol>
+  <symbol id="i-share" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4"/><path d="m15.4 6.5-6.8 4"/></symbol>
   <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
   <symbol id="i-google" viewBox="0 0 24 24"><path d="M21.6 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.4a4.6 4.6 0 0 1-2 3v2.5h3.2c1.9-1.7 3-4.3 3-7.3Z" fill="#4285F4" stroke="none"/><path d="M12 22c2.7 0 5-.9 6.6-2.4l-3.2-2.5c-.9.6-2 1-3.4 1-2.6 0-4.8-1.8-5.6-4.1H3.1v2.6A10 10 0 0 0 12 22Z" fill="#34A853" stroke="none"/><path d="M6.4 14c-.2-.6-.3-1.3-.3-2s.1-1.4.3-2V7.4H3.1a10 10 0 0 0 0 9.2L6.4 14Z" fill="#FBBC05" stroke="none"/><path d="M12 5.9c1.5 0 2.8.5 3.8 1.5l2.9-2.9A10 10 0 0 0 3.1 7.4L6.4 10c.8-2.4 3-4.1 5.6-4.1Z" fill="#EA4335" stroke="none"/></symbol>
 </svg>
@@ -309,6 +436,6 @@
 <script src="vendor/marked-12.0.2.min.js"></script>
 <script src="vendor/purify-3.1.6.min.js"></script>
 <script src="config.js?v=1"></script>
-<script src="app.js?v=13"></script>
+<script src="app.js?v=17"></script>
 </body>
 </html>

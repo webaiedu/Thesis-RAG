@@ -53,18 +53,36 @@ const QS = colIndex(HEAD.Questions);
 function colIndex(h) { const o = {}; h.forEach((k, i) => { o[k] = i; }); return o; }
 
 // ------------------------------------------------------------------ sheet helpers
-function book() { return SpreadsheetApp.openById(SHEET_ID); }
+// Speed (26 Nov): each web request opened the spreadsheet and re-checked a tab's header every time a tab was used
+// (~0.3 s each, ~10 times per question) and read Ratings/Queue/Questions several times. Now each request opens and
+// reads them once (MEMO lives for one request only), and small lookups are cached across requests (CacheService).
+// Same data, same rules, same results.
+const MEMO = {};
+function book() { return MEMO.book || (MEMO.book = SpreadsheetApp.openById(SHEET_ID)); }
 
 function tab(name) {
+  MEMO.tabs = MEMO.tabs || {};
+  if (MEMO.tabs[name]) return MEMO.tabs[name];
   let sh = book().getSheetByName(name);
   if (!sh) {
     sh = book().insertSheet(name);
     sh.setFrozenRows(1);
   }
-  const head = sh.getRange(1, 1, 1, HEAD[name].length);
-  if (head.getValues()[0].join('\t') !== HEAD[name].join('\t')) head.setValues([HEAD[name]]);  // new columns go last
+  const cache = CacheService.getScriptCache(), hk = 'head:' + name + ':' + md5hex(HEAD[name].join('\t'));
+  if (!cache.get(hk)) {
+    const head = sh.getRange(1, 1, 1, HEAD[name].length);
+    if (head.getValues()[0].join('\t') !== HEAD[name].join('\t')) head.setValues([HEAD[name]]);  // new columns go last
+    cache.put(hk, '1', 21600);
+  }
+  MEMO.tabs[name] = sh;
   return sh;
 }
+
+/** All Ratings rows, read once per request (cleared when this request adds a rating). */
+function ratingRows() { return MEMO.ratings || (MEMO.ratings = rowsOf(tab('Ratings'), HEAD.Ratings.length)); }
+
+/** Clear the cross-request caches that depend on imported data (after an import or a new queue). */
+function clearDataCache() { CacheService.getScriptCache().removeAll(['qinfo2']); }
 
 function rowsOf(sh, ncols) {
   const n = sh.getLastRow() - 1;
@@ -205,6 +223,7 @@ function auditModel(model) {
 function importRows(name, rows) {
   const tabName = { questions: 'Questions', chunks: 'Chunks', answers: 'Answers' }[String(name)];
   if (!tabName || !Array.isArray(rows) || rows.length < 1) throw new Error('import_rows: bad name or rows');
+  clearDataCache();
   return withLock(() => importInto(tabName, rows.map(r => r.map(v => (v == null ? '' : String(v)))), Date.now()));
 }
 
@@ -221,6 +240,7 @@ function importFiles() {
     msg.push(n + ': +' + r.added + (r.left ? ' (' + r.left + ' left)' : ''));
     if (r.left) return msg.join('\n') + '\n\nStopped before the 6-minute limit. Run Import again to continue.';
   }
+  clearDataCache();
   msg.push('new bundles in the queue: ' + buildQueue());
   SpreadsheetApp.flush();
   return msg.join('\n');
@@ -356,7 +376,7 @@ function doPost(e) {
                     progress: () => progressFor('', true), ratings: exportRatings, acks: exportAcks,
                     // human.py push: the same import as the Drive folder, sent directly (rows incl. the header row)
                     import_rows: () => importRows(d.name, d.rows), build_queue: () => ({ added: buildQueue() }),
-                    audit: () => auditModel(d.model) };
+                    audit: () => auditModel(d.model), bench: () => bench(d.n), bench3: () => bench3(d.n) };
     if (req.action.indexOf('admin_') === 0) {
       if (req.secret !== API_SECRET) throw new Error('forbidden');
       const f = admin[req.action.slice(6)];
@@ -370,7 +390,11 @@ function doPost(e) {
       else if (req.action === 'next') out = { result: getNext(u, d.section, d.filter) };
       else if (req.action === 'mine') out = { result: myRatings(u) };
       else if (req.action === 'open') out = { result: openBundle(u, d.bundle) };
-      else if (req.action === 'submit') out = { result: submit(u, d.row, d.bundle, d.rating) };
+      else if (req.action === 'submit') {
+        const res = submit(u, d.row, d.bundle, d.rating);
+        if (res.finished && d.next) res.next = getNext(u, d.next.section, d.next.filter);   // the next question at once
+        out = { result: res };
+      }
       else if (req.action === 'skip') out = { result: skip(u, d.row, d.bundle, d.section, d.filter) };
       else if (req.action === 'progress') out = { result: progressFor(u.id, false) };
       else throw new Error('unknown action');
@@ -437,7 +461,7 @@ function authorize() {
 }
 
 function exportRatings() {
-  return rowsOf(tab('Ratings'), HEAD.Ratings.length).map(r => {
+  return ratingRows().map(r => {
     const o = {};
     HEAD.Ratings.forEach((h, i) => { o[h] = String(r[i]); });
     return o;
@@ -457,7 +481,7 @@ function claimLive(r, now) {
  */
 function abandonedKeys(bundle, done, u) {
   const out = {};
-  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+  ratingRows().forEach(r => {
     const who = String(r[1]);
     if (String(r[3]) === String(bundle) && who !== u.id && done.indexOf(who) < 0) out[String(r[2])] = 1;
   });
@@ -475,7 +499,7 @@ function takeoverRated(r, u) {
 /** Keys of this bundle the rater has scored before (any time). */
 function myKeys(u, bundle) {
   const out = {};
-  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+  ratingRows().forEach(r => {
     if (String(r[1]) === u.id && String(r[3]) === String(bundle)) out[String(r[2])] = 1;
   });
   return out;
@@ -489,7 +513,7 @@ function better(a, b) {
 
 /** qid -> 'law' or 'file' (the test set the question comes from). */
 function sections() {
-  const out = {}, qi = qinfo();
+  const out = {}, qi = qinfoLite();
   Object.keys(qi).forEach(k => { out[k] = qi[k].sec; });
   return out;
 }
@@ -513,6 +537,7 @@ function fileType(f) {
 
 /** qid -> {sec, group (law: en/bn/other; file: pdf/scan/photo/word), question} */
 function qinfo() {
+  if (MEMO.qinfo) return MEMO.qinfo;
   const out = {};
   rowsOf(tab('Questions'), 11).forEach(r => {
     const sec = String(r[3]) === 'file' ? 'file' : 'law';
@@ -520,7 +545,23 @@ function qinfo() {
       : SPECIAL_TYPES.indexOf(String(r[6])) >= 0 ? 'other' : (String(r[4]) === 'bn' ? 'bn' : 'en');
     out[String(r[0])] = { sec: sec, group: group, question: String(r[10] || '') };
   });
-  return out;
+  return (MEMO.qinfo = out);
+}
+
+/** qid -> {sec, group} without the question text: cached across requests (6 h; cleared by imports). */
+function qinfoLite() {
+  if (MEMO.qinfoLite) return MEMO.qinfoLite;
+  const cache = CacheService.getScriptCache(), hit = cache.get('qinfo2');
+  let out;
+  if (hit) out = JSON.parse(hit);
+  else {
+    const full = qinfo();
+    out = {};
+    Object.keys(full).forEach(k => { out[k] = { sec: full[k].sec, group: full[k].group }; });
+    const js = JSON.stringify(out);
+    if (js.length < 90000) cache.put('qinfo2', js, 21600);
+  }
+  return (MEMO.qinfoLite = out);
 }
 
 /** The rater's choice: law defaults to English, files to all types. */
@@ -537,11 +578,12 @@ function matches(info, section, want) {
 /** Give the rater their current bundle in this section (law or file), or claim the next open one. */
 function getNext(u, section, filter) {
   section = section === 'file' ? 'file' : 'law';
-  const qi = qinfo(), want = wanted(section, filter);
+  const qi = qinfoLite(), want = wanted(section, filter);
   const wantModel = filter && MODEL_ORDER.indexOf(filter.model) >= 0 ? filter.model : 'all';   // 'all' = any model
   const row = withLock(() => {
     const sh = tab('Queue');
     const vals = rowsOf(sh, HEAD.Queue.length);
+    MEMO.queue = vals;                                  // progress below counts from this same read
     if (!vals.length) return 0;
     const now = Date.now();
     let mine = -1, best = -1;
@@ -586,6 +628,24 @@ function getNext(u, section, filter) {
 
 function objOf(head, r) { const o = {}; head.forEach((h, i) => { o[h] = r[i]; }); return o; }
 
+/** Texts of these chunk ids (only ids that exist in Chunks), cached per chunk for 6 h. */
+function chunkTexts(ids) {
+  const cache = CacheService.getScriptCache(), key = id => 'ch:' + md5hex(id), out = {}, miss = [];
+  const got = ids.length ? cache.getAll(ids.map(key)) : {};
+  ids.forEach(id => { const v = got[key(id)]; if (v != null) out[id] = v; else miss.push(id); });
+  if (miss.length) {
+    const rowOf = chunkRows(), csh = tab('Chunks'), put = {};
+    miss.forEach(id => {
+      if (!rowOf[id]) return;
+      const t = String(csh.getRange(rowOf[id], 2).getValue());
+      out[id] = t;
+      if (t.length < 25000) put[key(id)] = t;
+    });
+    if (Object.keys(put).length) cache.putAll(put, 21600);
+  }
+  return out;
+}
+
 function chunkRows() {
   const rowOf = {};
   column(tab('Chunks'), 1).forEach((id, i) => { rowOf[id] = i + 2; });
@@ -600,14 +660,11 @@ function loadBundle(row, u) {
   const tr = translationFor(qrow, q);
   const ans = tab('Answers').getRange(Number(qr[Q.answer_row]), 1, 9, HEAD.Answers.length).getValues()
     .map(r => objOf(HEAD.Answers, r));
-  const rowOf = chunkRows();
-  const text = {};
-  const csh = tab('Chunks');
-  ans.forEach(a => JSON.parse(a.sources || '[]').forEach(s => {
-    if (rowOf[s.id] && !(s.id in text)) text[s.id] = String(csh.getRange(rowOf[s.id], 2).getValue());
-  }));
+  const ids = [];
+  ans.forEach(a => JSON.parse(a.sources || '[]').forEach(s => { if (ids.indexOf(s.id) < 0) ids.push(s.id); }));
+  const text = chunkTexts(ids);
   const mine = {};
-  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+  ratingRows().forEach(r => {
     const o = objOf(HEAD.Ratings, r);
     if (o.bundle === qr[Q.bundle] && o.rater === u.id) mine[o.key] = o;   // later rows win
   });
@@ -697,6 +754,7 @@ function submit(u, row, bundle, rating) {
     appendText(tab('Ratings'), [[new Date().toISOString(), u.id, rating.key, bundle, a[1], a[2], a[4], a[5],
       s.correctness, s.faithfulness, s.technicality_fit, s.language_ok, s.refused,
       String(rating.note || '').slice(0, 2000), second ? '1' : '', u.name, RUBRIC]]);
+    MEMO.ratings = null;
     let finished = false;
     const now = Date.now();
     if (doneBefore.indexOf(u.id) < 0 && (r[Q.claim_rater] === u.id || !claimLive(r, now))) {
@@ -743,7 +801,7 @@ const MODEL_LABEL = { 'gemma': 'Gemma 4 E4B', 'qwen3-30b': 'Qwen3 30B', 'qwen3-n
 /** The questions this rater has scored (newest first), for "My ratings". */
 function myRatings(u) {
   const by = {};
-  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+  ratingRows().forEach(r => {
     if (String(r[1]) !== u.id) return;
     const b = String(r[3]);
     const o = by[b] || (by[b] = { bundle: b, qid: String(r[4]), model: String(r[5]), keys: {}, last: '' });
@@ -761,13 +819,41 @@ function myRatings(u) {
 
 /** One of my scored questions again, with my scores filled in, so I can change them. */
 function openBundle(u, bundle) {
-  const mineHere = rowsOf(tab('Ratings'), HEAD.Ratings.length).some(r => String(r[1]) === u.id && String(r[3]) === String(bundle));
+  const mineHere = ratingRows().some(r => String(r[1]) === u.id && String(r[3]) === String(bundle));
   if (!mineHere) throw new Error('You can only reopen questions you have scored.');
   const b = loadBundle(findRow(tab('Queue'), 0, String(bundle)), u);
-  const q = qinfo()[String(b.question.qid)] || {};
+  const q = qinfoLite()[String(b.question.qid)] || {};
   b.section = q.sec || 'law';
   b.review = true;
   return b;
+}
+
+/** Read-only timing of one question load (admin): where does the time go? */
+function bench(n) {
+  const t = {}, T = (k, f) => { const s = Date.now(); const r = f(); t[k] = (t[k] || 0) + Date.now() - s; return r; };
+  const u = { id: 'bench@ainsutro.invalid', name: 'bench' };
+  const sh = T('tab_queue', () => tab('Queue'));
+  const vals = T('read_queue', () => rowsOf(sh, HEAD.Queue.length));
+  T('qinfo', () => qinfo());
+  T('read_ratings', () => ratingRows());
+  T('chunk_rows', () => chunkRows());
+  const row = 2 + Math.min(vals.length - 1, Number(n) || 0);
+  T('load_bundle_total', () => loadBundle(row, u));
+  T('progress', () => progressFor(u.id, false));
+  return t;
+}
+
+
+/** Read-only timing of the real question-load path (no claim is written): queue scan + question + 9 answers + excerpts + progress. */
+function bench3(n) {
+  const t0 = Date.now(), u = { id: 'bench@ainsutro.invalid', name: 'bench' };
+  const qi = (typeof qinfoLite === 'function') ? qinfoLite() : qinfo();
+  const vals = rowsOf(tab('Queue'), HEAD.Queue.length);
+  if (typeof MEMO !== 'undefined') MEMO.queue = vals;
+  let c = 0; vals.forEach(r => { if (qi[String(r[Q.qid])]) c++; });
+  const row = 2 + Math.min(vals.length - 1, Number(n) || 0);
+  const b = loadBundle(row, u);
+  return { ms: Date.now() - t0, answers: b.answers.length, excerpts: b.answers.reduce((x, a) => x + a.excerpts.length, 0) };
 }
 
 function findRow(sh, row, bundle) {
@@ -780,8 +866,8 @@ function findRow(sh, row, bundle) {
 
 /** Team progress (each answer counted once) and this rater's count. Rater names only for the owner. */
 function progressFor(id, withRaters) {
-  const vals = rowsOf(tab('Queue'), HEAD.Queue.length);
-  const qi = qinfo(), sec = {};
+  const vals = MEMO.queue || rowsOf(tab('Queue'), HEAD.Queue.length);
+  const qi = qinfoLite(), sec = {};
   Object.keys(qi).forEach(k => { sec[k] = qi[k].sec; });
   const per = {}, bySec = { law: { done: 0, total: 0 }, file: { done: 0, total: 0 } }, groups = {};
   let done = 0;
@@ -807,7 +893,7 @@ function progressFor(id, withRaters) {
   ['law', 'file'].forEach(k => { bySec[k].pct = bySec[k].total ? Math.round(1000 * bySec[k].done / bySec[k].total) / 10 : 0; });
   const counts = {}, names = {}, mineBy = {};
   const seen = new Set();
-  rowsOf(tab('Ratings'), HEAD.Ratings.length).forEach(r => {
+  ratingRows().forEach(r => {
     const k = r[1] + '|' + r[2];
     names[r[1]] = r[15] || r[1];
     if (seen.has(k)) return;
