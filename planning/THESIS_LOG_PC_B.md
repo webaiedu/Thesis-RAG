@@ -314,3 +314,47 @@ PC B found this problem, and it led to the project-wide fix **baseline-v1.1**.
 | Judge sees the full answer | yes (PC A's `score.py`, no cut; longest answer 6,409 chars) |
 | Context errors | 0 |
 - **13:10 26 Nov: Qwen3 30B B0 fully judged and pushed** (`fb4303c`; checked by PC A: 0 errors, same judge hash). Stopped for today; all models unloaded (`lms unload --all`). Privacy runs not started (inputs not built yet: no privacy branch, canaries, PII index, attack set or filter code; PC A builds them first and sends exact instructions). The 30B "after" runs wait for the team's model choice (after human scoring). No work 27–28 Nov; next session 29 Nov.
+
+## 9. 26 Nov 2026 (afternoon): N0 = Qwen3 30B without RAG
+- **13:20 new task (team decision, PC A):** the thesis needs RAG vs no RAG. N0 = Qwen3 30B in the chatbot's **General mode**: no router, no law search; for file questions the attached file is still given (only the law search is off). No code change; the baseline stays frozen. Settings: effort low/mid/high × technicality auto, 365 law questions (1,095 answers) and 76 file questions (228 answers). Then judge with the 80B and report. **No `score.py compare`.**
+- **13:30 setup:**
+  - `git pull --rebase`: up to date (`10187d1`). `backend/.env`: `GENERAL_PROVIDER=lmstudio` (and LLM/ROUTER `lmstudio`). `GENERAL_MODEL=gemini-3.8-flash` is set but only used when the provider is `gemini` (`chat.service.ts:236`); with `lmstudio` the user's model is used (`mid` → `qwen/qwen3-30b-a3b-2507`). Nothing calls an online model.
+  - `lms unload --all` (the 30B was loaded under its default id), then `lms load qwen3-30b-a3b-instruct-2507 --identifier qwen/qwen3-30b-a3b-2507 -c 131072 --parallel 4 --gpu max`. `lms ps`: only the 30B, context 131,072, Parallel 4.
+  - Retrieval server started (`~/retrieval.log`): `/domains` lists 9 domains. It is needed only to rank the attached file's passages.
+  - Shared caches md5 recorded (route-cache `91ff9a29…`, file-cache `4dfe38df…`).
+- **13:35 law pilot** (`--limit 5`, 15 answers): "15 answers written, 0 errors, 0 cut saved". Checks: 15 unique, 0 empty, 0 `<think>`, `sources: []` for all, all `finishReason: stop`, `route: {type: general}`, model `qwen/qwen3-30b-a3b-2507`, real answers (no refusal for missing excerpts). git clean in `run-config.json`.
+  - Code check: in General mode the runner passes no route decision (`run-eval.ts:290`) and calls no router, so `ChatService.general()` answers from the original message, the same as the UI's General mode. The `corrected`, `routerTokens` and `routerMs` fields are only copied from the existing route cache and are not used. Gemma was never loaded; caches unchanged.
+- **13:37 full chain started:** `~/n0-30b.sh` (outside the repo, log `~/n0-30b.log`, resumable). Steps:
+  1. law answers until 1,095 complete (at most 2 runs);
+  2. files pilot (15) with checks;
+  3. files answers until 228;
+  4. caches unchanged;
+  5. unload, check the 80B sha256, load the 80B (131,072, Parallel 4);
+  6. judge + report law, then files (`--test data/test_files.jsonl`), each until every answer is judged. No compare.
+  - It refuses to answer unless the 30B is loaded (131,072 / 4) and the 80B is not, and refuses to judge while the 30B is loaded.
+- **15:08 N0 law complete:** "1,080 answers written, 0 errors, 0 cut saved" (plus the 15 from the pilot). Check: 1,095 rows, 1,095 unique, 0 bad (none empty, no `<think>`, `sources: []`, all `stop`, mode general, model `qwen/qwen3-30b-a3b-2507`). Speed: low ~30/min, mid ~16/min, high ~5–6/min.
+- **15:10 N0 files pilot** (`--limit 5`): "15 answers written, 0 errors, 0 cut saved"; checks passed (15, none empty, no `<think>`, `sources: []`, all `stop`, a file on each).
+  - Read by hand: the answers use the attached file (they quote the letter's "8:00 AM to 8:00 PM, six days a week"), so only the law search is off. There are no refusals.
+  - Without the law excerpts the legal content is visibly weaker. For example, the low and mid answers say that overtime at the normal hourly rate "is allowed". This is the RAG vs no-RAG effect that the judge is meant to measure.
+- **15:10 N0 files full run started** (228; 213 left).
+- **15:29 N0 files complete:** "213 answers written, 0 errors, 0 cut saved". Check: 228 rows, 228 unique, 0 bad. Shared caches unchanged (md5).
+- **15:30 judge switch (script):** `lms unload --all`; 80B sha256 matches `eeece92f…4a7472`; loaded `qwen3-next-80b-a3b-instruct` with context 131,072, Parallel 4, GPU max. Judging N0 law started at 15:30:29 (j1, `aebea71088b8`).
+- **16:01 N0 law judging: 1,094/1,095, 1 judge error that does not go away.** `N0|q-22327c908c72|mid|mid|auto|general` (Bangla, a family-law question on annulment for the husband's impotence; the answer is 1,199 chars).
+  - Failed tries: script attempt 1 (16:00), attempt 2 (16:01), and a 3rd try at 16:05 batched with the files judging. `score.py` itself retries 3× per run.
+  - **Cause (read-only probe in the scratchpad, exact same prompt and settings):** the 80B returns a complete judgment (finish `stop`, 72 tokens; correctness 3, faithfulness null, tech 4, language_ok true, refused false, reason "…cites non-existent sections…") but **leaves out the closing `}`**. `score.py`'s `\{.*\}` match then finds no JSON, so nothing is saved, which is correct by design. At temperature 0 it is repeatable, alone or batched.
+  - Stopped as the rule says; asked the user. No code or config changed. The files judging (228) continues.
+- **16:18 N0 files judging finished:** "226 judged, 2 errors". Both errors are the same missing-`}` case (`N0|f-c51173ada8b3|mid|low` and `N0|f-bb317adeb572|mid|low`).
+- **16:19 PC A's parser fix pulled** (`git pull --rebase --autostash`, `9566006`). Same issue on PC A (`B0|q-1c2c26e8031c`, 80B law). `call_judge()` now adds the final `}` when the reply is a JSON object missing only that brace, and records `"repaired": "closing brace added"`. Judge config, prompts and hash are unchanged (`aebea71088b8`); replies that parsed before are unchanged.
+- **16:19 the 3 missing judgments redone:** law "1 judged, 0 errors"; files "2 judged, 0 errors".
+  - The two file judgments carry `repaired` (correctness 3, faithfulness 2).
+  - The law one (`q-22327c908c72` mid) came back **with** its closing brace this time, so it was saved normally (correctness 3, faithfulness null, tech 4) with no repair. The reason text differs slightly from the 3 failed tries: a run-to-run variation, as seen on 25 Nov.
+- **Note on the judge context:** the script loaded the 80B at 131,072 (log: `n_ctx_slot = 131072`, 15:30:28). At 15:31:30 LM Studio's model process crashed ("Channel Error … terminated"), and LM Studio **restarted it by itself at 262,144** (15:31:38). So nearly all N0 judgments were made at context 262,144, the same as the 30B B0 judging on 25–26 Nov.
+  - The requests open during the crash succeeded on `score.py`'s retries (no judge error from it).
+  - The context size does not change the prompt, and no prompt was near either limit (0 "Context size has been exceeded" today).
+- **16:22 final audit + reports:** law 1,095/1,095 judged and files 228/228, one hash `aebea71088b8`, 0 incomplete, 2 repaired (files). `score.py report` was written for both. Shared caches unchanged. **No compare.**
+  - **N0 = Qwen3 30B without RAG, law (n = 1,095):** correctness **2.77** [2.65, 2.90]. Faithfulness: – (no excerpts and no file, so the judge gives none). Technicality fit 4.37. route_ok: – (no router). ctx_hit **0.00** (nothing retrieved). cite recall 0.06. 206 words, 20.2 s.
+    - By effort: correctness low 2.66, mid 2.82, high 2.83.
+  - **N0, files (n = 228):** correctness **2.72** [2.39, 3.03], faithfulness **2.18** [1.86, 2.51] (to the attached file), technicality fit 4.78, ctx_hit 0.00, cite recall 0.11, 214 words.
+    - By effort: correctness low 2.84, mid 2.71, high 2.61.
+    - By format: photo bn 1.97 / en 3.06; scan bn 2.74 / en 2.83; text bn 2.39 / en 3.29.
+  - `~/n0-30b.sh` had stopped at 16:01 on the law error (as designed); the remaining steps were done by hand with the same commands.
