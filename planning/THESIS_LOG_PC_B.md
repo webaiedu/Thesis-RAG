@@ -313,3 +313,4 @@ PC B found this problem, and it led to the project-wide fix **baseline-v1.1**.
 | Compare | not run (PC A runs all comparisons later, once, for all three models on the human-rated answers) |
 | Judge sees the full answer | yes (PC A's `score.py`, no cut; longest answer 6,409 chars) |
 | Context errors | 0 |
+- **13:10 26 Nov: Qwen3 30B B0 fully judged and pushed** (`fb4303c`; checked by PC A: 0 errors, same judge hash). Stopped for today; all models unloaded (`lms unload --all`). Privacy runs not started (inputs not built yet: no privacy branch, canaries, PII index, attack set or filter code; PC A builds them first and sends exact instructions). The 30B "after" runs wait for the team's model choice (after human scoring). No work 27–28 Nov; next session 29 Nov.
