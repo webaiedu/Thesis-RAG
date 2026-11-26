@@ -7,7 +7,7 @@ A running record of what we did, why, and what we found, written for the thesis 
 - **Thesis:** *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering* (decided 23 Nov 2026).
 - **System:** AinSutro (formerly Ainkhoj), a RAG chatbot for Bangladesh law (Bangla + English).
 - **Human-scoring tool:** AinSutro Scoring Page.
-- **Last updated:** 26 Nov 2026, 16:16 (PC A).
+- **Last updated:** 26 Nov 2026, 16:32 (PC A).
 
 ---
 
@@ -23,6 +23,19 @@ A running record of what we did, why, and what we found, written for the thesis 
 ---
 
 ## 2. Timeline (newest first)
+
+### 26 Nov 2026, 16:32 (PC A): stopped for the day (next session 29 Nov)
+- **Stopped at 16:30** (user's request): the waiting `n0chain.sh`, `judge80b.sh` and its judge (SIGINT), and the retrieval server. 80B B0 file judgments **231 / 684**, all lines valid, 0 errors (resumes exactly). LM Studio keeps the 80B loaded (262,144, Parallel 4).
+- **PC B pushed** `eca65e2` + `8f37879`: Qwen3 30B **N0** law 1,095 + files 228, answered (General mode, no sources, none empty) and judged, 0 errors, reports written; 2 file judgments "repaired" (missing final brace); its formerly failing law judgment was saved normally on the rerun. Merged fast-forward and checked on PC A. No compare was run on either PC.
+- **Human ratings** (`human.py pull` + `status`): 15 rows → **14 answers** rated by 2 raters (Gemma 12, Qwen3 30B 2, 80B 0); no overlap pair yet.
+- **Invitation document:** both versions on the Desktop, `AinSutro_Scoring_Page_Application_5pages.pdf` (to send) and `..._10pages.pdf` (to compare); sources renamed `application-5pages.html` / `application-10pages.html` in `~/Documents/AinSutro-application/`.
+- **Handoff:** `planning/NEXT_STEPS.md` (26 → 29 Nov, incl. PC B's prompt) and `~/Desktop/"Tomorrows promt.txt"` (PC A, 29 Nov): restart `judge80b.sh` (80B files, ~30 min), then `n0chain.sh` (Gemma N0 ~2.5 h, 80B N0 ~5 h). No work on 27–28 Nov.
+
+### 26 Nov 2026, 16:28 (PC A): invitation document shortened to 5 pages
+- Team request: 5 pages with the main objective. `~/Desktop/AinSutro_Scoring_Page_Application.pdf` is now 5 pages: page 1 letterhead (AIUB, Department of Computer Science; title, thesis, link + QR), covering letter, a **Main objective** box (expert legal scores as the human gold standard: check the two AI judges incl. self-preference, choose the model to fine-tune, find where the assistant fails; wider aim: correct, sourced, privacy-preserving legal assistant) and a 5-step start; then the study and why experts are needed (Table 1, Figure 1), the page (Figure 2: sign-in, account panel, share), scoring (Figure 3, Table 2), file questions (Figure 4, 2×2 collage), review and guide (Figure 5), fair scoring/time/privacy, contact with the team table. The 10-page version is kept as `~/Documents/AinSutro-application/AinSutro_Scoring_Page_Application_long.pdf` (source `application-long.html`).
+
+### 26 Nov 2026, 16:17 (PC A): commit 9566006 pushed
+- Pushed: 80B B0 answers + law judgments/report, 80B pilot redo, `score.py` parser fix, scoring page + store code, docs, this log. Not included: the 80B file judgments (still running), `eval/runs/logs/`, secrets and generated files. PC B told to pull the parser fix and judge its one missing N0 answer.
 
 ### 26 Nov 2026, 16:16 (PC A): 80B B0 law judged 3,285 / 3,285; judge parser accepts a missing final brace
 - **16:13 the judge chain stopped** at law 3,284 / 3,285: one judgment (`B0|q-1c2c26e8031c|high|low|auto|auto`, a 224-char answer about turnover tax) failed twice with "no JSON in judge reply". Reproduced without saving: the 80B's reply is complete (finish_reason stop, 63 tokens; correctness 5, faithfulness 5, reason given) but **ends without the closing brace**, identical at temperature 0, also with a larger token limit. The no-RAG chain waiting behind it stopped too, as designed.

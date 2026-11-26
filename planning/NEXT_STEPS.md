@@ -1,4 +1,38 @@
-# Where to start next (handoff, 25 Nov 2026 → 26 Nov; TWO PCs)
+# Where to start next (handoff, 26 Nov 2026 → 29 Nov; TWO PCs; no work on 27–28 Nov)
+
+**Project name:** the thesis project and chatbot are **AinSutro** (formerly Ainkhoj). The human scoring page is the **AinSutro Scoring Page** (one main link, on PC A only). **The system-prompt name stays "Ainkhoj" until the whole benchmark (before and after fine-tuning) is finished** (`backend/src/bot.config.ts`, `eval/make_questions.py` unchanged). Never change anything that affects the benchmark.
+
+**Thesis:** *Privacy Driven AI Protection: Safeguarding Sensitive Information in RAG Systems Using Multi-Layer Filtering*. Fine-tuning **and** privacy. Three base models; only the best is fine-tuned, **the team chooses**.
+
+## State on 26 Nov evening
+| Item | Status |
+|---|---|
+| **B0 (with RAG), answers** | Gemma, Qwen3 30B, Qwen3-Next 80B: **all complete** (law 3,285 + files 684 each, 0 cut saved) |
+| **B0, judged by the 80B** | Gemma: done. Qwen3 30B (PC B): done (`fb4303c`). **80B: law 3,285 / 3,285 done; files 231 / 684** (stopped 16:30; resumes exactly) |
+| **N0 (no RAG)**, law 1,095 + files 228 per model, effort low/mid/high × technicality auto | **Qwen3 30B (PC B): answered + judged, 0 errors** (`eca65e2`). Gemma and 80B: **not started** (PC A, `eval/runs/logs/n0chain.sh`, queued behind the 80B file judging) |
+| Judge parser | `score.py` accepts a complete reply missing only its final `}` (marked `repaired`); hash unchanged `aebea71088b8`. 80B law: 1 repaired; 30B N0 files: 2 repaired |
+| **AinSutro Scoring Page** | All three models (11,907 answers, 80B audited 0 problems). Responsive on every device, faster store (v13), My scored answers with choices, Share button, "(Before fine-tune)" label, guide updated. **Team: 14 answers rated** (Gemma 12, 30B 2, 80B 0; 2 raters) |
+| Invitation document | `~/Desktop/AinSutro_Scoring_Page_Application_5pages.pdf` (to send) and `..._10pages.pdf` (long version); sources `~/Documents/AinSutro-application/` (not in git: contains the link) |
+
+## Decisions (26 Nov)
+- **No model comparisons** (`score.py compare`) on either PC **until the user says the human scoring is finished.** Then one final comparison: Gemma vs Qwen3 30B vs Qwen3-Next 80B under three judges (humans, Claude, 80B judge) on exactly the human-rated answers; Claude scores exactly those (ask first, token estimate); notebook with all figures for a Q1 paper (see "Final comparison" below).
+- **RAG vs no RAG is required** (N0 now, N1 after fine-tuning): see "RAG vs no RAG" below.
+
+## Plan
+| When | PC A | PC B |
+|---|---|---|
+| **29 Nov** | Start the retrieval server; restart `judge80b.sh` (finishes the 80B file judging, ~30 min) and `n0chain.sh` behind it (Gemma N0 law+files ~2.5 h, then 80B N0 law+files ~5 h; may continue on 30 Nov). `human.py pull/status`. No comparisons. | Nothing to run: its benchmark part (30B B0 + N0) is done. Pull, check, stay free until PC A gives a task (privacy data comes first from PC A). |
+| when the humans finish (the user says so) | Final comparison (Claude scores the human-rated set first, after asking) → **ask the team which model to fine-tune** | |
+| then | Privacy part: build canaries, PII index, attack set, filter layers (`planning/PRIVACY_PLAN.md`), plan with the team first | privacy runs on the Qwen models when PC A gives the inputs |
+
+## Start prompts
+**PC A:** the same text as `~/Desktop/"Tomorrows promt.txt"` (on PC A's desktop).
+
+**PC B (29 Nov):**
+> This is PC B (`~/Desktop/Thesis-RAG PC-B`, branch `benchmark-setup`; quote the path). Read `CLAUDE.md`, `planning/NEXT_STEPS.md` and `planning/THESIS_LOG_PC_B.md`, then `git pull --rebase`. PC B's benchmark work is finished (Qwen3 30B B0 + N0, answered and judged, checked by PC A). **Nothing to run today**: no benchmark, no privacy runs and no `score.py compare` until PC A gives the next task. Check that `git log --oneline -3` shows PC A's latest commit, write a short dated entry in `planning/THESIS_LOG_PC_B.md`, and when I say "commit": `git pull --rebase`, then push only that log. Only PC B's own log and `eval/runs/B0/qwen3-30b*` / `eval/runs/N0/qwen3-30b*` may be edited.
+
+---
+# History (25 Nov handoff → 26 Nov, kept for reference)
 
 **Project name:** the thesis project and chatbot are **AinSutro** (formerly Ainkhoj, renamed 25 Nov). The human gold-standard scoring page is the **AinSutro Scoring Page**. **The system-prompt name stays "Ainkhoj" until the whole benchmark (before and after fine-tuning) is finished** (`backend/src/bot.config.ts`, `eval/make_questions.py` unchanged), so every model gets the identical prompt. Never change anything that affects the benchmark.
 
