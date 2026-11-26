@@ -358,3 +358,16 @@ PC B found this problem, and it led to the project-wide fix **baseline-v1.1**.
     - By effort: correctness low 2.84, mid 2.71, high 2.61.
     - By format: photo bn 1.97 / en 3.06; scan bn 2.74 / en 2.83; text bn 2.39 / en 3.29.
   - `~/n0-30b.sh` had stopped at 16:01 on the law error (as designed); the remaining steps were done by hand with the same commands.
+- **16:35 pushed `eca65e2`:** `eval/runs/N0/qwen3-30b*` (answers, judgments, scores, summaries) + this log.
+
+### Summary of 26 Nov on PC B
+| Item | Result |
+|---|---|
+| Qwen3 30B **B0** (with RAG) | answers 3,285 + 684, judged 3,285 + 684, 0 errors, pushed `fb4303c` |
+| Qwen3 30B **N0** (no RAG, General mode) | answers 1,095 + 228, judged 1,095 + 228, 0 errors (2 judgments repaired by PC A's parser fix), pushed `eca65e2` |
+| B0 law / files | correctness 3.95 / 3.18, faithfulness 4.13 / 3.13, route_ok 0.96 / 1.00, ctx_hit 0.70 / 0.46 |
+| N0 law / files | correctness 2.77 / 2.72, faithfulness – / 2.18, route_ok –, ctx_hit 0.00 / 0.00 |
+| Compare | none on PC B (PC A compares all models later) |
+| Problems | 80B judge sometimes leaves out the final `}` (fixed by PC A, `9566006`); LM Studio restarted the 80B by itself at context 262,144 after a crash at 15:31 |
+
+**All Qwen3 30B work (with and without RAG) is finished on PC B.** Next: wait for PC A's next task (privacy inputs; "after" runs only if the team picks the 30B). No work 27–28 Nov; next session 29 Nov.
