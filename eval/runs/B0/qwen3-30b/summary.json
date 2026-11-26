@@ -1,0 +1,1632 @@
+{
+ "variant": [
+  {
+   "group": {
+    "variant": "B0"
+   },
+   "n": 3285,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.6504297994269341,
+   "ctx_hit_group": 0.6972301814708691,
+   "ctx_hit_group_ci": [
+    0.6485195797516714,
+    0.7411652340019103
+   ],
+   "cite_recall": 0.6663482967207895,
+   "cite_recall_ci": [
+    0.6198662846227316,
+    0.7090098694683222
+   ],
+   "cite_precision": 0.90983452603888,
+   "judge_correctness": 3.951902587519026,
+   "judge_correctness_ci": [
+    3.8091324200913244,
+    4.082496194824962
+   ],
+   "judge_faithfulness": 4.125878594249201,
+   "judge_faithfulness_ci": [
+    4.006709265175719,
+    4.242966751918159
+   ],
+   "judge_technicality_fit": 4.9240556660039765,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.020395738203957382,
+   "words": 147.4599695585997,
+   "words_per_sentence": 22.572267884322677,
+   "flesch": 44.84816919191919,
+   "seconds": 24.540803652968034,
+   "first_token_s": 2.2737199391171994,
+   "tokens": 4859.827092846271
+  }
+ ],
+ "model/effort/tech": [
+  {
+   "group": {
+    "model": "mid",
+    "effort": "high",
+    "tech": "auto"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9424657534246575,
+    0.9780821917808219
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.7048710601719198,
+   "ctx_hit_group": 0.7507163323782235,
+   "ctx_hit_group_ci": [
+    0.7020057306590258,
+    0.7965616045845272
+   ],
+   "cite_recall": 0.7249283667621776,
+   "cite_recall_ci": [
+    0.6762177650429799,
+    0.7736389684813754
+   ],
+   "cite_precision": 0.9040315512708151,
+   "judge_correctness": 4.057534246575343,
+   "judge_correctness_ci": [
+    3.904109589041096,
+    4.2
+   ],
+   "judge_faithfulness": 4.126801152737752,
+   "judge_faithfulness_ci": [
+    3.9769452449567724,
+    4.273775216138328
+   ],
+   "judge_technicality_fit": 4.973154362416107,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.01643835616438356,
+   "words": 225.9972602739726,
+   "words_per_sentence": 23.412328767123288,
+   "flesch": 43.23053892215569,
+   "seconds": 41.93375342465753,
+   "first_token_s": 3.9074520547945206,
+   "tokens": 6986.73698630137
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "high",
+    "tech": "high"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9424657534246575,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.7048710601719198,
+   "ctx_hit_group": 0.7507163323782235,
+   "ctx_hit_group_ci": [
+    0.7077363896848138,
+    0.7936962750716332
+   ],
+   "cite_recall": 0.7277936962750716,
+   "cite_recall_ci": [
+    0.6790830945558739,
+    0.7736389684813754
+   ],
+   "cite_precision": 0.8871043771043772,
+   "judge_correctness": 3.9616438356164383,
+   "judge_correctness_ci": [
+    3.802739726027397,
+    4.115068493150685
+   ],
+   "judge_faithfulness": 3.9454022988505746,
+   "judge_faithfulness_ci": [
+    3.781609195402299,
+    4.112068965517241
+   ],
+   "judge_technicality_fit": 4.947222222222222,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.019178082191780823,
+   "words": 267.83287671232875,
+   "words_per_sentence": 24.114520547945204,
+   "flesch": 41.07093023255814,
+   "seconds": 45.15983561643836,
+   "first_token_s": 3.742027397260274,
+   "tokens": 7114.038356164384
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "high",
+    "tech": "low"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.7048710601719198,
+   "ctx_hit_group": 0.7507163323782235,
+   "ctx_hit_group_ci": [
+    0.7048710601719198,
+    0.7965616045845272
+   ],
+   "cite_recall": 0.7134670487106017,
+   "cite_recall_ci": [
+    0.664756446991404,
+    0.7593123209169055
+   ],
+   "cite_precision": 0.8986542443064183,
+   "judge_correctness": 3.9945205479452053,
+   "judge_correctness_ci": [
+    3.8493150684931505,
+    4.136986301369863
+   ],
+   "judge_faithfulness": 3.9310344827586206,
+   "judge_faithfulness_ci": [
+    3.7672413793103448,
+    4.089080459770115
+   ],
+   "judge_technicality_fit": 4.879888268156424,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.01643835616438356,
+   "words": 188.86301369863014,
+   "words_per_sentence": 20.64958904109589,
+   "flesch": 48.233333333333334,
+   "seconds": 36.257917808219176,
+   "first_token_s": 3.0981917808219177,
+   "tokens": 6889.712328767123
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "low",
+    "tech": "auto"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.5959885386819485,
+   "ctx_hit_group": 0.6389684813753582,
+   "ctx_hit_group_ci": [
+    0.5902578796561605,
+    0.6876790830945558
+   ],
+   "cite_recall": 0.6160458452722063,
+   "cite_recall_ci": [
+    0.5644699140401146,
+    0.667621776504298
+   ],
+   "cite_precision": 0.9320388349514563,
+   "judge_correctness": 3.8986301369863012,
+   "judge_correctness_ci": [
+    3.73972602739726,
+    4.046575342465753
+   ],
+   "judge_faithfulness": 4.272988505747127,
+   "judge_faithfulness_ci": [
+    4.126436781609195,
+    4.399425287356322
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.024657534246575342,
+   "words": 69.02465753424657,
+   "words_per_sentence": 22.3413698630137,
+   "flesch": 45.785714285714285,
+   "seconds": 10.159205479452055,
+   "first_token_s": 1.0527671232876712,
+   "tokens": 2914.9945205479453
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "low",
+    "tech": "high"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9424657534246575,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.5959885386819485,
+   "ctx_hit_group": 0.6389684813753582,
+   "ctx_hit_group_ci": [
+    0.5873925501432665,
+    0.6905444126074498
+   ],
+   "cite_recall": 0.6103151862464183,
+   "cite_recall_ci": [
+    0.5616045845272206,
+    0.66189111747851
+   ],
+   "cite_precision": 0.9224212812160695,
+   "judge_correctness": 3.7726027397260276,
+   "judge_correctness_ci": [
+    3.6082191780821917,
+    3.9315068493150687
+   ],
+   "judge_faithfulness": 4.066091954022989,
+   "judge_faithfulness_ci": [
+    3.910919540229885,
+    4.224137931034483
+   ],
+   "judge_technicality_fit": 4.878873239436619,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.019178082191780823,
+   "words": 86.18082191780822,
+   "words_per_sentence": 24.08958904109589,
+   "flesch": 41.18388888888889,
+   "seconds": 12.035369863013699,
+   "first_token_s": 1.3409863013698629,
+   "tokens": 3015.93698630137
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "low",
+    "tech": "low"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.5959885386819485,
+   "ctx_hit_group": 0.6389684813753582,
+   "ctx_hit_group_ci": [
+    0.5902578796561605,
+    0.6876790830945558
+   ],
+   "cite_recall": 0.6332378223495702,
+   "cite_recall_ci": [
+    0.5787965616045845,
+    0.6819484240687679
+   ],
+   "cite_precision": 0.9240506329113924,
+   "judge_correctness": 3.9013698630136986,
+   "judge_correctness_ci": [
+    3.7424657534246575,
+    4.046575342465753
+   ],
+   "judge_faithfulness": 4.17816091954023,
+   "judge_faithfulness_ci": [
+    4.0344827586206895,
+    4.316091954022989
+   ],
+   "judge_technicality_fit": 4.927576601671309,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.024657534246575342,
+   "words": 72.17260273972603,
+   "words_per_sentence": 19.789863013698632,
+   "flesch": 50.37637362637363,
+   "seconds": 10.414712328767123,
+   "first_token_s": 1.1375342465753424,
+   "tokens": 2970.2602739726026
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "mid",
+    "tech": "auto"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.6504297994269341,
+   "ctx_hit_group": 0.7020057306590258,
+   "ctx_hit_group_ci": [
+    0.6532951289398281,
+    0.7478510028653295
+   ],
+   "cite_recall": 0.6475644699140402,
+   "cite_recall_ci": [
+    0.5988538681948424,
+    0.6962750716332379
+   ],
+   "cite_precision": 0.9105573419078242,
+   "judge_correctness": 4.027397260273973,
+   "judge_correctness_ci": [
+    3.8794520547945206,
+    4.161643835616438
+   ],
+   "judge_faithfulness": 4.272988505747127,
+   "judge_faithfulness_ci": [
+    4.129310344827586,
+    4.416666666666667
+   ],
+   "judge_technicality_fit": 4.991735537190083,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.01643835616438356,
+   "words": 132.25479452054793,
+   "words_per_sentence": 23.59835616438356,
+   "flesch": 42.439325842696626,
+   "seconds": 20.84304109589041,
+   "first_token_s": 1.839890410958904,
+   "tokens": 4562.147945205479
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "mid",
+    "tech": "high"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9780821917808219
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.6504297994269341,
+   "ctx_hit_group": 0.7020057306590258,
+   "ctx_hit_group_ci": [
+    0.6561604584527221,
+    0.7507163323782235
+   ],
+   "cite_recall": 0.667621776504298,
+   "cite_recall_ci": [
+    0.6160458452722063,
+    0.7191977077363897
+   ],
+   "cite_precision": 0.9044337606837607,
+   "judge_correctness": 3.9506849315068493,
+   "judge_correctness_ci": [
+    3.786301369863014,
+    4.104109589041096
+   ],
+   "judge_faithfulness": 4.14367816091954,
+   "judge_faithfulness_ci": [
+    4.005747126436781,
+    4.293103448275862
+   ],
+   "judge_technicality_fit": 4.9299719887955185,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.021917808219178082,
+   "words": 161.8739726027397,
+   "words_per_sentence": 24.80931506849315,
+   "flesch": 40.34705882352941,
+   "seconds": 25.196739726027396,
+   "first_token_s": 2.6725753424657532,
+   "tokens": 4708.172602739726
+  },
+  {
+   "group": {
+    "model": "mid",
+    "effort": "mid",
+    "tech": "low"
+   },
+   "n": 365,
+   "route_ok": 0.9616438356164384,
+   "route_ok_ci": [
+    0.9397260273972603,
+    0.9808219178082191
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.6504297994269341,
+   "ctx_hit_group": 0.7020057306590258,
+   "ctx_hit_group_ci": [
+    0.6561604584527221,
+    0.7507163323782235
+   ],
+   "cite_recall": 0.6561604584527221,
+   "cite_recall_ci": [
+    0.6045845272206304,
+    0.7077363896848138
+   ],
+   "cite_precision": 0.9074074074074073,
+   "judge_correctness": 4.002739726027397,
+   "judge_correctness_ci": [
+    3.8602739726027395,
+    4.156164383561644
+   ],
+   "judge_faithfulness": 4.195965417867435,
+   "judge_faithfulness_ci": [
+    4.043227665706052,
+    4.334293948126801
+   ],
+   "judge_technicality_fit": 4.916897506925208,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.024657534246575342,
+   "words": 122.93972602739726,
+   "words_per_sentence": 20.345479452054796,
+   "flesch": 50.36944444444445,
+   "seconds": 18.866657534246574,
+   "first_token_s": 1.6720547945205477,
+   "tokens": 4576.443835616438
+  }
+ ],
+ "domain": [
+  {
+   "group": {
+    "domain": "-"
+   },
+   "n": 144,
+   "route_ok": 0.5,
+   "route_ok_ci": [
+    0.25,
+    0.75
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": null,
+   "ctx_hit_group": null,
+   "ctx_hit_group_ci": [
+    null,
+    null
+   ],
+   "cite_recall": null,
+   "cite_recall_ci": [
+    null,
+    null
+   ],
+   "cite_precision": null,
+   "judge_correctness": 4.055555555555555,
+   "judge_correctness_ci": [
+    3.3055555555555554,
+    4.75
+   ],
+   "judge_faithfulness": 4.733333333333333,
+   "judge_faithfulness_ci": [
+    4.377777777777778,
+    5.0
+   ],
+   "judge_technicality_fit": 4.597938144329897,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.3055555555555556,
+   "words": 132.69444444444446,
+   "words_per_sentence": 12.211805555555555,
+   "flesch": 66.38229166666666,
+   "seconds": 15.471041666666666,
+   "first_token_s": 0.6575694444444444,
+   "tokens": 1837.2777777777778
+  },
+  {
+   "group": {
+    "domain": "cases"
+   },
+   "n": 324,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.9444444444444444,
+   "ctx_hit_chunk": 0.49074074074074076,
+   "ctx_hit_group": 0.8518518518518519,
+   "ctx_hit_group_ci": [
+    0.7407407407407407,
+    0.9444444444444444
+   ],
+   "cite_recall": 0.8395061728395061,
+   "cite_recall_ci": [
+    0.7407407407407407,
+    0.9197530864197531
+   ],
+   "cite_precision": 0.5734166666666667,
+   "judge_correctness": 3.984567901234568,
+   "judge_correctness_ci": [
+    3.54320987654321,
+    4.410493827160494
+   ],
+   "judge_faithfulness": 3.3447204968944098,
+   "judge_faithfulness_ci": [
+    2.937888198757764,
+    3.7453416149068324
+   ],
+   "judge_technicality_fit": 4.927350427350428,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.009259259259259259,
+   "words": 144.40123456790124,
+   "words_per_sentence": 17.454012345679015,
+   "flesch": 50.916666666666664,
+   "seconds": 22.80293209876543,
+   "first_token_s": 2.968888888888889,
+   "tokens": 5056.805555555556
+  },
+  {
+   "group": {
+    "domain": "children_women"
+   },
+   "n": 360,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.875,
+   "ctx_hit_chunk": 0.7583333333333333,
+   "ctx_hit_group": 0.7833333333333333,
+   "ctx_hit_group_ci": [
+    0.6583333333333333,
+    0.9
+   ],
+   "cite_recall": 0.75,
+   "cite_recall_ci": [
+    0.625,
+    0.8666666666666667
+   ],
+   "cite_precision": 0.936908077994429,
+   "judge_correctness": 4.338888888888889,
+   "judge_correctness_ci": [
+    3.9722222222222223,
+    4.655555555555556
+   ],
+   "judge_faithfulness": 4.363888888888889,
+   "judge_faithfulness_ci": [
+    4.019444444444445,
+    4.691666666666666
+   ],
+   "judge_technicality_fit": 4.963898916967509,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 159.4361111111111,
+   "words_per_sentence": 23.963055555555556,
+   "flesch": 46.946853146853144,
+   "seconds": 30.39997222222222,
+   "first_token_s": 3.580194444444445,
+   "tokens": 6221.188888888889
+  },
+  {
+   "group": {
+    "domain": "criminal"
+   },
+   "n": 459,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.9019607843137255,
+   "ctx_hit_chunk": 0.7124183006535948,
+   "ctx_hit_group": 0.7254901960784313,
+   "ctx_hit_group_ci": [
+    0.6143790849673203,
+    0.8235294117647058
+   ],
+   "cite_recall": 0.6971677559912854,
+   "cite_recall_ci": [
+    0.5838779956427015,
+    0.7973856209150327
+   ],
+   "cite_precision": 0.9276643990929706,
+   "judge_correctness": 4.237472766884531,
+   "judge_correctness_ci": [
+    3.945533769063181,
+    4.490196078431373
+   ],
+   "judge_faithfulness": 4.313725490196078,
+   "judge_faithfulness_ci": [
+    4.041394335511982,
+    4.5773420479302835
+   ],
+   "judge_technicality_fit": 4.957507082152975,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 173.46623093681916,
+   "words_per_sentence": 26.798910675381265,
+   "flesch": 46.23984375,
+   "seconds": 23.922047930283224,
+   "first_token_s": 1.3251851851851852,
+   "tokens": 3627.1786492374727
+  },
+  {
+   "group": {
+    "domain": "education"
+   },
+   "n": 279,
+   "route_ok": 0.8387096774193549,
+   "route_ok_ci": [
+    0.7096774193548387,
+    0.967741935483871
+   ],
+   "domain_ok": 0.8461538461538461,
+   "ctx_hit_chunk": 0.43010752688172044,
+   "ctx_hit_group": 0.43010752688172044,
+   "ctx_hit_group_ci": [
+    0.27956989247311825,
+    0.5913978494623656
+   ],
+   "cite_recall": 0.40860215053763443,
+   "cite_recall_ci": [
+    0.2616487455197133,
+    0.5627240143369175
+   ],
+   "cite_precision": 0.9622926093514328,
+   "judge_correctness": 3.2652329749103943,
+   "judge_correctness_ci": [
+    2.7562724014336917,
+    3.752688172043011
+   ],
+   "judge_faithfulness": 3.876068376068376,
+   "judge_faithfulness_ci": [
+    3.388888888888889,
+    4.311965811965812
+   ],
+   "judge_technicality_fit": 4.833333333333333,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.014336917562724014,
+   "words": 107.23297491039426,
+   "words_per_sentence": 22.720788530465953,
+   "flesch": 13.85344827586207,
+   "seconds": 21.1415770609319,
+   "first_token_s": 2.1427240143369177,
+   "tokens": 4765.8243727598565
+  },
+  {
+   "group": {
+    "domain": "family"
+   },
+   "n": 342,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.8421052631578947,
+   "ctx_hit_chunk": 0.6754385964912281,
+   "ctx_hit_group": 0.6754385964912281,
+   "ctx_hit_group_ci": [
+    0.5350877192982456,
+    0.8157894736842105
+   ],
+   "cite_recall": 0.6345029239766082,
+   "cite_recall_ci": [
+    0.49122807017543857,
+    0.7719298245614035
+   ],
+   "cite_precision": 0.97331256490135,
+   "judge_correctness": 4.055555555555555,
+   "judge_correctness_ci": [
+    3.6608187134502925,
+    4.394736842105263
+   ],
+   "judge_faithfulness": 4.309941520467836,
+   "judge_faithfulness_ci": [
+    3.9473684210526314,
+    4.640350877192983
+   ],
+   "judge_technicality_fit": 4.9335793357933575,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.017543859649122806,
+   "words": 153.8654970760234,
+   "words_per_sentence": 23.734502923976606,
+   "flesch": 45.641040462427746,
+   "seconds": 19.461929824561402,
+   "first_token_s": 1.3407309941520467,
+   "tokens": 2838.6812865497077
+  },
+  {
+   "group": {
+    "domain": "labour"
+   },
+   "n": 396,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.7575757575757576,
+   "ctx_hit_group": 0.7803030303030303,
+   "ctx_hit_group_ci": [
+    0.6742424242424242,
+    0.8863636363636364
+   ],
+   "cite_recall": 0.7247474747474747,
+   "cite_recall_ci": [
+    0.6161616161616161,
+    0.8333333333333334
+   ],
+   "cite_precision": 0.9552699228791774,
+   "judge_correctness": 4.2272727272727275,
+   "judge_correctness_ci": [
+    3.95959595959596,
+    4.4646464646464645
+   ],
+   "judge_faithfulness": 4.462121212121212,
+   "judge_faithfulness_ci": [
+    4.19949494949495,
+    4.681818181818182
+   ],
+   "judge_technicality_fit": 4.981424148606811,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 136.77777777777777,
+   "words_per_sentence": 22.422474747474745,
+   "flesch": 46.33461538461538,
+   "seconds": 28.008030303030303,
+   "first_token_s": 2.866565656565657,
+   "tokens": 6681.770202020202
+  },
+  {
+   "group": {
+    "domain": "land"
+   },
+   "n": 315,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.8571428571428571,
+   "ctx_hit_chunk": 0.819047619047619,
+   "ctx_hit_group": 0.8380952380952381,
+   "ctx_hit_group_ci": [
+    0.7142857142857143,
+    0.9428571428571428
+   ],
+   "cite_recall": 0.765079365079365,
+   "cite_recall_ci": [
+    0.638095238095238,
+    0.873015873015873
+   ],
+   "cite_precision": 0.9406249999999999,
+   "judge_correctness": 4.123809523809523,
+   "judge_correctness_ci": [
+    3.6920634920634923,
+    4.485714285714286
+   ],
+   "judge_faithfulness": 4.450793650793651,
+   "judge_faithfulness_ci": [
+    4.133333333333334,
+    4.720634920634921
+   ],
+   "judge_technicality_fit": 4.926356589147287,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 137.9968253968254,
+   "words_per_sentence": 23.11079365079365,
+   "flesch": 41.03115942028985,
+   "seconds": 22.58552380952381,
+   "first_token_s": 1.6153968253968254,
+   "tokens": 4386.028571428571
+  },
+  {
+   "group": {
+    "domain": "tax"
+   },
+   "n": 333,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.9459459459459459,
+   "ctx_hit_chunk": 0.8468468468468469,
+   "ctx_hit_group": 0.8468468468468469,
+   "ctx_hit_group_ci": [
+    0.7477477477477478,
+    0.9369369369369369
+   ],
+   "cite_recall": 0.8198198198198198,
+   "cite_recall_ci": [
+    0.7177177177177178,
+    0.9129129129129129
+   ],
+   "cite_precision": 0.9572981366459627,
+   "judge_correctness": 4.132132132132132,
+   "judge_correctness_ci": [
+    3.7627627627627627,
+    4.468468468468468
+   ],
+   "judge_faithfulness": 4.327327327327327,
+   "judge_faithfulness_ci": [
+    4.039039039039039,
+    4.606606606606607
+   ],
+   "judge_technicality_fit": 4.962546816479401,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.012012012012012012,
+   "words": 133.7027027027027,
+   "words_per_sentence": 22.305105105105106,
+   "flesch": 49.31708860759494,
+   "seconds": 26.14327327327327,
+   "first_token_s": 2.795675675675676,
+   "tokens": 6571.579579579579
+  },
+  {
+   "group": {
+    "domain": "uncategorized"
+   },
+   "n": 333,
+   "route_ok": 0.972972972972973,
+   "route_ok_ci": [
+    0.918918918918919,
+    1.0
+   ],
+   "domain_ok": 0.5277777777777778,
+   "ctx_hit_chunk": 0.27927927927927926,
+   "ctx_hit_group": 0.27927927927927926,
+   "ctx_hit_group_ci": [
+    0.14414414414414414,
+    0.42342342342342343
+   ],
+   "cite_recall": 0.2972972972972973,
+   "cite_recall_ci": [
+    0.16516516516516516,
+    0.43243243243243246
+   ],
+   "cite_precision": 0.8253450062728414,
+   "judge_correctness": 2.8618618618618616,
+   "judge_correctness_ci": [
+    2.3933933933933935,
+    3.33033033033033
+   ],
+   "judge_faithfulness": 3.3395061728395063,
+   "judge_faithfulness_ci": [
+    2.888888888888889,
+    3.75
+   ],
+   "judge_technicality_fit": 4.902222222222222,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.018018018018018018,
+   "words": 170.56456456456456,
+   "words_per_sentence": 23.320720720720722,
+   "flesch": 39.45192307692308,
+   "seconds": 28.860480480480483,
+   "first_token_s": 2.654984984984985,
+   "tokens": 4926.864864864865
+  }
+ ],
+ "lang": [
+  {
+   "group": {
+    "lang": "bn"
+   },
+   "n": 1620,
+   "route_ok": 0.9722222222222222,
+   "route_ok_ci": [
+    0.95,
+    0.9944444444444445
+   ],
+   "domain_ok": 0.8421052631578947,
+   "ctx_hit_chunk": 0.6339113680154143,
+   "ctx_hit_group": 0.674373795761079,
+   "ctx_hit_group_ci": [
+    0.6088631984585742,
+    0.7360308285163777
+   ],
+   "cite_recall": 0.636480411046885,
+   "cite_recall_ci": [
+    0.5761078998073218,
+    0.6936416184971098
+   ],
+   "cite_precision": 0.9192908346134152,
+   "judge_correctness": 3.829012345679012,
+   "judge_correctness_ci": [
+    3.6419753086419755,
+    4.0
+   ],
+   "judge_faithfulness": 4.030205655526992,
+   "judge_faithfulness_ci": [
+    3.852922286448298,
+    4.210661528580604
+   ],
+   "judge_technicality_fit": 4.891505466778805,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.016666666666666666,
+   "words": 144.0962962962963,
+   "words_per_sentence": 20.003641975308643,
+   "flesch": 48.74578313253012,
+   "seconds": 38.60371604938271,
+   "first_token_s": 2.8529197530864194,
+   "tokens": 5714.041975308642
+  },
+  {
+   "group": {
+    "lang": "en"
+   },
+   "n": 1665,
+   "route_ok": 0.9513513513513514,
+   "route_ok_ci": [
+    0.9135135135135135,
+    0.9783783783783784
+   ],
+   "domain_ok": 0.8895348837209303,
+   "ctx_hit_chunk": 0.6666666666666666,
+   "ctx_hit_group": 0.7196969696969697,
+   "ctx_hit_group_ci": [
+    0.6590909090909091,
+    0.7784090909090909
+   ],
+   "cite_recall": 0.6957070707070707,
+   "cite_recall_ci": [
+    0.63510101010101,
+    0.7550505050505051
+   ],
+   "cite_precision": 0.900351617440225,
+   "judge_correctness": 4.0714714714714715,
+   "judge_correctness_ci": [
+    3.8912912912912914,
+    4.24984984984985
+   ],
+   "judge_faithfulness": 4.220457433290979,
+   "judge_faithfulness_ci": [
+    4.059047619047619,
+    4.358322744599746
+   ],
+   "judge_technicality_fit": 4.953242835595777,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.024024024024024024,
+   "words": 150.73273273273273,
+   "words_per_sentence": 25.071471471471472,
+   "flesch": 44.63264490339774,
+   "seconds": 10.85796996996997,
+   "first_token_s": 1.7101741741741743,
+   "tokens": 4028.699099099099
+  }
+ ],
+ "type": [
+  {
+   "group": {
+    "type": "case_law"
+   },
+   "n": 54,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.16666666666666666,
+   "ctx_hit_group": 0.8333333333333334,
+   "ctx_hit_group_ci": [
+    0.5,
+    1.0
+   ],
+   "cite_recall": 0.8333333333333334,
+   "cite_recall_ci": [
+    0.5555555555555556,
+    1.0
+   ],
+   "cite_precision": 0.3238095238095238,
+   "judge_correctness": 3.425925925925926,
+   "judge_correctness_ci": [
+    2.1666666666666665,
+    4.722222222222222
+   ],
+   "judge_faithfulness": 2.6666666666666665,
+   "judge_faithfulness_ci": [
+    1.6851851851851851,
+    3.537037037037037
+   ],
+   "judge_technicality_fit": 4.945945945945946,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 151.2962962962963,
+   "words_per_sentence": 18.63888888888889,
+   "flesch": 43.7054054054054,
+   "seconds": 18.531296296296297,
+   "first_token_s": 2.4692592592592595,
+   "tokens": 5952.611111111111
+  },
+  {
+   "group": {
+    "type": "colloquial"
+   },
+   "n": 90,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.8,
+   "ctx_hit_chunk": 0.3333333333333333,
+   "ctx_hit_group": 0.3333333333333333,
+   "ctx_hit_group_ci": [
+    0.1,
+    0.6333333333333333
+   ],
+   "cite_recall": 0.2111111111111111,
+   "cite_recall_ci": [
+    0.05555555555555555,
+    0.4
+   ],
+   "cite_precision": 0.881140350877193,
+   "judge_correctness": 2.7888888888888888,
+   "judge_correctness_ci": [
+    2.066666666666667,
+    3.4555555555555557
+   ],
+   "judge_faithfulness": 3.966666666666667,
+   "judge_faithfulness_ci": [
+    3.3333333333333335,
+    4.511111111111111
+   ],
+   "judge_technicality_fit": 4.836065573770492,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.06666666666666667,
+   "words": 150.6888888888889,
+   "words_per_sentence": 20.128888888888888,
+   "flesch": 54.59130434782608,
+   "seconds": 28.13522222222222,
+   "first_token_s": 2.033111111111111,
+   "tokens": 5094.222222222223
+  },
+  {
+   "group": {
+    "type": "follow_up"
+   },
+   "n": 90,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.9,
+   "ctx_hit_chunk": 0.6333333333333333,
+   "ctx_hit_group": 0.6333333333333333,
+   "ctx_hit_group_ci": [
+    0.3333333333333333,
+    0.9
+   ],
+   "cite_recall": 0.8777777777777778,
+   "cite_recall_ci": [
+    0.7555555555555555,
+    1.0
+   ],
+   "cite_precision": 0.8,
+   "judge_correctness": 3.9444444444444446,
+   "judge_correctness_ci": [
+    3.0,
+    4.7555555555555555
+   ],
+   "judge_faithfulness": 4.277777777777778,
+   "judge_faithfulness_ci": [
+    3.5555555555555554,
+    4.911111111111111
+   ],
+   "judge_technicality_fit": 4.924242424242424,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 75.23333333333333,
+   "words_per_sentence": 27.474444444444444,
+   "flesch": 50.15555555555556,
+   "seconds": 11.894222222222222,
+   "first_token_s": 1.657111111111111,
+   "tokens": 4197.677777777778
+  },
+  {
+   "group": {
+    "type": "general"
+   },
+   "n": 72,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": null,
+   "ctx_hit_group": null,
+   "ctx_hit_group_ci": [
+    null,
+    null
+   ],
+   "cite_recall": null,
+   "cite_recall_ci": [
+    null,
+    null
+   ],
+   "cite_precision": null,
+   "judge_correctness": 4.611111111111111,
+   "judge_correctness_ci": [
+    3.8333333333333335,
+    5.0
+   ],
+   "judge_faithfulness": null,
+   "judge_faithfulness_ci": [
+    null,
+    null
+   ],
+   "judge_technicality_fit": 4.204081632653061,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 136.125,
+   "words_per_sentence": 9.418055555555556,
+   "flesch": 82.34444444444445,
+   "seconds": 12.846944444444444,
+   "first_token_s": 0.19847222222222222,
+   "tokens": 628.2916666666666
+  },
+  {
+   "group": {
+    "type": "generated"
+   },
+   "n": 2745,
+   "route_ok": 0.980327868852459,
+   "route_ok_ci": [
+    0.9639344262295082,
+    0.9934426229508196
+   ],
+   "domain_ok": 0.8595317725752508,
+   "ctx_hit_chunk": 0.6633879781420765,
+   "ctx_hit_group": 0.7038251366120218,
+   "ctx_hit_group_ci": [
+    0.6568306010928961,
+    0.7497267759562841
+   ],
+   "cite_recall": 0.6655737704918033,
+   "cite_recall_ci": [
+    0.6174863387978142,
+    0.7089253187613843
+   ],
+   "cite_precision": 0.9242130480273567,
+   "judge_correctness": 3.9759562841530056,
+   "judge_correctness_ci": [
+    3.8404371584699453,
+    4.103096539162113
+   ],
+   "judge_faithfulness": 4.1379695053923395,
+   "judge_faithfulness_ci": [
+    4.009300595238095,
+    4.268029739776952
+   ],
+   "judge_technicality_fit": 4.939493433395873,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.006193078324225865,
+   "words": 149.2105646630237,
+   "words_per_sentence": 23.030200364298725,
+   "flesch": 42.37885802469136,
+   "seconds": 25.430178506375228,
+   "first_token_s": 2.4209836065573773,
+   "tokens": 5041.829508196722
+  },
+  {
+   "group": {
+    "type": "multi_section"
+   },
+   "n": 72,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.875,
+   "ctx_hit_chunk": 0.75,
+   "ctx_hit_group": 0.75,
+   "ctx_hit_group_ci": [
+    0.375,
+    1.0
+   ],
+   "cite_recall": 0.7777777777777778,
+   "cite_recall_ci": [
+    0.5277777777777778,
+    0.9722222222222222
+   ],
+   "cite_precision": 0.8467592592592593,
+   "judge_correctness": 4.097222222222222,
+   "judge_correctness_ci": [
+    3.375,
+    4.708333333333333
+   ],
+   "judge_faithfulness": 4.083333333333333,
+   "judge_faithfulness_ci": [
+    3.263888888888889,
+    4.736111111111111
+   ],
+   "judge_technicality_fit": 4.892857142857143,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 227.36111111111111,
+   "words_per_sentence": 25.637500000000003,
+   "flesch": 45.94864864864864,
+   "seconds": 33.00597222222222,
+   "first_token_s": 1.7331944444444445,
+   "tokens": 4825.736111111111
+  },
+  {
+   "group": {
+    "type": "out_of_scope"
+   },
+   "n": 72,
+   "route_ok": 0.0,
+   "route_ok_ci": [
+    0.0,
+    0.0
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": null,
+   "ctx_hit_group": null,
+   "ctx_hit_group_ci": [
+    null,
+    null
+   ],
+   "cite_recall": null,
+   "cite_recall_ci": [
+    null,
+    null
+   ],
+   "cite_precision": null,
+   "judge_correctness": 3.5,
+   "judge_correctness_ci": [
+    2.388888888888889,
+    4.611111111111111
+   ],
+   "judge_faithfulness": 4.733333333333333,
+   "judge_faithfulness_ci": [
+    4.377777777777778,
+    5.0
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.6111111111111112,
+   "words": 129.26388888888889,
+   "words_per_sentence": 15.005555555555556,
+   "flesch": 52.29803921568627,
+   "seconds": 18.095138888888886,
+   "first_token_s": 1.1166666666666667,
+   "tokens": 3046.2638888888887
+  },
+  {
+   "group": {
+    "type": "typo"
+   },
+   "n": 90,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 1.0,
+   "ctx_hit_chunk": 0.8,
+   "ctx_hit_group": 0.8,
+   "ctx_hit_group_ci": [
+    0.5666666666666667,
+    1.0
+   ],
+   "cite_recall": 0.7444444444444445,
+   "cite_recall_ci": [
+    0.5666666666666667,
+    0.9222222222222223
+   ],
+   "cite_precision": 0.9252873563218391,
+   "judge_correctness": 4.4222222222222225,
+   "judge_correctness_ci": [
+    3.7333333333333334,
+    5.0
+   ],
+   "judge_faithfulness": 4.377777777777778,
+   "judge_faithfulness_ci": [
+    3.5,
+    4.933333333333334
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 120.46666666666667,
+   "words_per_sentence": 22.63111111111111,
+   "flesch": 58.28,
+   "seconds": 17.81222222222222,
+   "first_token_s": 1.5403333333333333,
+   "tokens": 3944.188888888889
+  }
+ ],
+ "format/lang": [
+  {
+   "group": {
+    "format": "-",
+    "lang": "bn"
+   },
+   "n": 1620,
+   "route_ok": 0.9722222222222222,
+   "route_ok_ci": [
+    0.95,
+    0.9944444444444445
+   ],
+   "domain_ok": 0.8421052631578947,
+   "ctx_hit_chunk": 0.6339113680154143,
+   "ctx_hit_group": 0.674373795761079,
+   "ctx_hit_group_ci": [
+    0.6088631984585742,
+    0.7360308285163777
+   ],
+   "cite_recall": 0.636480411046885,
+   "cite_recall_ci": [
+    0.5761078998073218,
+    0.6936416184971098
+   ],
+   "cite_precision": 0.9192908346134152,
+   "judge_correctness": 3.829012345679012,
+   "judge_correctness_ci": [
+    3.6419753086419755,
+    4.0
+   ],
+   "judge_faithfulness": 4.030205655526992,
+   "judge_faithfulness_ci": [
+    3.852922286448298,
+    4.210661528580604
+   ],
+   "judge_technicality_fit": 4.891505466778805,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.016666666666666666,
+   "words": 144.0962962962963,
+   "words_per_sentence": 20.003641975308643,
+   "flesch": 48.74578313253012,
+   "seconds": 38.60371604938271,
+   "first_token_s": 2.8529197530864194,
+   "tokens": 5714.041975308642
+  },
+  {
+   "group": {
+    "format": "-",
+    "lang": "en"
+   },
+   "n": 1665,
+   "route_ok": 0.9513513513513514,
+   "route_ok_ci": [
+    0.9135135135135135,
+    0.9783783783783784
+   ],
+   "domain_ok": 0.8895348837209303,
+   "ctx_hit_chunk": 0.6666666666666666,
+   "ctx_hit_group": 0.7196969696969697,
+   "ctx_hit_group_ci": [
+    0.6590909090909091,
+    0.7784090909090909
+   ],
+   "cite_recall": 0.6957070707070707,
+   "cite_recall_ci": [
+    0.63510101010101,
+    0.7550505050505051
+   ],
+   "cite_precision": 0.900351617440225,
+   "judge_correctness": 4.0714714714714715,
+   "judge_correctness_ci": [
+    3.8912912912912914,
+    4.24984984984985
+   ],
+   "judge_faithfulness": 4.220457433290979,
+   "judge_faithfulness_ci": [
+    4.059047619047619,
+    4.358322744599746
+   ],
+   "judge_technicality_fit": 4.953242835595777,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.024024024024024024,
+   "words": 150.73273273273273,
+   "words_per_sentence": 25.071471471471472,
+   "flesch": 44.63264490339774,
+   "seconds": 10.85796996996997,
+   "first_token_s": 1.7101741741741743,
+   "tokens": 4028.699099099099
+  }
+ ],
+ "expected_route/route": [
+  {
+   "group": {
+    "expected_route": "general",
+    "route": "general"
+   },
+   "n": 72,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": null,
+   "ctx_hit_group": null,
+   "ctx_hit_group_ci": [
+    null,
+    null
+   ],
+   "cite_recall": null,
+   "cite_recall_ci": [
+    null,
+    null
+   ],
+   "cite_precision": null,
+   "judge_correctness": 4.611111111111111,
+   "judge_correctness_ci": [
+    3.8333333333333335,
+    5.0
+   ],
+   "judge_faithfulness": null,
+   "judge_faithfulness_ci": [
+    null,
+    null
+   ],
+   "judge_technicality_fit": 4.204081632653061,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 136.125,
+   "words_per_sentence": 9.418055555555556,
+   "flesch": 82.34444444444445,
+   "seconds": 12.846944444444444,
+   "first_token_s": 0.19847222222222222,
+   "tokens": 628.2916666666666
+  },
+  {
+   "group": {
+    "expected_route": "law",
+    "route": "general"
+   },
+   "n": 54,
+   "route_ok": 0.0,
+   "route_ok_ci": [
+    0.0,
+    0.0
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": 0.0,
+   "ctx_hit_group": 0.0,
+   "ctx_hit_group_ci": [
+    0.0,
+    0.0
+   ],
+   "cite_recall": 0.0,
+   "cite_recall_ci": [
+    0.0,
+    0.0
+   ],
+   "cite_precision": 0.0,
+   "judge_correctness": 1.6296296296296295,
+   "judge_correctness_ci": [
+    1.037037037037037,
+    2.259259259259259
+   ],
+   "judge_faithfulness": null,
+   "judge_faithfulness_ci": [
+    null,
+    null
+   ],
+   "judge_technicality_fit": 4.333333333333333,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.0,
+   "words": 124.33333333333333,
+   "words_per_sentence": 19.36111111111111,
+   "flesch": 18.519444444444446,
+   "seconds": 15.518333333333333,
+   "first_token_s": 0.2583333333333333,
+   "tokens": 626.0925925925926
+  },
+  {
+   "group": {
+    "expected_route": "law",
+    "route": "law"
+   },
+   "n": 3087,
+   "route_ok": 1.0,
+   "route_ok_ci": [
+    1.0,
+    1.0
+   ],
+   "domain_ok": 0.8658892128279884,
+   "ctx_hit_chunk": 0.6618075801749271,
+   "ctx_hit_group": 0.7094266277939747,
+   "ctx_hit_group_ci": [
+    0.6666666666666666,
+    0.7560738581146744
+   ],
+   "cite_recall": 0.6780045351473923,
+   "cite_recall_ci": [
+    0.6352445740200843,
+    0.7249757045675413
+   ],
+   "cite_precision": 0.9130404264125195,
+   "judge_correctness": 3.9876903142209263,
+   "judge_correctness_ci": [
+    3.856818918043408,
+    4.119533527696793
+   ],
+   "judge_faithfulness": 4.117017828200972,
+   "judge_faithfulness_ci": [
+    4.000647878198898,
+    4.243760129659643
+   ],
+   "judge_technicality_fit": 4.946263643996642,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.007450599287333981,
+   "words": 148.5532879818594,
+   "words_per_sentence": 23.111726595400064,
+   "flesch": 44.07720385674931,
+   "seconds": 25.121710398445092,
+   "first_token_s": 2.384363459669582,
+   "tokens": 5074.880142533204
+  },
+  {
+   "group": {
+    "expected_route": "unsupported",
+    "route": "general"
+   },
+   "n": 27,
+   "route_ok": 0.0,
+   "route_ok_ci": [
+    0.0,
+    0.0
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": null,
+   "ctx_hit_group": null,
+   "ctx_hit_group_ci": [
+    null,
+    null
+   ],
+   "cite_recall": null,
+   "cite_recall_ci": [
+    null,
+    null
+   ],
+   "cite_precision": null,
+   "judge_correctness": 1.4444444444444444,
+   "judge_correctness_ci": [
+    1.0,
+    2.3333333333333335
+   ],
+   "judge_faithfulness": null,
+   "judge_faithfulness_ci": [
+    null,
+    null
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.07407407407407407,
+   "words": 242.07407407407408,
+   "words_per_sentence": 12.37037037037037,
+   "flesch": 60.388888888888886,
+   "seconds": 31.825555555555553,
+   "first_token_s": 0.13962962962962963,
+   "tokens": 1031.851851851852
+  },
+  {
+   "group": {
+    "expected_route": "unsupported",
+    "route": "law"
+   },
+   "n": 45,
+   "route_ok": 0.0,
+   "route_ok_ci": [
+    0.0,
+    0.0
+   ],
+   "domain_ok": null,
+   "ctx_hit_chunk": null,
+   "ctx_hit_group": null,
+   "ctx_hit_group_ci": [
+    null,
+    null
+   ],
+   "cite_recall": null,
+   "cite_recall_ci": [
+    null,
+    null
+   ],
+   "cite_precision": null,
+   "judge_correctness": 4.733333333333333,
+   "judge_correctness_ci": [
+    4.377777777777778,
+    5.0
+   ],
+   "judge_faithfulness": 4.733333333333333,
+   "judge_faithfulness_ci": [
+    4.377777777777778,
+    5.0
+   ],
+   "judge_technicality_fit": 5.0,
+   "judge_language_ok": 1.0,
+   "judge_refused": 0.9333333333333333,
+   "words": 61.577777777777776,
+   "words_per_sentence": 16.586666666666666,
+   "flesch": 47.88484848484848,
+   "seconds": 9.85688888888889,
+   "first_token_s": 1.702888888888889,
+   "tokens": 4254.9111111111115
+  }
+ ]
+}

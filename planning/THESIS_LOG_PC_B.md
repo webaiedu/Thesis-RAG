@@ -274,3 +274,42 @@ PC B found this problem, and it led to the project-wide fix **baseline-v1.1**.
 1. `git pull --rebase`; `lms ps` must show only `qwen3-next-80b-a3b-instruct` (context 262,144 or at least 131,072, Parallel 4). If it doesn't, reload it after checking its sha256.
 2. Resume the judge: `setsid nohup ~/judge-30b.sh >> ~/judge-30b.log 2>&1 < /dev/null &`. It skips the 1,684 done; ~2,285 judgments are left at ~17–22/min (≈2–2.3 h). Then the reports and `compare runs/B0/gemma runs/B0/qwen3-30b --across-models` run automatically.
 3. Add the results to this log: correctness, faithfulness, route_ok, ctx_hit (law and files) and the paired difference vs Gemma. Commit/push `eval/runs/B0/qwen3-30b*` + this log.
+
+## 8. 26 Nov 2026 (session log)
+- **10:25 checks:**
+  - `git pull --rebase`: already up to date (`297d412`).
+  - Providers in `backend/.env` (LLM, ROUTER, GENERAL) are `lmstudio`; the judge in `eval/config.json` is `lmstudio` (`qwen3-next-80b-a3b-instruct`, `http://localhost:1234/v1`, j1). `GEMINI_API_KEY` has a value in `.env` but no provider uses it. Nothing calls an online model.
+  - `lms ps`: only `qwen3-next-80b-a3b-instruct`, context 262,144, Parallel 4 (still loaded from 25 Nov, sha256 checked then). No reload needed. Retrieval server not started (not needed for judging).
+- **10:26:54 judging resumed** with `~/judge-30b.sh` (log `~/judge-30b.log`). Gate passed: law 3,285/3,285 unique, files 684/684, 0 cut or empty, 0 over 8,000 chars. Law 1,684/3,285 already judged; it skips those.
+- **11:40 plan change (PC A, 26 Nov): no `score.py compare` on PC B** (also not Gemma vs 30B). PC A runs every comparison later, once, for all three models on the answers the humans rated. PC B only judges the full Qwen3 30B run (law + files, each until "0 errors"), writes both reports and pushes.
+  - `~/judge-30b.sh` would have run `compare --across-models` at its end. Bash had already read that last command, so the file could not just be edited. Instead only the wrapper was stopped (SIGTERM to `bash judge-30b.sh`); the law judge it had started (`score.py judge runs/B0/qwen3-30b`, setsid) kept running untouched at 2,811/3,285.
+  - New `~/judge-30b-nocompare.sh` (copy of the old script without the compare step): it waits for that judge to finish, then runs the same gate, judge law (re-check, every answer judged, retry once) + report, then files (`--test data/test_files.jsonl`) + report. Log still `~/judge-30b.log`. **No compare was run on PC B.**
+- **11:40 progress:** law 2,811/3,285 judged, 0 judge errors, ~14.6/min. 0 "Context size has been exceeded" today.
+- **12:05 full-answer check (user's request):** the judge sees the whole answer.
+  - `eval/score.py` is PC A's `b0e3c31` with no local change: `answer=a.get("reply") or ""`, with no character cut. The running judge started at 10:26, after that code was pulled on 25 Nov.
+  - The longest answers are law 6,409 and files 4,612 chars; 0 are over 8,000, so not even the old cut would have touched them.
+  - The 4,466 "truncat" hits in today's LM Studio log are only "<Truncated in logs>", LM Studio shortening the prompt it prints to its log. The model gets the full prompt: each logged prompt ends with the template's final JSON-format line.
+  - 0 "Context size has been exceeded"; each 80B slot holds 65,536 tokens, against a longest judge prompt of ~16k.
+- **12:13 law judging complete:** "done: 1,601 judged, 0 errors". Check: answers 3,285, judged 3,285, missing 0 (one judge hash `aebea71088b8`). Report written (`runs/B0/qwen3-30b/summary.md`).
+  - **Qwen3 30B B0, law (n = 3,285, 80B judge j1, 95% bootstrap CI over questions):** correctness **3.95** [3.81, 4.08], faithfulness **4.13** [4.01, 4.24], technicality fit 4.92, route_ok **0.96** [0.94, 0.98], ctx_hit (group) **0.70** [0.65, 0.74], cite recall 0.67, cite precision 0.91, 147 words, 24.5 s per answer.
+  - By effort (mean of the 3 technicality settings): correctness low 3.86, mid 3.99, high 4.00; faithfulness low 4.17, mid 4.20, high 4.00; ctx_hit low 0.64, mid 0.70, high 0.75 (higher effort retrieves more excerpts).
+  - Weakest: domain `uncategorized` (correctness 2.86, ctx_hit 0.28), `education` (3.27, 0.43), colloquial questions (2.79, ctx_hit 0.33), case-law faithfulness (2.67). Law questions routed to general (54): correctness 1.63.
+  - No compare (PC A's plan): these numbers are not put next to Gemma here.
+- **12:14 files judging started** (684, `--test data/test_files.jsonl`).
+- **12:58 files judging complete:** "done: 684 judged, 0 errors". Check: answers 684, judged 684, missing 0. Report written (`runs/B0/qwen3-30b-files/summary.md`). Script end: "=== end (no compare)".
+  - **Qwen3 30B B0, files (n = 684):** correctness **3.18** [2.84, 3.52], faithfulness **3.13** [2.80, 3.47], technicality fit 4.81, route_ok **1.00**, ctx_hit (group) **0.46** [0.36, 0.57], cite recall 0.45, cite precision 0.83, 199 words, 42.1 s per answer.
+  - By effort (mean of 3 tech settings): correctness low 3.09, mid 3.19, high 3.25; ctx_hit low 0.42, mid 0.47, high 0.50.
+  - By file format: photo bn 2.66 / en 3.28; scan bn 3.03 / en 3.20; text bn 3.00 / en 3.84 (correctness). Bangla photos are the weakest.
+  - Routing: general→general 36 (correctness 4.00), law→law 648 (3.13).
+- **13:00 final audit:** law 3,285/3,285 and files 684/684 judged, one judge hash `aebea71088b8` (j1), 0 incomplete judgments (correctness and language_ok present), 0 judge errors all day, 0 "Context size has been exceeded" today. **No `score.py compare` was run on PC B**, so there is no compare output to discard. Shared caches (`route-cache.jsonl`, `file-cache.jsonl`) unchanged.
+
+### Summary of 26 Nov on PC B
+| Item | Result |
+|---|---|
+| Qwen3 30B B0 law judged (80B, j1) | **3,285 / 3,285**, 0 errors (1,601 today) |
+| Qwen3 30B B0 files judged | **684 / 684**, 0 errors |
+| Law | correctness 3.95, faithfulness 4.13, route_ok 0.96, ctx_hit 0.70 |
+| Files | correctness 3.18, faithfulness 3.13, route_ok 1.00, ctx_hit 0.46 |
+| Compare | not run (PC A runs all comparisons later, once, for all three models on the human-rated answers) |
+| Judge sees the full answer | yes (PC A's `score.py`, no cut; longest answer 6,409 chars) |
+| Context errors | 0 |
